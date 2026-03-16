@@ -769,7 +769,6 @@ select.appendChild(option)
 })
 
 }
-
 function loadProductForCalc(){
 
 const id = document.getElementById("calcProductSelect").value
