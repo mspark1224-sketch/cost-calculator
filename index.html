@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>제품 원가 견적 시스템</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -20,53 +19,37 @@
 <button onclick="showPage('history')">4 견적 조회</button>
 </div>
 
-
 <!-- 원재료 DB -->
+
 <div id="db" class="page">
 
 <h2>원재료 데이터베이스</h2>
 
 <div class="card">
 
-<div class="grid-4">
-
-<div>
 <label>원재료 코드</label>
-<input id="materialCode" placeholder="예: RM001">
-</div>
+<input id="materialCode">
 
-<div>
 <label>원재료 이름</label>
 <input id="materialName">
-</div>
 
-<div>
 <label>단가 (원/kg)</label>
 <input id="materialPrice" type="number">
-</div>
 
-<div>
 <label>적용 날짜</label>
 <input id="materialDate" type="date">
-</div>
-
-</div>
 
 <div class="button-row">
 <button onclick="saveMaterial()">저장</button>
+<button onclick="updateMaterial()">수정</button>
 <button onclick="clearMaterialInputs()">초기화</button>
 </div>
 
 </div>
 
-
 <div class="card">
 
-<div class="search-row">
-<input id="materialSearch"
-placeholder="원재료 검색"
-oninput="loadMaterials()">
-</div>
+<input id="materialSearch" placeholder="원재료 검색" oninput="loadMaterials()">
 
 <table>
 
@@ -75,15 +58,13 @@ oninput="loadMaterials()">
 <th>No</th>
 <th>코드</th>
 <th>원재료명</th>
-<th>단가 (원/kg)</th>
-<th>적용일</th>
-<th>수정</th>
+<th>단가</th>
+<th>날짜</th>
 <th>삭제</th>
 </tr>
 </thead>
 
-<tbody id="materialList">
-</tbody>
+<tbody id="materialList"></tbody>
 
 </table>
 
@@ -93,38 +74,17 @@ oninput="loadMaterials()">
 
 
 <!-- 배합표 -->
-<div id="recipe" class="page" style="display:none;">
+
+<div id="recipe" class="page" style="display:none">
 
 <h2>배합표 작성</h2>
 
-<div class="card">
-
-<div class="grid-2">
-
 <div>
+
 <label>제품명</label>
-<input id="productName" placeholder="예: 고추장 크림치즈">
-</div>
+<input id="productName">
 
-<div>
-<label>제품 검색</label>
-<input id="productSearch"
-placeholder="제품명 검색"
-oninput="loadProducts()">
-</div>
-
-</div>
-
-<div class="button-row">
 <button onclick="addRecipe()">원재료 추가</button>
-<button onclick="saveRecipe()">제품 저장</button>
-<button onclick="resetRecipeTable()">배합표 초기화</button>
-</div>
-
-<div class="ratio-box">
-배합비 합계 :
-<strong id="ratioTotal">0</strong> %
-</div>
 
 <table id="recipeTable">
 
@@ -132,118 +92,51 @@ oninput="loadProducts()">
 <tr>
 <th>원재료</th>
 <th>단가</th>
-<th>배합비 (%)</th>
-<th>원재료 원가</th>
+<th>배합비</th>
+<th>원가</th>
 <th>삭제</th>
 </tr>
 </thead>
 
-<tbody>
-</tbody>
-
-</table>
-
-</div>
-
-
-<div class="card">
-
-<h3>저장된 제품 목록</h3>
-
-<table>
-
-<thead>
-<tr>
-<th>제품명</th>
-<th>저장일시</th>
-<th>불러오기</th>
-<th>삭제</th>
-</tr>
-</thead>
-
-<tbody id="productList"></tbody>
+<tbody></tbody>
 
 </table>
 
 </div>
 
 </div>
-
 
 
 <!-- 원가 계산 -->
-<div id="calc" class="page" style="display:none;">
+
+<div id="calc" class="page" style="display:none">
 
 <h2>원가 계산</h2>
 
-<div class="card">
-
-<div class="grid-2">
-
-<div>
 <label>제조비</label>
-<input id="mfg" type="number" value="0">
-</div>
+<input id="mfg" type="number">
 
-<div>
 <label>포장비</label>
-<input id="pack" type="number" value="0">
-</div>
+<input id="pack" type="number">
 
-<div>
 <label>물류비</label>
-<input id="logi" type="number" value="0">
-</div>
+<input id="logi" type="number">
 
-<div>
 <label>마진 (%)</label>
-<input id="margin" type="number" value="0">
-</div>
+<input id="margin" type="number">
 
-</div>
-
-<div class="button-row">
 <button onclick="calculate()">계산</button>
-<button onclick="saveQuote()">견적 저장</button>
-</div>
+
+<h3 id="result">0 원</h3>
 
 </div>
-
-<div class="card result-card">
-
-<p>제품명 :
-<strong id="calcProductName">-</strong></p>
-
-<p>원재료 원가 :
-<strong id="materialCostText">0 원</strong></p>
-
-<p>부대비용 :
-<strong id="extraCostText">0 원</strong></p>
-
-<p>총원가 :
-<strong id="totalCostText">0 원</strong></p>
-
-<p>최종 견적가 :
-<strong id="result">0 원</strong></p>
-
-</div>
-
-</div>
-
 
 
 <!-- 견적 조회 -->
-<div id="history" class="page" style="display:none;">
+
+<div id="history" class="page" style="display:none">
 
 <h2>견적 조회</h2>
-
-<div class="card">
-
-<div class="search-row">
-<input id="quoteSearch"
-placeholder="제품명 검색"
-oninput="loadQuotes()">
-</div>
 
 <table>
 
@@ -251,7 +144,7 @@ oninput="loadQuotes()">
 <tr>
 <th>제품명</th>
 <th>견적가</th>
-<th>저장일</th>
+<th>날짜</th>
 <th>삭제</th>
 </tr>
 </thead>
@@ -259,8 +152,6 @@ oninput="loadQuotes()">
 <tbody id="quoteList"></tbody>
 
 </table>
-
-</div>
 
 </div>
 
