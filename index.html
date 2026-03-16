@@ -80,19 +80,25 @@
 
       <div class="card">
         <h3>가격 히스토리</h3>
-        <div id="historyTitle" class="subtle">원재료를 선택하면 이력이 표시됩니다.</div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:80px;">No</th>
-              <th style="width:120px;">코드</th>
-              <th>원재료명</th>
-              <th style="width:160px;">단가</th>
-              <th style="width:140px;">적용일</th>
-            </tr>
-          </thead>
-          <tbody id="priceHistoryList"></tbody>
-        </table>
+      <input 
+  type="text" 
+  id="priceSearch" 
+  placeholder="원재료명 또는 코드 검색"
+  oninput="loadPriceHistory(this.value)"
+  style="margin-bottom:10px; width:220px;"
+/>
+
+<table>
+  <thead>
+    <tr>
+      <th>코드</th>
+      <th>원재료명</th>
+      <th>단가</th>
+      <th>등록일</th>
+    </tr>
+  </thead>
+  <tbody id="priceHistoryTable"></tbody>
+</table>
       </div>
     </div>
 
