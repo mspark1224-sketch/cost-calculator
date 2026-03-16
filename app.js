@@ -306,11 +306,17 @@ function loadPriceHistory(code) {
   });
 }
 
-function handleExcelUpload(event){
+function handleExcelUpload(){
 
-const file = event.target.files[0]
+const file = document.getElementById("excelFile").files[0]
 
-if(!file) return
+if(!file){
+
+alert("엑셀 파일을 선택하세요.")
+
+return
+
+}
 
 const reader = new FileReader()
 
@@ -328,27 +334,12 @@ let inserted = 0
 
 rows.forEach(row=>{
 
-const code =
-row["코드"] ||
-row["원재료코드"] ||
-row["코드번호"]
+const code = row["코드"]
+const name = row["원재료명"]
+const price = row["단가"]
+const date = row["적용일"]
 
-const name =
-row["원재료명"] ||
-row["품명"] ||
-row["원재료"]
-
-const price =
-row["단가"] ||
-row["단가(원)"] ||
-row["단가원kg"]
-
-const date =
-row["적용일"] ||
-row["적용일자"] ||
-row["날짜"]
-
-if(!code || !name || !price) return
+if(!code || !price) return
 
 materials.push({
 
@@ -356,7 +347,7 @@ id:Date.now()+Math.random(),
 
 code:String(code).trim(),
 
-name:String(name).trim(),
+name:String(name||"").trim(),
 
 price:Number(price),
 
