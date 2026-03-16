@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>제품 원가 견적 계산기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>제품 견적 계산기</h1>
+
+<div class="box">
+
+<h3>원재료 입력</h3>
+
+<label>모짜렐라 단가 (원/kg)</label>
+<input id="m1" type="number" value="6500">
+
+<label>크림 단가 (원/kg)</label>
+<input id="m2" type="number" value="4200">
+
+<label>두부박 단가 (원/kg)</label>
+<input id="m3" type="number" value="800">
+
+<h3>배합비 (%)</h3>
+
+<label>모짜렐라</label>
+<input id="r1" type="number" value="30">
+
+<label>크림</label>
+<input id="r2" type="number" value="50">
+
+<label>두부박</label>
+<input id="r3" type="number" value="20">
+
+<h3>기타 비용</h3>
+
+<label>제조비</label>
+<input id="mfg" type="number" value="600">
+
+<label>포장비</label>
+<input id="pack" type="number" value="300">
+
+<label>물류비</label>
+<input id="logi" type="number" value="200">
+
+<label>마진 (%)</label>
+<input id="margin" type="number" value="30">
+
+<br><br>
+
+<button onclick="calc()">견적 계산</button>
+
+<h2 id="result"></h2>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
