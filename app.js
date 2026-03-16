@@ -483,16 +483,34 @@ function refreshRecipeMaterialOptions() {
   refreshRecipePrices();
 }
 
-function updateRatioTotal() {
-  const ratios = document.querySelectorAll(".recipe-ratio");
-  let total = 0;
+function updateRatioTotal(){
 
-  ratios.forEach((input) => {
-    total += Number(input.value || 0);
-  });
+const ratios = document.querySelectorAll(".recipe-ratio")
 
-  const ratioEl = document.getElementById("ratioTotal");
-  if (ratioEl) ratioEl.innerText = total;
+let total = 0
+
+ratios.forEach(input=>{
+total += Number(input.value || 0)
+})
+
+document.getElementById("ratioTotal").innerText = total
+
+
+// 원재료 원가 합계 계산
+
+let costSum = 0
+
+document.querySelectorAll(".recipe-cost").forEach(cell=>{
+
+const value = cell.innerText.replace(/[^0-9]/g,"")
+
+costSum += Number(value || 0)
+
+})
+
+document.getElementById("materialCostSum").innerText =
+costSum.toLocaleString("ko-KR")
+
 }
 
 function getRecipeData() {
