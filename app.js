@@ -1,244 +1,221 @@
-let materials = JSON.parse(localStorage.getItem("materials")) || []
-let quotes = JSON.parse(localStorage.getItem("quotes")) || []
-
-let editMaterialId = null
-
-function saveData(){
-localStorage.setItem("materials",JSON.stringify(materials))
-localStorage.setItem("quotes",JSON.stringify(quotes))
-}
-
-function showPage(id){
-
-document.querySelectorAll(".page").forEach(p=>{
-p.style.display="none"
-})
-
-document.getElementById(id).style.display="block"
-
-if(id==="db") loadMaterials()
-if(id==="history") loadQuotes()
-
-}
-
-function clearMaterialInputs(){
-
-editMaterialId=null
-
-document.getElementById("materialCode").value=""
-document.getElementById("materialName").value=""
-document.getElementById("materialPrice").value=""
-document.getElementById("materialDate").value=""
-
-}
-
-function saveMaterial(){
-
-let code=document.getElementById("materialCode").value
-let name=document.getElementById("materialName").value
-let price=document.getElementById("materialPrice").value
-let date=document.getElementById("materialDate").value
-
-materials.push({
-id:Date.now(),
-code,
-name,
-price,
-date
-})
-
-saveData()
-
-loadMaterials()
-
-clearMaterialInputs()
-
-}
-
-function editMaterial(id){
-
-let m=materials.find(x=>x.id===id)
-
-editMaterialId=id
-
-document.getElementById("materialCode").value=m.code
-document.getElementById("materialName").value=m.name
-document.getElementById("materialPrice").value=m.price
-document.getElementById("materialDate").value=m.date
-
-}
-
-function updateMaterial(){
-
-if(editMaterialId===null) return
-
-let m=materials.find(x=>x.id===editMaterialId)
-
-m.code=document.getElementById("materialCode").value
-m.name=document.getElementById("materialName").value
-m.price=document.getElementById("materialPrice").value
-m.date=document.getElementById("materialDate").value
-
-saveData()
-
-loadMaterials()
-
-clearMaterialInputs()
-
-}
-
-function deleteMaterial(id){
-
-materials=materials.filter(x=>x.id!==id)
-
-saveData()
-
-loadMaterials()
-
-}
-
-function loadMaterials(){
-
-let list=document.getElementById("materialList")
-
-let keyword=(document.getElementById("materialSearch").value||"").toLowerCase()
-
-list.innerHTML=""
-
-materials
-.filter(m=>
-m.name.toLowerCase().includes(keyword)||
-m.code.toLowerCase().includes(keyword)
-)
-.forEach((m,i)=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=`
-
-<td>${i+1}</td>
-<td>${m.code}</td>
-<td>${m.name}</td>
-<td>${Number(m.price).toLocaleString()} 원</td>
-<td>${m.date||""}</td>
-
-<td>
-<button onclick="editMaterial(${m.id})">
-수정
-</button>
-</td>
-
-<td>
-<button onclick="deleteMaterial(${m.id})">
-삭제
-</button>
-</td>
-
-`
-
-list.appendChild(tr)
-
-})
-
-}
-
-function addRecipe(){
-
-let table=document.querySelector("#recipeTable tbody")
-
-let row=table.insertRow()
-
-let cell1=row.insertCell(0)
-let cell2=row.insertCell(1)
-let cell3=row.insertCell(2)
-let cell4=row.insertCell(3)
-let cell5=row.insertCell(4)
-
-let select="<select>"
-
-materials.forEach(m=>{
-select+=`<option value="${m.price}">${m.name}</option>`
-})
-
-select+="</select>"
-
-cell1.innerHTML=select
-cell2.innerHTML="0"
-cell3.innerHTML='<input type="number" value="0">'
-cell4.innerHTML="0"
-cell5.innerHTML='<button onclick="this.parentNode.parentNode.remove()">삭제</button>'
-
-}
-
-function calculate(){
-
-let table=document.querySelector("#recipeTable tbody")
-
-let cost=0
-
-Array.from(table.rows).forEach(r=>{
-
-let price=r.cells[0].children[0].value
-let ratio=r.cells[2].children[0].value
-
-cost+=price*(ratio/100)
-
-})
-
-let mfg=Number(document.getElementById("mfg").value||0)
-let pack=Number(document.getElementById("pack").value||0)
-let logi=Number(document.getElementById("logi").value||0)
-let margin=Number(document.getElementById("margin").value||0)/100
-
-let total=cost+mfg+pack+logi
-
-let quote=total*(1+margin)
-
-document.getElementById("result").innerText=quote.toLocaleString()+" 원"
-
-quotes.push({
-product:document.getElementById("productName").value,
-price:quote,
-date:new Date().toLocaleString()
-})
-
-saveData()
-
-}
-
-function loadQuotes(){
-
-let list=document.getElementById("quoteList")
-
-list.innerHTML=""
-
-quotes.forEach(q=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=`
-
-<td>${q.product}</td>
-<td>${Number(q.price).toLocaleString()} 원</td>
-<td>${q.date}</td>
-<td><button onclick="deleteQuote('${q.date}')">삭제</button></td>
-
-`
-
-list.appendChild(tr)
-
-})
-
-}
-
-function deleteQuote(date){
-
-quotes=quotes.filter(q=>q.date!==date)
-
-saveData()
-
-loadQuotes()
-
-}
-
-loadMaterials()
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제품 원가 견적 시스템</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>제품 원가 견적 시스템</h1>
+
+    <div class="menu">
+      <button onclick="showPage('db')">1 원재료 DB</button>
+      <button onclick="showPage('recipe')">2 배합표</button>
+      <button onclick="showPage('calc')">3 원가 계산</button>
+      <button onclick="showPage('history')">4 견적 조회</button>
+    </div>
+
+    <!-- 원재료 DB -->
+    <div id="db" class="page">
+      <h2>원재료 데이터베이스</h2>
+
+      <div class="card">
+        <div class="grid-4">
+          <div>
+            <label>원재료 코드</label>
+            <input id="materialCode" placeholder="예: 5410 또는 RM001" />
+          </div>
+          <div>
+            <label>원재료 이름</label>
+            <input id="materialName" placeholder="예: 고다치즈(네덜란드)" />
+          </div>
+          <div>
+            <label>단가 (원/kg)</label>
+            <input id="materialPrice" type="number" placeholder="예: 4800" />
+          </div>
+          <div>
+            <label>적용 날짜</label>
+            <input id="materialDate" type="date" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button onclick="saveMaterial()">저장</button>
+          <button onclick="updateMaterial()">수정</button>
+          <button class="secondary" onclick="clearMaterialInputs()">초기화</button>
+        </div>
+
+        <div class="upload-box">
+          <label for="excelFile" class="upload-label">엑셀 업로드</label>
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleExcelUpload(event)" />
+          <div class="help-text">
+            엑셀 컬럼명: <strong>코드</strong>, <strong>원재료명</strong>, <strong>단가</strong>, <strong>적용일</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="search-row">
+          <input id="materialSearch" type="text" placeholder="원재료명 또는 코드 검색" oninput="loadMaterials()" />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px;">No</th>
+              <th style="width:120px;">코드</th>
+              <th>원재료명</th>
+              <th style="width:160px;">최신단가</th>
+              <th style="width:140px;">최신적용일</th>
+              <th style="width:100px;">수정</th>
+              <th style="width:100px;">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="materialList"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>가격 히스토리</h3>
+        <div id="historyTitle" class="subtle">원재료를 선택하면 이력이 표시됩니다.</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:80px;">No</th>
+              <th style="width:120px;">코드</th>
+              <th>원재료명</th>
+              <th style="width:160px;">단가</th>
+              <th style="width:140px;">적용일</th>
+            </tr>
+          </thead>
+          <tbody id="priceHistoryList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 배합표 -->
+    <div id="recipe" class="page" style="display:none;">
+      <h2>배합표 작성</h2>
+
+      <div class="card">
+        <div class="grid-2">
+          <div>
+            <label>제품명</label>
+            <input id="productName" type="text" placeholder="예: 고추장 크림치즈" />
+          </div>
+          <div>
+            <label>제품 검색</label>
+            <input id="productSearch" type="text" placeholder="제품명 검색" oninput="loadProducts()" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button onclick="addRecipe()">원재료 추가</button>
+          <button onclick="saveRecipe()">제품 저장</button>
+          <button class="secondary" onclick="resetRecipeTable()">배합표 초기화</button>
+        </div>
+
+        <div class="ratio-box">
+          배합비 합계: <strong id="ratioTotal">0</strong> %
+        </div>
+
+        <table id="recipeTable">
+          <thead>
+            <tr>
+              <th>원재료</th>
+              <th style="width:120px;">코드</th>
+              <th style="width:160px;">최신단가</th>
+              <th style="width:140px;">배합비 (%)</th>
+              <th style="width:180px;">원재료 원가</th>
+              <th style="width:100px;">삭제</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>저장된 제품 목록</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>제품명</th>
+              <th style="width:180px;">저장일시</th>
+              <th style="width:100px;">불러오기</th>
+              <th style="width:100px;">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="productList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 원가 계산 -->
+    <div id="calc" class="page" style="display:none;">
+      <h2>원가 계산</h2>
+
+      <div class="card">
+        <div class="grid-2">
+          <div>
+            <label>제조비</label>
+            <input id="mfg" type="number" value="0" />
+          </div>
+          <div>
+            <label>포장비</label>
+            <input id="pack" type="number" value="0" />
+          </div>
+          <div>
+            <label>물류비</label>
+            <input id="logi" type="number" value="0" />
+          </div>
+          <div>
+            <label>마진 (%)</label>
+            <input id="margin" type="number" value="0" />
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button onclick="calculate()">계산</button>
+          <button onclick="saveQuote()">견적 저장</button>
+        </div>
+      </div>
+
+      <div class="card result-card">
+        <p>제품명: <strong id="calcProductName">-</strong></p>
+        <p>원재료 원가 합계: <strong id="materialCostText">0 원</strong></p>
+        <p>부대비용 합계: <strong id="extraCostText">0 원</strong></p>
+        <p>총원가: <strong id="totalCostText">0 원</strong></p>
+        <p>최종 견적가: <strong id="result">0 원</strong></p>
+      </div>
+    </div>
+
+    <!-- 견적 조회 -->
+    <div id="history" class="page" style="display:none;">
+      <h2>견적 조회</h2>
+
+      <div class="card">
+        <div class="search-row">
+          <input id="quoteSearch" type="text" placeholder="제품명 검색" oninput="loadQuotes()" />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>제품명</th>
+              <th style="width:160px;">견적가</th>
+              <th style="width:180px;">저장일시</th>
+              <th style="width:100px;">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="quoteList"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
