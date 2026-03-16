@@ -118,18 +118,31 @@
       배합비 합계: <strong id="ratioTotal">0</strong> %
     </div>
 
-    <table id="recipeTable">
-      <thead>
-        <tr>
-          <th>원재료</th>
-          <th style="width:120px;">코드</th>
-          <th style="width:160px;">최신단가</th>
-          <th style="width:140px;">배합비 (%)</th>
-          <th style="width:180px;">원재료 원가</th>
-          <th style="width:100px;">삭제</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
+   <table id="recipeTable">
+  <thead>
+    <tr>
+      <th>원재료</th>
+      <th style="width:120px;">코드</th>
+      <th style="width:160px;">최신단가</th>
+      <th style="width:140px;">배합비 (%)</th>
+      <th style="width:180px;">원재료 원가</th>
+      <th style="width:100px;">삭제</th>
+    </tr>
+  </thead>
+
+  <tbody></tbody>
+
+  <tfoot>
+    <tr class="sum-row">
+      <td colspan="3"><strong>합계</strong></td>
+      <td id="ratioSum">0</td>
+      <td id="costSum">0 원</td>
+      <td></td>
+    </tr>
+  </tfoot>
+
+</table>
+    
     </table>
   </div>
 
