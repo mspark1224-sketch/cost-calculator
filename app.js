@@ -778,8 +778,21 @@ const product = products.find(p=>p.id==id)
 
 if(!product) return
 
-document.getElementById("calcProductName").innerText = product.name
+// 배합표 페이지로 이동
+showPage("recipe")
 
-currentRecipe = product.recipe
+// 기존 배합표 초기화
+resetRecipeTable()
+
+// 제품명 표시
+document.getElementById("productName").value = product.name
+
+// 배합표 자동 로드
+product.recipe.forEach(item=>{
+addRecipe(item)
+})
+
+// 합계 업데이트
+updateRatioTotal()
 
 }
