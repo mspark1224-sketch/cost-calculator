@@ -55,6 +55,19 @@ clearMaterialInputs()
 
 }
 
+function editMaterial(id){
+
+let m=materials.find(x=>x.id===id)
+
+editMaterialId=id
+
+document.getElementById("materialCode").value=m.code
+document.getElementById("materialName").value=m.name
+document.getElementById("materialPrice").value=m.price
+document.getElementById("materialDate").value=m.date
+
+}
+
 function updateMaterial(){
 
 if(editMaterialId===null) return
@@ -71,19 +84,6 @@ saveData()
 loadMaterials()
 
 clearMaterialInputs()
-
-}
-
-function selectMaterial(id){
-
-let m=materials.find(x=>x.id===id)
-
-editMaterialId=id
-
-document.getElementById("materialCode").value=m.code
-document.getElementById("materialName").value=m.name
-document.getElementById("materialPrice").value=m.price
-document.getElementById("materialDate").value=m.date
 
 }
 
@@ -114,8 +114,6 @@ m.code.toLowerCase().includes(keyword)
 
 let tr=document.createElement("tr")
 
-tr.onclick=()=>selectMaterial(m.id)
-
 tr.innerHTML=`
 
 <td>${i+1}</td>
@@ -123,7 +121,18 @@ tr.innerHTML=`
 <td>${m.name}</td>
 <td>${Number(m.price).toLocaleString()} 원</td>
 <td>${m.date||""}</td>
-<td><button onclick="deleteMaterial(${m.id});event.stopPropagation()">삭제</button></td>
+
+<td>
+<button onclick="editMaterial(${m.id})">
+수정
+</button>
+</td>
+
+<td>
+<button onclick="deleteMaterial(${m.id})">
+삭제
+</button>
+</td>
 
 `
 
