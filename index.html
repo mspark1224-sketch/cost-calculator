@@ -48,19 +48,13 @@
           <button class="secondary" onclick="clearMaterialInputs()">초기화</button>
         </div>
 
-     <div class="upload-box">
-
-<label class="upload-label">엑셀 업로드</label>
-
-<input id="excelFile" type="file" accept=".xlsx,.xls,.csv">
-
-<button onclick="handleExcelUpload()">업로드</button>
-
-<div class="help-text">
-엑셀 컬럼명: 코드, 원재료명, 단가, 적용일
-</div>
-
-</div>
+        <div class="upload-box">
+          <label for="excelFile" class="upload-label">엑셀 업로드</label>
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleExcelUpload(event)" />
+          <div class="help-text">
+            엑셀 컬럼명: <strong>코드</strong>, <strong>원재료명</strong>, <strong>단가</strong>, <strong>적용일</strong>
+          </div>
+        </div>
       </div>
 
       <div class="card">
