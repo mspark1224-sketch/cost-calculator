@@ -506,11 +506,6 @@ ratios.forEach(input=>{
 total += Number(input.value || 0)
 })
 
-document.getElementById("ratioTotal").innerText = total
-
-
-// 원재료 원가 합계 계산
-
 let costSum = 0
 
 document.querySelectorAll(".recipe-cost").forEach(cell=>{
@@ -521,11 +516,17 @@ costSum += Number(value || 0)
 
 })
 
+document.getElementById("ratioTotal").innerText = total
 document.getElementById("materialCostSum").innerText =
-costSum.toLocaleString("ko-KR")
+formatNumber(costSum)
+
+const ratioSumEl = document.getElementById("ratioSum")
+const costSumEl = document.getElementById("costSum")
+
+if(ratioSumEl) ratioSumEl.innerText = total
+if(costSumEl) costSumEl.innerText = `${formatNumber(costSum)} 원`
 
 }
-
 function getRecipeData() {
   const rows = Array.from(getRecipeTbody().querySelectorAll("tr"));
 
