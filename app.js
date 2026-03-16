@@ -654,44 +654,53 @@ function deleteProduct(id) {
 }
 
 function calculate() {
-  const recipe = getRecipeData();
 
-  if (recipe.length === 0) {
-    alert("배합표를 먼저 작성하세요.");
-    return;
-  }
+const productId = document.getElementById("calcProductSelect").value
 
-  const productName = document.getElementById("productName").value.trim() || "미지정 제품";
+const product = products.find(p => p.id == productId)
 
-  let materialCost = 0;
-  recipe.forEach((item) => {
-    materialCost += getLatestPriceByCode(item.materialCode) * (Number(item.ratio) / 100);
-  });
+if(!product){
+alert("제품을 선택하세요.")
+return
+}
 
-  const mfg = Number(document.getElementById("mfg").value || 0);
-  const pack = Number(document.getElementById("pack").value || 0);
-  const logi = Number(document.getElementById("logi").value || 0);
-  const margin = Number(document.getElementById("margin").value || 0) / 100;
+const recipe = product.recipe
 
-  const extraCost = mfg + pack + logi;
-  const totalCost = materialCost + extraCost;
-  const quote = totalCost * (1 + margin);
+let materialCost = 0
 
-  document.getElementById("calcProductName").innerText = productName;
-  document.getElementById("materialCostText").innerText = `${formatNumber(materialCost.toFixed(0))} 원`;
-  document.getElementById("extraCostText").innerText = `${formatNumber(extraCost.toFixed(0))} 원`;
-  document.getElementById("totalCostText").innerText = `${formatNumber(totalCost.toFixed(0))} 원`;
-  document.getElementById("result").innerText = `${formatNumber(quote.toFixed(0))} 원`;
+recipe.forEach(item => {
 
-  window.currentQuote = {
-    id: Date.now() + Math.random(),
-    productName,
-    quote: Number(quote.toFixed(0)),
-    materialCost: Number(materialCost.toFixed(0)),
-    extraCost: Number(extraCost.toFixed(0)),
-    totalCost: Number(totalCost.toFixed(0)),
-    date: new Date().toLocaleString()
-  };
+const price = getLatestPriceByCode(item.materialCode)
+
+materialCost += price * (Number(item.ratio) / 100)
+
+})
+
+const mfg = Number(document.getElementById("mfg").value || 0)
+const pack = Number(document.getElementById("pack").value || 0)
+const logi = Number(document.getElementById("logi").value || 0)
+const margin = Number(document.getElementById("margin").value || 0) / 100
+
+const extraCost = mfg + pack + logi
+const totalCost = materialCost + extraCost
+const quote = totalCost * (1 + margin)
+
+document.getElementById("calcProductName").innerText = product.name
+document.getElementById("materialCostText").innerText = `${formatNumber(materialCost.toFixed(0))} 원`
+document.getElementById("extraCostText").innerText = `${formatNumber(extraCost.toFixed(0))} 원`
+document.getElementById("totalCostText").innerText = `${formatNumber(totalCost.toFixed(0))} 원`
+document.getElementById("result").innerText = `${formatNumber(quote.toFixed(0))} 원`
+
+window.currentQuote = {
+id: Date.now() + Math.random(),
+productName: product.name,
+quote: Number(quote.toFixed(0)),
+materialCost: Number(materialCost.toFixed(0)),
+extraCost: Number(extraCost.toFixed(0)),
+totalCost: Number(totalCost.toFixed(0)),
+date: new Date().toLocaleString()
+}
+
 }
 
 function saveQuote() {
