@@ -12,24 +12,30 @@ function saveAll() {
 }
 
 function showPage(id) {
-  document.querySelectorAll(".page").forEach((p) => {
-    p.style.display = "none";
-  });
 
-  document.getElementById(id).style.display = "block";
+  document.querySelectorAll(".page").forEach(p=>{
+    p.style.display="none"
+  })
 
-  if (id === "db") {
-    loadMaterials();
-    loadPriceHistory(selectedHistoryCode);
+  document.getElementById(id).style.display="block"
+
+  if(id==="db"){
+    loadMaterials()
   }
-  if (id === "recipe") {
-    loadProducts();
-    updateRatioTotal();
-    refreshRecipePrices();
+
+  if(id==="recipe"){
+    loadProducts()
   }
-  if (id === "history") loadQuotes();
+
+  if(id==="calc"){
+    loadCalcProducts()
+  }
+
+  if(id==="history"){
+    loadQuotes()
+  }
+
 }
-
 function formatNumber(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
