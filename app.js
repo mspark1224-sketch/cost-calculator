@@ -276,19 +276,32 @@ function loadMaterials() {
 function loadPriceHistory(keyword) {
 
   const table = document.getElementById("priceHistoryTable");
+  if(!table) return;
+
   table.innerHTML = "";
 
-  let list = priceHistory;
+  let list = [...materials];
 
   if (keyword && keyword.trim() !== "") {
 
     const k = keyword.toLowerCase();
 
-    list = priceHistory.filter((p) =>
+    list = list.filter((p) =>
       (p.name && p.name.toLowerCase().includes(k)) ||
-      (p.code && p.code.toLowerCase().includes(k))
+      (p.code && String(p.code).toLowerCase().includes(k))
     );
 
+  }
+
+  list.sort((a,b)=>{
+    const ad = new Date(a.date || "1900-01-01").getTime();
+    const bd = new Date(b.date || "1900-01-01").getTime();
+    return bd - ad;
+  });
+
+  if(list.length === 0){
+    table.innerHTML = `<tr><td colspan="4">검색 결과가 없습니다.</td></tr>`;
+    return;
   }
 
   list.forEach((p) => {
@@ -297,9 +310,9 @@ function loadPriceHistory(keyword) {
 
     tr.innerHTML = `
       <td>${p.code || ""}</td>
-      <td>${p.name}</td>
-      <td>${p.price}</td>
-      <td>${p.date}</td>
+      <td>${p.name || ""}</td>
+      <td>${formatNumber(p.price)} 원</td>
+      <td>${normalizeDate(p.date)}</td>
     `;
 
     table.appendChild(tr);
