@@ -702,3 +702,38 @@ loadMaterials();
 loadProducts();
 loadQuotes();
 loadPriceHistory(null);
+
+function loadCalcProducts(){
+
+const select = document.getElementById("calcProductSelect")
+
+if(!select) return
+
+select.innerHTML = '<option value="">제품 선택</option>'
+
+products.forEach(p=>{
+
+const option = document.createElement("option")
+
+option.value = p.id
+option.textContent = p.name
+
+select.appendChild(option)
+
+})
+
+}
+
+function loadProductForCalc(){
+
+const id = document.getElementById("calcProductSelect").value
+
+const product = products.find(p=>p.id==id)
+
+if(!product) return
+
+document.getElementById("calcProductName").innerText = product.name
+
+currentRecipe = product.recipe
+
+}
