@@ -307,6 +307,10 @@ function loadPriceHistory(keyword) {
   });
 
 }
+function searchPriceHistory() {
+  const keyword = document.getElementById("priceSearch").value;
+  loadPriceHistory(keyword);
+}
 
 function handleExcelUpload(event) {
   const file = event.target.files?.[0];
