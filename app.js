@@ -11,30 +11,30 @@ function saveAll() {
   localStorage.setItem("products", JSON.stringify(products));
 }
 
-function showPage(id) {
+function showPage(id){
 
-  document.querySelectorAll(".page").forEach(p=>{
-    p.style.display="none"
-  })
+document.querySelectorAll(".page").forEach(p=>{
+p.style.display="none"
+})
 
-  document.getElementById(id).style.display="block"
+document.getElementById(id).style.display="block"
 
 if(id==="db"){
-  loadMaterials()
-  loadPriceHistory(document.getElementById("priceSearch")?.value || "")
+loadMaterials()
+loadPriceHistory(document.getElementById("priceSearch")?.value || "")
 }
 
-  if(id==="recipe"){
-    loadProducts()
-  }
+if(id==="recipe"){
+loadProducts()
+}
 
-  if(id==="calc"){
-    loadCalcProducts()
-  }
+if(id==="calc"){
+loadCalcProducts()
+}
 
-  if(id==="history"){
-    loadQuotes()
-  }
+if(id==="history"){
+loadQuotes()
+}
 
 }
 function formatNumber(num) {
