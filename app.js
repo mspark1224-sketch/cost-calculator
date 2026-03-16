@@ -653,53 +653,31 @@ function deleteProduct(id) {
   loadProducts();
 }
 
-function calculate() {
+function calculate(){
 
 const productId = document.getElementById("calcProductSelect").value
-
-const product = products.find(p => p.id == productId)
+const product = products.find(p=>p.id==productId)
 
 if(!product){
-alert("제품을 선택하세요.")
+alert("제품을 선택하세요")
 return
 }
 
-const recipe = product.recipe
-
-let materialCost = 0
-
-recipe.forEach(item => {
-
-const price = getLatestPriceByCode(item.materialCode)
-
-materialCost += price * (Number(item.ratio) / 100)
-
-})
+const materialCost = Number(document.getElementById("materialCostInput").value || 0)
 
 const mfg = Number(document.getElementById("mfg").value || 0)
 const pack = Number(document.getElementById("pack").value || 0)
 const logi = Number(document.getElementById("logi").value || 0)
-const margin = Number(document.getElementById("margin").value || 0) / 100
+const margin = Number(document.getElementById("margin").value || 0)/100
 
 const extraCost = mfg + pack + logi
 const totalCost = materialCost + extraCost
 const quote = totalCost * (1 + margin)
 
-document.getElementById("calcProductName").innerText = product.name
-document.getElementById("materialCostText").innerText = `${formatNumber(materialCost.toFixed(0))} 원`
-document.getElementById("extraCostText").innerText = `${formatNumber(extraCost.toFixed(0))} 원`
-document.getElementById("totalCostText").innerText = `${formatNumber(totalCost.toFixed(0))} 원`
-document.getElementById("result").innerText = `${formatNumber(quote.toFixed(0))} 원`
-
-window.currentQuote = {
-id: Date.now() + Math.random(),
-productName: product.name,
-quote: Number(quote.toFixed(0)),
-materialCost: Number(materialCost.toFixed(0)),
-extraCost: Number(extraCost.toFixed(0)),
-totalCost: Number(totalCost.toFixed(0)),
-date: new Date().toLocaleString()
-}
+document.getElementById("materialCostText").innerText = `${formatNumber(materialCost)} 원`
+document.getElementById("extraCostText").innerText = `${formatNumber(extraCost)} 원`
+document.getElementById("totalCostText").innerText = `${formatNumber(totalCost)} 원`
+document.getElementById("result").innerText = `${formatNumber(quote)} 원`
 
 }
 
