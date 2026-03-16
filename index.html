@@ -19,6 +19,7 @@
 <button onclick="showPage('history')">4 견적 조회</button>
 </div>
 
+
 <!-- 원재료 DB -->
 
 <div id="db" class="page">
@@ -47,6 +48,7 @@
 
 </div>
 
+
 <div class="card">
 
 <input id="materialSearch" placeholder="원재료 검색" oninput="loadMaterials()">
@@ -59,7 +61,8 @@
 <th>코드</th>
 <th>원재료명</th>
 <th>단가</th>
-<th>날짜</th>
+<th>적용일</th>
+<th>수정</th>
 <th>삭제</th>
 </tr>
 </thead>
@@ -78,8 +81,6 @@
 <div id="recipe" class="page" style="display:none">
 
 <h2>배합표 작성</h2>
-
-<div>
 
 <label>제품명</label>
 <input id="productName">
@@ -101,8 +102,6 @@
 <tbody></tbody>
 
 </table>
-
-</div>
 
 </div>
 
