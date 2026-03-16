@@ -1,60 +1,90 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
 <meta charset="UTF-8">
-<title>제품 원가 견적 계산기</title>
+<title>원가 견적 시스템</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>제품 견적 계산기</h1>
+<h1>제품 원가 견적 시스템</h1>
 
-<div class="box">
+<div class="menu">
 
-<h3>원재료 입력</h3>
+<button onclick="showPage('db')">1 원재료 DB</button>
+<button onclick="showPage('recipe')">2 배합표</button>
+<button onclick="showPage('calc')">3 원가 계산</button>
+<button onclick="showPage('history')">4 견적 조회</button>
 
-<label>모짜렐라 단가 (원/kg)</label>
-<input id="m1" type="number" value="6500">
+</div>
 
-<label>크림 단가 (원/kg)</label>
-<input id="m2" type="number" value="4200">
+<div id="db" class="page">
 
-<label>두부박 단가 (원/kg)</label>
-<input id="m3" type="number" value="800">
+<h2>원재료 데이터베이스</h2>
 
-<h3>배합비 (%)</h3>
+<input id="materialName" placeholder="원재료 이름">
+<input id="materialPrice" type="number" placeholder="단가">
 
-<label>모짜렐라</label>
-<input id="r1" type="number" value="30">
+<button onclick="saveMaterial()">저장</button>
 
-<label>크림</label>
-<input id="r2" type="number" value="50">
+<ul id="materialList"></ul>
 
-<label>두부박</label>
-<input id="r3" type="number" value="20">
+</div>
 
-<h3>기타 비용</h3>
+
+<div id="recipe" class="page" style="display:none">
+
+<h2>배합표 작성</h2>
+
+<table id="recipeTable">
+<tr>
+<th>원재료</th>
+<th>배합비 (%)</th>
+</tr>
+</table>
+
+<button onclick="addRecipe()">원재료 추가</button>
+
+</div>
+
+
+<div id="calc" class="page" style="display:none">
+
+<h2>원가 계산</h2>
 
 <label>제조비</label>
-<input id="mfg" type="number" value="600">
+<input id="mfg" type="number">
 
 <label>포장비</label>
-<input id="pack" type="number" value="300">
+<input id="pack" type="number">
 
 <label>물류비</label>
-<input id="logi" type="number" value="200">
+<input id="logi" type="number">
 
 <label>마진 (%)</label>
-<input id="margin" type="number" value="30">
+<input id="margin" type="number">
 
 <br><br>
 
-<button onclick="calc()">견적 계산</button>
+<button onclick="calculate()">계산</button>
 
 <h2 id="result"></h2>
 
+<button onclick="saveQuote()">견적 저장</button>
+
 </div>
+
+
+<div id="history" class="page" style="display:none">
+
+<h2>견적 조회</h2>
+
+<ul id="quoteList"></ul>
+
+</div>
+
 
 <script src="app.js"></script>
 
