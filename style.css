@@ -1,17 +1,173 @@
-body{
-font-family:Arial;
-background:#f5f5f5;
-padding:40px;
+body {
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+  margin: 0;
+  padding: 0;
+  color: #111;
 }
 
-.menu button{
-margin-right:10px;
-padding:10px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-.page{
-background:white;
-padding:30px;
-margin-top:20px;
-border-radius:10px;
+h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 42px;
+  font-weight: 800;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 24px;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.menu {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.menu button,
+button {
+  padding: 10px 16px;
+  border: 1px solid #2f5fe3;
+  background: #2f5fe3;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  opacity: 0.92;
+}
+
+button.secondary {
+  background: white;
+  color: #2f5fe3;
+}
+
+button.danger {
+  background: #d83b3b;
+  border-color: #d83b3b;
+}
+
+.page {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+
+.card {
+  background: #fafafa;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #b9b9b9;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.search-row {
+  margin-bottom: 14px;
+}
+
+.ratio-box {
+  margin: 14px 0;
+  padding: 12px;
+  background: #eef4ff;
+  border: 1px solid #cddcff;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+table th,
+table td {
+  border: 1px solid #d6d6d6;
+  padding: 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+table th {
+  background: #f1f4f8;
+  font-weight: 700;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 24px;
+}
+
+.result-card p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+#result {
+  color: #1e4fd1;
+  font-size: 28px;
+}
+
+@media (max-width: 800px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .page {
+    padding: 18px;
+  }
 }
