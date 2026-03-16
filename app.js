@@ -789,11 +789,20 @@ updateRatioTotal()
 }
 function loadMaterialCostFromProduct(){
 
-const id = document.getElementById("calcProductSelect").value
+const select = document.getElementById("calcProductSelect")
+const id = select.value
 
-const product = products.find(p=>p.id==id)
+if(!id){
+document.getElementById("materialCostInput").value = 0
+return
+}
 
-if(!product) return
+const product = products.find(p => String(p.id) === String(id))
+
+if(!product){
+console.log("제품을 찾을 수 없음", id)
+return
+}
 
 document.getElementById("calcProductName").innerText = product.name
 
@@ -803,10 +812,13 @@ product.recipe.forEach(item=>{
 
 const price = getLatestPriceByCode(item.materialCode)
 
-materialCost += price * (Number(item.ratio) / 100)
+const ratio = Number(item.ratio || 0)
+
+materialCost += price * (ratio / 100)
 
 })
 
-document.getElementById("materialCostInput").value = materialCost.toFixed(0)
+document.getElementById("materialCostInput").value =
+Math.round(materialCost)
 
 }
