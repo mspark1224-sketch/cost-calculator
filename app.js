@@ -311,11 +311,8 @@ function handleExcelUpload(){
 const file = document.getElementById("excelFile").files[0]
 
 if(!file){
-
 alert("엑셀 파일을 선택하세요.")
-
 return
-
 }
 
 const reader = new FileReader()
@@ -342,17 +339,11 @@ const date = row["적용일"]
 if(!code || !price) return
 
 materials.push({
-
 id:Date.now()+Math.random(),
-
 code:String(code).trim(),
-
 name:String(name||"").trim(),
-
 price:Number(price),
-
 date:date || new Date().toISOString().slice(0,10)
-
 })
 
 inserted++
@@ -360,10 +351,13 @@ inserted++
 })
 
 saveAll()
-
 loadMaterials()
 
 alert("엑셀 업로드 완료 : "+inserted+"건")
+
+}
+
+reader.readAsArrayBuffer(file)
 
 }
 
