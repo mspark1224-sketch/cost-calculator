@@ -688,9 +688,9 @@ function loadQuotes() {
 
   list.innerHTML = "";
 
-  const filtered = quotes.filter((q) =>
-    q.productName.toLowerCase().includes(keyword)
-  );
+const filtered = quotes.filter((q) =>
+  (q.productName || "").toLowerCase().includes(keyword)
+)
 
   if (filtered.length === 0) {
     list.innerHTML = `<tr><td colspan="4" class="empty">저장된 견적이 없습니다.</td></tr>`;
