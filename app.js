@@ -532,7 +532,8 @@ function getRecipeData() {
   const rows = Array.from(getRecipeTbody().querySelectorAll("tr"));
 
   return rows.map((row) => {
-    const materialCode = String(row.querySelector(".recipe-material").value);
+   const materialCost =
+Number(document.getElementById("materialCostInput").value || 0)
     const ratio = Number(row.querySelector(".recipe-ratio").value || 0);
 
     return {
@@ -742,13 +743,10 @@ const select = document.getElementById("calcProductSelect")
 
 if(!select) return
 
-// 기존 옵션 초기화
 select.innerHTML = '<option value="">제품 선택</option>'
 
-// 저장된 제품이 없을 경우
 if(products.length === 0) return
 
-// 제품 목록 추가
 products.forEach(p=>{
 
 const option = document.createElement("option")
