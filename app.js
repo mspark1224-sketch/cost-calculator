@@ -19,9 +19,10 @@ function showPage(id) {
 
   document.getElementById(id).style.display="block"
 
-  if(id==="db"){
-    loadMaterials()
-  }
+if(id==="db"){
+  loadMaterials()
+  loadPriceHistory(document.getElementById("priceSearch")?.value || "")
+}
 
   if(id==="recipe"){
     loadProducts()
