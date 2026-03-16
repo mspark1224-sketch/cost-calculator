@@ -22,22 +22,35 @@
       <h2>원재료 데이터베이스</h2>
 
       <div class="card">
-        <div class="grid-2">
-          <div>
-            <label>원재료명</label>
-            <input id="materialName" type="text" placeholder="예: 모짜렐라치즈" />
-          </div>
-          <div>
-            <label>단가 (원/kg)</label>
-            <input id="materialPrice" type="number" placeholder="예: 6800" />
-          </div>
-        </div>
+<div class="grid-4">
 
-        <div class="button-row">
-          <button onclick="saveMaterial()">저장</button>
-          <button class="secondary" onclick="clearMaterialInputs()">입력 초기화</button>
-        </div>
-      </div>
+<div>
+<label>원재료 코드</label>
+<input id="materialCode" placeholder="예: RM001">
+</div>
+
+<div>
+<label>원재료 이름</label>
+<input id="materialName">
+</div>
+
+<div>
+<label>단가 (원/kg)</label>
+<input id="materialPrice" type="number">
+</div>
+
+<div>
+<label>적용 날짜</label>
+<input id="materialDate" type="date">
+</div>
+
+</div>
+
+<div class="button-row">
+<button onclick="saveMaterial()">저장</button>
+<button onclick="updateMaterial()">수정</button>
+<button onclick="clearMaterialInputs()">초기화</button>
+</div>
 
       <div class="card">
         <div class="search-row">
