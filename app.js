@@ -306,53 +306,79 @@ function loadPriceHistory(code) {
   });
 }
 
-function handleExcelUpload(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
+function handleExcelUpload(event){
 
-  const reader = new FileReader();
+const file = event.target.files[0]
 
-  reader.onload = function (e) {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
+if(!file) return
 
-      if (!rows.length) {
-        alert("엑셀에 데이터가 없습니다.");
-        return;
-      }
+const reader = new FileReader()
 
-      let inserted = 0;
-      let updated = 0;
+reader.onload = function(e){
 
-      rows.forEach((row) => {
-        const code = String(row["코드"] || "").trim();
-        const name = String(row["원재료명"] || "").trim();
-        const price = Number(row["단가"] || 0);
-        const date = normalizeDate(String(row["적용일"] || "").trim());
+const data = new Uint8Array(e.target.result)
 
-        if (!code || !name || !price || !date) return;
+const workbook = XLSX.read(data,{type:"array"})
 
-        const existing = materials.find(
-          (m) => m.code === code && normalizeDate(m.date) === date
-        );
+const sheet = workbook.Sheets[workbook.SheetNames[0]]
 
-        if (existing) {
-          existing.name = name;
-          existing.price = price;
-          updated += 1;
-        } else {
-          materials.push({
-            id: Date.now() + Math.random(),
-            code,
-            name,
-            price,
-            date
-          });
-          inserted += 1;
-        }
+const rows = XLSX.utils.sheet_to_json(sheet)
+
+let inserted = 0
+
+rows.forEach(row=>{
+
+const code =
+row["코드"] ||
+row["원재료코드"] ||
+row["코드번호"]
+
+const name =
+row["원재료명"] ||
+row["품명"] ||
+row["원재료"]
+
+const price =
+row["단가"] ||
+row["단가(원)"] ||
+row["단가원kg"]
+
+const date =
+row["적용일"] ||
+row["적용일자"] ||
+row["날짜"]
+
+if(!code || !name || !price) return
+
+materials.push({
+
+id:Date.now()+Math.random(),
+
+code:String(code).trim(),
+
+name:String(name).trim(),
+
+price:Number(price),
+
+date:date || new Date().toISOString().slice(0,10)
+
+})
+
+inserted++
+
+})
+
+saveAll()
+
+loadMaterials()
+
+alert("엑셀 업로드 완료 : "+inserted+"건")
+
+}
+
+reader.readAsArrayBuffer(file)
+
+}
       });
 
       saveAll();
