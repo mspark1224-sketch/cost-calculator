@@ -79,14 +79,21 @@
       </div>
 
       <div class="card">
-        <h3>가격 히스토리</h3>
-      <input 
-  type="text" 
-  id="priceSearch" 
-  placeholder="원재료명 또는 코드 검색"
-  oninput="loadPriceHistory(this.value)"
-  style="margin-bottom:10px; width:220px;"
-/>
+    <h3>가격 히스토리</h3>
+
+<div style="margin-bottom:10px; display:flex; gap:6px;">
+  <input 
+    type="text" 
+    id="priceSearch" 
+    placeholder="원재료명 또는 코드 검색"
+    style="width:220px;"
+    onkeypress="if(event.key==='Enter'){searchPriceHistory();}"
+  />
+
+  <button onclick="searchPriceHistory()">검색</button>
+
+  <button onclick="loadPriceHistory(null)">전체</button>
+</div>
 
 <table>
   <thead>
