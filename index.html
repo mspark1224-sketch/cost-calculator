@@ -96,62 +96,70 @@
       </div>
     </div>
 
-    <!-- 배합표 -->
-    <div id="recipe" class="page" style="display:none;">
-      <h2>배합표 작성</h2>
+<!-- 배합표 -->
+<div id="recipe" class="page" style="display:none;">
+  <h2>배합표 작성</h2>
 
-      <div class="card">
-        <div class="grid-2">
-          <div>
-            <label>제품명</label>
-            <input id="productName" type="text" placeholder="예: 고추장 크림치즈" />
-          </div>
-          <div>
-            <label>제품 검색</label>
-            <input id="productSearch" type="text" placeholder="제품명 검색" oninput="loadProducts()" />
-          </div>
-        </div>
-
-        <div class="button-row">
-          <button onclick="addRecipe()">원재료 추가</button>
-          <button onclick="saveRecipe()">제품 저장</button>
-          <button class="secondary" onclick="resetRecipeTable()">배합표 초기화</button>
-        </div>
-
-        <div class="ratio-box">
-          배합비 합계: <strong id="ratioTotal">0</strong> %
-        </div>
-
-        <table id="recipeTable">
-          <thead>
-            <tr>
-              <th>원재료</th>
-              <th style="width:120px;">코드</th>
-              <th style="width:160px;">최신단가</th>
-              <th style="width:140px;">배합비 (%)</th>
-              <th style="width:180px;">원재료 원가</th>
-              <th style="width:100px;">삭제</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <h3>저장된 제품 목록</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>제품명</th>
-              <th style="width:180px;">저장일시</th>
-              <th style="width:100px;">불러오기</th>
-              <th style="width:100px;">삭제</th>
-            </tr>
-          </thead>
-          <tbody id="productList"></tbody>
-        </table>
+  <div class="card">
+    <div class="grid-1">
+      <div>
+        <label>제품명</label>
+        <input id="productName" type="text" placeholder="예: 고추장 크림치즈" />
       </div>
     </div>
+
+    <div class="button-row">
+      <button onclick="addRecipe()">원재료 추가</button>
+      <button onclick="saveRecipe()">제품 저장</button>
+      <button class="secondary" onclick="resetRecipeTable()">배합표 초기화</button>
+    </div>
+
+    <div class="ratio-box">
+      배합비 합계: <strong id="ratioTotal">0</strong> %
+    </div>
+
+    <table id="recipeTable">
+      <thead>
+        <tr>
+          <th>원재료</th>
+          <th style="width:120px;">코드</th>
+          <th style="width:160px;">최신단가</th>
+          <th style="width:140px;">배합비 (%)</th>
+          <th style="width:180px;">원재료 원가</th>
+          <th style="width:100px;">삭제</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+
+    <div class="search-row">
+      <input 
+        id="productSearch"
+        type="text"
+        placeholder="제품명 검색"
+        oninput="loadProducts()"
+      />
+    </div>
+
+    <h3>저장된 제품 목록</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>제품명</th>
+          <th style="width:180px;">저장일시</th>
+          <th style="width:100px;">불러오기</th>
+          <th style="width:100px;">삭제</th>
+        </tr>
+      </thead>
+      <tbody id="productList"></tbody>
+    </table>
+
+  </div>
+</div>
 
     <!-- 원가 계산 -->
     <div id="calc" class="page" style="display:none;">
