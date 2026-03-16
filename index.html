@@ -177,10 +177,16 @@
     <!-- 원가 계산 -->
     <div id="calc" class="page" style="display:none;">
       <h2>원가 계산</h2>
-
+     
       <div class="card">
-        <div class="grid-2">
-          <div>
+<div class="grid-2">
+
+  <div>
+    <label>제품 선택</label>
+    <select id="calcProductSelect" onchange="loadProductForCalc()">
+      <option value="">제품 선택</option>
+    </select>
+  </div>
             <label>제조비</label>
             <input id="mfg" type="number" value="0" />
           </div>
