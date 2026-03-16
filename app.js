@@ -273,43 +273,39 @@ function loadMaterials() {
   });
 }
 
-function loadPriceHistory(code) {
-  const title = document.getElementById("historyTitle");
-  const list = document.getElementById("priceHistoryList");
+function loadPriceHistory(keyword) {
 
-  if (!list || !title) return;
+  const table = document.getElementById("priceHistoryTable");
+  table.innerHTML = "";
 
-  list.innerHTML = "";
+  let list = priceHistory;
 
-  if (!code) {
-    title.innerText = "원재료를 선택하면 이력이 표시됩니다.";
-    list.innerHTML = `<tr><td colspan="5" class="empty">선택된 원재료가 없습니다.</td></tr>`;
-    return;
+  if (keyword && keyword.trim() !== "") {
+
+    const k = keyword.toLowerCase();
+
+    list = priceHistory.filter((p) =>
+      (p.name && p.name.toLowerCase().includes(k)) ||
+      (p.code && p.code.toLowerCase().includes(k))
+    );
+
   }
 
-  const rows = materials
-    .filter((m) => m.code === code)
-    .sort((a, b) => new Date(b.date || "1900-01-01") - new Date(a.date || "1900-01-01"));
+  list.forEach((p) => {
 
-  if (rows.length === 0) {
-    title.innerText = "이력이 없습니다.";
-    list.innerHTML = `<tr><td colspan="5" class="empty">이력이 없습니다.</td></tr>`;
-    return;
-  }
-
-  title.innerText = `${rows[0].name} (${rows[0].code}) 가격 이력`;
-
-  rows.forEach((row, index) => {
     const tr = document.createElement("tr");
+
     tr.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${row.code}</td>
-      <td>${row.name}</td>
-      <td>${formatNumber(row.price)} 원</td>
-      <td>${normalizeDate(row.date)}</td>
+      <td>${p.code || ""}</td>
+      <td>${p.name}</td>
+      <td>${p.price}</td>
+      <td>${p.date}</td>
     `;
-    list.appendChild(tr);
+
+    table.appendChild(tr);
+
   });
+
 }
 
 function handleExcelUpload(event) {
