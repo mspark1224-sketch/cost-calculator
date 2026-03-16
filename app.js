@@ -542,15 +542,22 @@ function getRecipeData() {
 }
 
 function checkRatio() {
-  const recipe = getRecipeData();
-  const total = recipe.reduce((sum, item) => sum + Number(item.ratio || 0), 0);
 
-  if (total !== 100) {
-    alert(`배합비 합계가 100%가 아닙니다. 현재 합계: ${total}%`);
-    return false;
+  const recipe = getRecipeData();
+
+  const total = recipe.reduce((sum,item)=>
+    sum + Number(item.ratio || 0)
+  ,0)
+
+  if(Math.abs(total - 100) > 0.001){
+
+    alert(`배합비 합계가 100%가 아닙니다. 현재 합계: ${total}%`)
+    return false
+
   }
 
-  return true;
+  return true
+
 }
 
 function saveRecipe() {
