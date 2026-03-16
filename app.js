@@ -544,7 +544,7 @@ function getRecipeData() {
 
 function checkRatio() {
 
-  const recipe = getRecipeData();
+  const materialCost = Number(document.getElementById("materialCostInput").value || 0)
 
   const total = recipe.reduce((sum,item)=>
     sum + Number(item.ratio || 0)
