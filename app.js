@@ -16,12 +16,23 @@ if(id=="history") loadQuotes()
 
 function saveMaterial(){
 
-let name=document.getElementById("materialName").value
+let name=document.getElementById("materialName").value.trim()
 let price=document.getElementById("materialPrice").value
 
-materials.push({name,price})
+if(name=="" || price==""){
+alert("원재료 이름과 단가를 입력하세요")
+return
+}
+
+materials.push({
+name:name,
+price:Number(price)
+})
 
 localStorage.setItem("materials",JSON.stringify(materials))
+
+document.getElementById("materialName").value=""
+document.getElementById("materialPrice").value=""
 
 loadMaterials()
 
@@ -31,13 +42,15 @@ function loadMaterials(){
 
 let list=document.getElementById("materialList")
 
+if(!list) return
+
 list.innerHTML=""
 
-materials.forEach(m=>{
+materials.forEach((m,index)=>{
 
 let li=document.createElement("li")
 
-li.innerText=m.name+" : "+m.price+"원"
+li.innerText=m.name+" : "+m.price+" 원"
 
 list.appendChild(li)
 
@@ -51,11 +64,16 @@ function loadRecipe(){
 
 let table=document.getElementById("recipeTable")
 
-table.innerHTML="<tr><th>원재료</th><th>배합비</th></tr>"
+table.innerHTML="<tr><th>원재료</th><th>배합비 (%)</th></tr>"
 
 }
 
 function addRecipe(){
+
+if(materials.length==0){
+alert("먼저 원재료 DB를 입력하세요")
+return
+}
 
 let table=document.getElementById("recipeTable")
 
@@ -64,16 +82,22 @@ let row=table.insertRow()
 let cell1=row.insertCell(0)
 let cell2=row.insertCell(1)
 
-let select="<select>"
+let select=document.createElement("select")
 
 materials.forEach(m=>{
-select+=`<option value="${m.price}">${m.name}</option>`
+let option=document.createElement("option")
+option.value=m.price
+option.text=m.name
+select.appendChild(option)
 })
 
-select+="</select>"
+cell1.appendChild(select)
 
-cell1.innerHTML=select
-cell2.innerHTML='<input type="number" value="0">'
+let ratioInput=document.createElement("input")
+ratioInput.type="number"
+ratioInput.value=0
+
+cell2.appendChild(ratioInput)
 
 }
 
@@ -85,8 +109,8 @@ let cost=0
 
 for(let i=1;i<table.rows.length;i++){
 
-let price=table.rows[i].cells[0].children[0].value
-let ratio=table.rows[i].cells[1].children[0].value/100
+let price=Number(table.rows[i].cells[0].children[0].value)
+let ratio=Number(table.rows[i].cells[1].children[0].value)/100
 
 cost+=price*ratio
 
@@ -96,7 +120,7 @@ let mfg=Number(document.getElementById("mfg").value)
 let pack=Number(document.getElementById("pack").value)
 let logi=Number(document.getElementById("logi").value)
 
-let margin=document.getElementById("margin").value/100
+let margin=Number(document.getElementById("margin").value)/100
 
 let total=cost+mfg+pack+logi
 
@@ -109,6 +133,11 @@ window.currentQuote=quote
 }
 
 function saveQuote(){
+
+if(!window.currentQuote){
+alert("먼저 계산하세요")
+return
+}
 
 quotes.push({
 price:window.currentQuote,
@@ -124,6 +153,8 @@ alert("저장되었습니다")
 function loadQuotes(){
 
 let list=document.getElementById("quoteList")
+
+if(!list) return
 
 list.innerHTML=""
 
