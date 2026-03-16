@@ -809,3 +809,26 @@ addRecipe(item)
 updateRatioTotal()
 
 }
+function loadMaterialCostFromProduct(){
+
+const id = document.getElementById("calcProductSelect").value
+
+const product = products.find(p=>p.id==id)
+
+if(!product) return
+
+document.getElementById("calcProductName").innerText = product.name
+
+let materialCost = 0
+
+product.recipe.forEach(item=>{
+
+const price = getLatestPriceByCode(item.materialCode)
+
+materialCost += price * (Number(item.ratio) / 100)
+
+})
+
+document.getElementById("materialCostInput").value = materialCost.toFixed(0)
+
+}
