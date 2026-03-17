@@ -98,7 +98,7 @@ th {
     120px   /* 단가 */
     150px   /* 날짜 */
     auto    /* 버튼 */
-    240px;  /* 업로드 */
+    120px;  /* 업로드 */
   gap: 12px;
   align-items: end;
 }
