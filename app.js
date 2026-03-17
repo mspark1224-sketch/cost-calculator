@@ -963,32 +963,41 @@ function loadCalcProducts(){
 
 function loadMaterialCostFromProduct(){
 
-  const select =
-  document.getElementById("calcProductSelect")
-
-  const id = select.value
+  const select = document.getElementById("calcProductSelect");
+  const id = select.value;
 
   if(!id){
-
-    document.getElementById("materialCostInput").value = 0
-    return
-
+    document.getElementById("materialCostInput").value = 0;
+    document.getElementById("calcProductName").innerText = "-";
+    document.getElementById("unitCost").value = 0; // ⭐ 추가
+    return;
   }
 
-  const product =
-  products.find(p=>String(p.id)===String(id))
+  const product = products.find(p => String(p.id) === String(id));
 
   if(!product){
-
-    console.log("제품을 찾을 수 없음", id)
-    return
-
+    console.log("제품을 찾을 수 없음", id);
+    return;
   }
 
-  document.getElementById("calcProductName").innerText =
-  product.name
+  // ✅ 제품명 표시
+  document.getElementById("calcProductName").innerText = product.name;
 
-  document.getElementById("materialCostInput").value =
-  product.materialCost || 0
+  // ✅ 원재료 원가
+  const materialCost = product.materialCost || 0;
+  document.getElementById("materialCostInput").value = materialCost;
+
+  // ⭐⭐⭐ 여기부터 핵심 (단위원가 계산)
+  const volume = Number(product.volume || 0);
+  const density = Number(product.density || 1);
+
+  if(volume > 0){
+    const weightKg = (volume * density) / 1000;
+    const unitCost = materialCost / weightKg;
+
+    document.getElementById("unitCost").value = Math.round(unitCost);
+  } else {
+    document.getElementById("unitCost").value = 0;
+  }
 
 }
