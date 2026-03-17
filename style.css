@@ -260,3 +260,155 @@ table th {
 .bottom-right input {
   width: 100%;
 }
+.recipe-summary {
+  margin: 10px 0 8px;
+  font-size: 16px;
+}
+
+.recipe-bottom-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.recipe-inline-box {
+  display: grid;
+  grid-template-columns: 1.2fr 0.7fr 1fr 1.2fr;
+  gap: 16px;
+  align-items: end;
+}
+
+.inline-field label,
+.mini-field label,
+.unit-calc-result label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.inline-field input,
+.inline-field select,
+.mini-field input,
+.mini-field select,
+.unit-calc-result input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inline-field-unit {
+  max-width: 90px;
+}
+
+.unit-calc-card,
+.saved-products-card {
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+}
+
+.unit-calc-top {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.mini-field-unit {
+  max-width: 70px;
+}
+
+.mini-action {
+  display: flex;
+  align-items: end;
+}
+
+.mini-action button {
+  height: 42px;
+  white-space: nowrap;
+}
+
+.unit-calc-result {
+  margin-bottom: 14px;
+}
+
+.unit-calc-save {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.saved-products-card .search-row {
+  margin-bottom: 10px;
+}
+
+.saved-products-card table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.saved-products-card th,
+.saved-products-card td {
+  word-break: keep-all;
+  vertical-align: middle;
+}
+
+#recipeTable {
+  width: 100%;
+  table-layout: fixed;
+}
+
+#recipeTable th,
+#recipeTable td {
+  vertical-align: middle;
+}
+
+#recipeTable th:nth-child(1),
+#recipeTable td:nth-child(1) {
+  width: 22%;
+}
+
+#recipeTable th:nth-child(2),
+#recipeTable td:nth-child(2) {
+  width: 12%;
+}
+
+#recipeTable th:nth-child(3),
+#recipeTable td:nth-child(3) {
+  width: 14%;
+}
+
+#recipeTable th:nth-child(4),
+#recipeTable td:nth-child(4) {
+  width: 22%;
+}
+
+#recipeTable th:nth-child(5),
+#recipeTable td:nth-child(5) {
+  width: 16%;
+}
+
+#recipeTable th:nth-child(6),
+#recipeTable td:nth-child(6) {
+  width: 14%;
+}
+
+@media (max-width: 1200px) {
+  .recipe-bottom-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-inline-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .unit-calc-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mini-action {
+    grid-column: span 2;
+  }
+}
