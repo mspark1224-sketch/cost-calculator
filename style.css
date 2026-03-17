@@ -251,12 +251,7 @@ th {
     160px   /* 날짜 */
     auto;
 }
-.material-inline {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1.2fr 1.2fr auto;
-  gap: 12px;
-  align-items: end;
-}
+
 
 .material-inline .field {
   display: flex;
