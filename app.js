@@ -604,17 +604,17 @@ function checkRatio(recipe) {
 function saveRecipe() {
 
   const name = document.getElementById("productName").value.trim()
-const type =
-document.getElementById("productType").value
+  const type = document.getElementById("productType").value
 
-const volume =
-Number(document.getElementById("productVolume").value || 0)
+  const volume =
+  Number(document.getElementById("productVolume").value || 0)
 
-const unit =
-document.getElementById("productUnit").value
+  const unit =
+  document.getElementById("productUnit").value
 
-const density =
-Number(document.getElementById("productDensity").value || 1)
+  const density =
+  Number(document.getElementById("productDensity").value || 1)
+
   if(name === ""){
     alert("제품명을 입력하세요.")
     return
@@ -631,24 +631,35 @@ Number(document.getElementById("productDensity").value || 1)
 
   const materialCost = calculateMaterialCost(recipe)
 
+
+  let unitCost = materialCost
+
+  if (unit === "g") {
+    unitCost = materialCost * (volume / 1000)
+  } else if (unit === "ml") {
+    const weightKg = (volume * density) / 1000
+    unitCost = materialCost * weightKg
+  }
+
   const existing = products.find(p=>p.name === name)
 
- const newData = {
+  const newData = {
 
-id: existing ? existing.id : Date.now()+Math.random(),
+    id: existing ? existing.id : Date.now()+Math.random(),
 
-name,
-type,
-volume,
-unit,
-density,
+    name,
+    type,
+    volume,
+    unit,
+    density,
 
-recipe,
-materialCost,
+    recipe,
+    materialCost,
+    unitCost, 
 
-date: new Date().toLocaleString()
+    date: new Date().toLocaleString()
 
-}
+  }
 
   if(existing){
 
