@@ -132,17 +132,29 @@ function saveMaterial() {
 // =============================
 function loadMaterials() {
   const list = document.getElementById("materialList");
+  const keyword = document.getElementById("materialSearch")?.value.toLowerCase() || "";
+
   if (!list) return;
 
   list.innerHTML = "";
 
-  getAllLatestMaterials().forEach((m, i) => {
+  const data = getAllLatestMaterials().filter(m =>
+    String(m.name).toLowerCase().includes(keyword) ||
+    String(m.code).toLowerCase().includes(keyword)
+  );
+
+  if (data.length === 0) {
+    list.innerHTML = `<tr><td colspan="7">검색 결과 없음</td></tr>`;
+    return;
+  }
+
+  data.forEach((m, i) => {
     list.innerHTML += `
       <tr>
         <td>${i + 1}</td>
         <td>${m.code}</td>
         <td>${m.name}</td>
-        <td>${formatNumber(m.price)} 원</td>
+        <td>${formatNumber(m.price)}</td>
         <td>${m.date}</td>
         <td><button onclick="editMaterial('${m.code}')">수정</button></td>
         <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
@@ -150,7 +162,6 @@ function loadMaterials() {
     `;
   });
 }
-
 // =============================
 // 엑셀 업로드
 // =============================
