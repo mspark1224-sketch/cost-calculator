@@ -256,6 +256,12 @@ th {
   padding: 0 14px;
 }
 
+.file-group {
+  background: #f8f9fb;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
 /* ================= 🔥 배합표 (유지) ================= */
 .grid-4 {
   display: grid;
