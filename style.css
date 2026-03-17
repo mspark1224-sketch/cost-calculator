@@ -201,3 +201,28 @@ th {
 .grid-4 select {
   width: 100%;
 }
+/* 🔥 상단 UI 강제 복구 (최종) */
+.product-box .row {
+  display: flex !important;
+  gap: 12px;
+}
+
+.product-box .field {
+  flex: 1;
+}
+
+.product-box .field input,
+.product-box .field select {
+  width: auto !important;
+  min-width: 180px;
+}
+
+/* 유형 select만 더 자연스럽게 */
+#productType {
+  width: 160px !important;
+}
+
+/* 제품명은 넓게 */
+#productName {
+  width: 100% !important;
+}
