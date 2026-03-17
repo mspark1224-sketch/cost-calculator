@@ -94,11 +94,11 @@ th {
   display: grid;
   grid-template-columns: 
     120px   /* 코드 */
-    1fr     /* 이름 */
+    240px     /* 이름 */
     120px   /* 단가 */
     150px   /* 날짜 */
     auto    /* 버튼 */
-    260px;  /* 업로드 */
+    240px;  /* 업로드 */
   gap: 12px;
   align-items: end;
 }
