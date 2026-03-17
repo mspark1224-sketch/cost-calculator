@@ -170,34 +170,41 @@
         </tfoot>
       </table>
 
-      <div class="bottom-area">
+    <div class="bottom-area">
 
-        <div>
-          <label>내용량</label>
-          <input id="productVolume" type="number" oninput="updateUnitCost()">
-        </div>
+  <div>
+    <label>내용량</label>
+    <input id="productVolume" type="number">
+  </div>
 
-        <div>
-          <label>단위</label>
-          <select id="productUnit" onchange="updateUnitCost()">
-            <option value="g">g</option>
-            <option value="ml">ml</option>
-          </select>
-        </div>
+  <div>
+    <label>단위</label>
+    <select id="productUnit">
+      <option value="g">g</option>
+      <option value="ml">ml</option>
+    </select>
+  </div>
 
-        <div>
-          <label>비중</label>
-          <input id="productDensity" type="number" value="1" oninput="updateUnitCost()">
-        </div>
+  <div>
+    <label>비중</label>
+    <input id="productDensity" type="number" value="1">
+  </div>
 
-        <div>
-          <label>단위원가</label>
-          <input id="recipeUnitCost" readonly>
-        </div>
+  <div>
+    <label>단위원가</label>
+    <input id="recipeUnitCost" readonly>
+  </div>
 
-      </div>
+  <!-- ⭐ 핵심 버튼 -->
+  <div style="display:flex; align-items:flex-end;">
+    <button onclick="calculateUnitCost()">환산</button>
+  </div>
 
-      <button onclick="saveRecipe()">제품 저장</button
+</div>
+
+<div style="text-align:right; margin-top:20px;">
+  <button onclick="saveRecipe()">제품 저장</button>
+</div>
                                                <!-- 저장된 제품 -->
       <div class="card">
 
