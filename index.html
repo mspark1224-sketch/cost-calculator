@@ -112,56 +112,44 @@
 <!-- 배합표 -->
 <div id="recipe" class="page" style="display:none;">
   <h2>배합표 작성</h2>
- <div class="product-box">
+<div class="product-box">
 
-    <div class="product-info">
+  <div class="product-info">
 
-      <!-- 1줄 -->
-      <div class="row">
-        <div class="field">
-          <label>유형</label>
-          <select id="productType">
-            <option value="">선택</option>
-            <option>가공치즈</option>
-            <option>치즈</option>
-            <option>가공유</option>
-            <option>우유</option>
-            <option>발효유</option>
-            <option>농후발효유</option>
-            <option>아이스밀크믹스</option>
-          </select>
-        </div>
-
-        <div class="field" style="flex:2;">
-          <label>제품명</label>
-          <input id="productName" type="text" placeholder="예: 고추장 크림치즈">
-        </div>
+    <!-- 1줄 -->
+    <div class="row">
+      <div class="field">
+        <label>유형</label>
+        <select id="productType">...</select>
       </div>
 
-      <!-- 2줄 -->
-      <div class="row">
-        <div class="field">
-          <label>내용량</label>
-          <input type="number" id="productVolume">
-        </div>
+      <div class="field" style="flex:2;">
+        <label>제품명</label>
+        <input id="productName">
+      </div>
+    </div>
 
-        <div class="field">
-          <label>단위</label>
-          <select id="productUnit">
-            <option value="g">g</option>
-            <option value="ml">mL</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>비중</label>
-          <input type="number" step="0.01" id="productDensity">
-        </div>
+    <!-- 2줄 -->
+    <div class="row">
+      <div class="field">
+        <label>내용량</label>
+        <input id="productVolume">
       </div>
 
+      <div class="field">
+        <label>단위</label>
+        <select id="productUnit"></select>
+      </div>
+
+      <div class="field">
+        <label>비중</label>
+        <input id="productDensity">
+      </div>
     </div>
 
   </div>
+
+</div>
   
     <div class="button-row">
       <button onclick="addRecipe()">원재료 추가</button>
