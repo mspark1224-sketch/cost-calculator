@@ -181,3 +181,18 @@ th {
     flex-wrap: wrap;
   }
 }
+/* 🔥 상단 UI 복구 */
+.product-box .row {
+  display: flex;
+  gap: 12px;
+}
+
+.product-box .field {
+  flex: 1;
+}
+
+.product-box input,
+.product-box select {
+  width: auto;
+  min-width: 180px;
+}
