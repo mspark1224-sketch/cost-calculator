@@ -425,13 +425,20 @@ function getRecipeTbody() {
   return document.querySelector("#recipeTable tbody");
 }
 
-function resetRecipeTable() {
-  const tbody = getRecipeTbody();
-  if (!tbody) return;
+function resetRecipeTable(){
 
-  tbody.innerHTML = "";
-  document.getElementById("productName").value = "";
-  updateRatioTotal();
+const tbody = getRecipeTbody()
+
+tbody.innerHTML = ""
+
+document.getElementById("productName").value = ""
+document.getElementById("productType").value = ""
+document.getElementById("productVolume").value = ""
+document.getElementById("productUnit").value = "g"
+document.getElementById("productDensity").value = ""
+
+updateRatioTotal()
+
 }
 
 function addRecipe(prefill = null) {
@@ -597,7 +604,17 @@ function checkRatio(recipe) {
 function saveRecipe() {
 
   const name = document.getElementById("productName").value.trim()
+const type =
+document.getElementById("productType").value
 
+const volume =
+Number(document.getElementById("productVolume").value || 0)
+
+const unit =
+document.getElementById("productUnit").value
+
+const density =
+Number(document.getElementById("productDensity").value || 1)
   if(name === ""){
     alert("제품명을 입력하세요.")
     return
@@ -616,15 +633,22 @@ function saveRecipe() {
 
   const existing = products.find(p=>p.name === name)
 
-  const newData = {
+ const newData = {
 
-    id: existing ? existing.id : Date.now()+Math.random(),
-    name,
-    recipe,
-    materialCost,
-    date: new Date().toLocaleString()
+id: existing ? existing.id : Date.now()+Math.random(),
 
-  }
+name,
+type,
+volume,
+unit,
+density,
+
+recipe,
+materialCost,
+
+date: new Date().toLocaleString()
+
+}
 
   if(existing){
 
@@ -704,7 +728,18 @@ function loadProduct(id){
 
   document.getElementById("productName").value =
   product.name
+document.getElementById("productType").value =
+product.type || ""
 
+document.getElementById("productVolume").value =
+product.volume || ""
+
+document.getElementById("productUnit").value =
+product.unit || "g"
+
+document.getElementById("productDensity").value =
+product.density || ""
+  
   product.recipe.forEach(item=>{
     addRecipe(item)
   })
