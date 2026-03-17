@@ -678,6 +678,7 @@ saveAll();
 loadProducts();
 
 alert("제품이 저장되었습니다.");
+}
 
 function loadProducts(){
 
@@ -1010,27 +1011,14 @@ function updateUnitCost() {
   const density = Number(document.getElementById("productDensity").value || 1);
   const unit = document.getElementById("productUnit").value;
 
-  if (volume === 0) {
-    document.getElementById("unitCost").value = 0;
-    return;
-  }
+  const unitCost = calculateUnitCostByProduct(
+    totalCost,
+    volume,
+    unit,
+    density
+  );
 
-  let weightKg = 0;
-
-  if (unit === "g") {
-    weightKg = volume / 1000;
-  } else if (unit === "ml") {
-    weightKg = (volume * density) / 1000;
-  }
-
-  if (weightKg === 0) {
-    document.getElementById("unitCost").value = 0;
-    return;
-  }
-
-  const unitCost = totalCost / weightKg;
-
-  document.getElementById("unitCost").value = Math.round(unitCost);
+  document.getElementById("unitCost").value = unitCost;
 }
 function calculateUnitCostByProduct(materialCost, volume, unit, density) {
   const cost = Number(materialCost || 0);
