@@ -749,7 +749,7 @@ document.getElementById("productUnit").value =
 product.unit || "g"
 
 document.getElementById("productDensity").value =
-product.density || ""
+product.density ?? ""
   
   product.recipe.forEach(item=>{
     addRecipe(item)
