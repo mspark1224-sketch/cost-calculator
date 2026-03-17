@@ -1049,3 +1049,22 @@ function updateUnitCost() {
 
   document.getElementById("unitCost").value = Math.round(unitCost);
 }
+function calculateUnitCostByProduct(materialCost, volume, unit, density) {
+  const cost = Number(materialCost || 0);
+  const qty = Number(volume || 0);
+  const specGravity = Number(density || 1);
+
+  if (qty <= 0) return 0;
+
+  let weightKg = 0;
+
+  if (unit === "g") {
+    weightKg = qty / 1000;
+  } else if (unit === "ml") {
+    weightKg = (qty * specGravity) / 1000;
+  } else {
+    return 0;
+  }
+
+  return Math.round(cost * weightKg);
+}
