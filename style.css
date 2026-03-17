@@ -188,10 +188,11 @@ th {
   display: grid;
   grid-template-columns: 
     120px   /* 코드 */
-    1fr     /* 이름 */
+    260px   /* 이름 */
     120px   /* 단가 */
     150px   /* 날짜 */
-    auto;   /* 버튼 */
+    auto    /* 버튼 */
+    220px;  /* 파일 업로드 */
   gap: 12px;
   align-items: end;
   width: 100%;
