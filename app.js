@@ -934,32 +934,27 @@ function loadCalcProducts() {
 
 function loadMaterialCostFromProduct() {
   const select = document.getElementById("calcProductSelect");
-  const id = select?.value;
+  const selectedName = select?.value;
 
   const materialCostInput = document.getElementById("materialCostInput");
   const calcProductName = document.getElementById("calcProductName");
   const calcUnitCost = document.getElementById("calcUnitCost");
 
-  if (!id) {
-    if (materialCostInput) materialCostInput.value = 0;
-    if (calcProductName) calcProductName.innerText = "-";
-    if (calcUnitCost) calcUnitCost.value = 0;
+  if (!selectedName) {
+    materialCostInput.value = 0;
+    calcProductName.innerText = "-";
+    calcUnitCost.value = 0;
     return;
   }
 
-  const product = products.find((p) => String(p.id) === String(id));
+  const product = products.find((p) => p.name === selectedName);  // ⭐ 변경
 
-  if (!product) {
-    if (materialCostInput) materialCostInput.value = 0;
-    if (calcProductName) calcProductName.innerText = "-";
-    if (calcUnitCost) calcUnitCost.value = 0;
-    return;
-  }
+  if (!product) return;
 
-  if (calcProductName) calcProductName.innerText = product.name;
+  calcProductName.innerText = product.name;
 
   const materialCost = Number(product.materialCost || 0);
-  if (materialCostInput) materialCostInput.value = materialCost;
+  materialCostInput.value = materialCost;
 
   const unitCost = calculateUnitCostByProduct(
     materialCost,
@@ -968,9 +963,8 @@ function loadMaterialCostFromProduct() {
     product.density
   );
 
-  if (calcUnitCost) calcUnitCost.value = unitCost;
+  calcUnitCost.value = unitCost;
 }
-
 function calculate() {
   const productId = document.getElementById("calcProductSelect")?.value;
   const product = products.find((p) => String(p.id) === String(productId));
