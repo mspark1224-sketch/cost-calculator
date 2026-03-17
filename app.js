@@ -563,25 +563,47 @@ function getRecipeTbody() {
 
 function resetRecipeTable() {
   const tbody = getRecipeTbody();
-  if (!tbody) return;
+  if (tbody) tbody.innerHTML = "";
 
-  tbody.innerHTML = "";
-
+  // 🔹 제품 기본 정보
   const productName = document.getElementById("productName");
   const productType = document.getElementById("productType");
+
+  if (productName) productName.value = "";
+  if (productType) productType.value = "";
+
+  // 🔹 좌측 입력 영역 (실제 저장용)
   const productVolume = document.getElementById("productVolume");
   const productUnit = document.getElementById("productUnit");
   const productDensity = document.getElementById("productDensity");
   const recipeUnitCost = document.getElementById("recipeUnitCost");
 
-  if (productName) productName.value = "";
-  if (productType) productType.value = "";
   if (productVolume) productVolume.value = "";
   if (productUnit) productUnit.value = "g";
-  if (productDensity) productDensity.value = "";
+  if (productDensity) productDensity.value = 1;
   if (recipeUnitCost) recipeUnitCost.value = 0;
 
-  updateRatioTotal();
+  // 🔹 가운데 환산 박스 (preview용)
+  const calcVolumePreview = document.getElementById("calcVolumePreview");
+  const calcUnitPreview = document.getElementById("calcUnitPreview");
+  const calcDensityPreview = document.getElementById("calcDensityPreview");
+  const recipeUnitCostPreview = document.getElementById("recipeUnitCostPreview");
+
+  if (calcVolumePreview) calcVolumePreview.value = "";
+  if (calcUnitPreview) calcUnitPreview.value = "g";
+  if (calcDensityPreview) calcDensityPreview.value = 1;
+  if (recipeUnitCostPreview) recipeUnitCostPreview.value = 0;
+
+  // 🔹 합계 초기화 (이거 중요!!)
+  const ratioTotal = document.getElementById("ratioTotal");
+  const materialCostSum = document.getElementById("materialCostSum");
+  const ratioSum = document.getElementById("ratioSum");
+  const costSum = document.getElementById("costSum");
+
+  if (ratioTotal) ratioTotal.innerText = 0;
+  if (materialCostSum) materialCostSum.innerText = 0;
+  if (ratioSum) ratioSum.innerText = 0;
+  if (costSum) costSum.innerText = "0 원";
 }
 
 function addRecipe(prefill = null) {
