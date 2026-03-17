@@ -924,11 +924,9 @@ function loadCalcProducts() {
 
   select.innerHTML = '<option value="">제품 선택</option>';
 
-  if (products.length === 0) return;
-
   products.forEach((p) => {
     const option = document.createElement("option");
-    option.value = p.id;
+    option.value = p.name;   // ⭐ 변경 (id → name)
     option.textContent = p.name;
     select.appendChild(option);
   });
