@@ -240,17 +240,20 @@ th {
 
 .file-group {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: end;
+  justify-content: flex-start; /* ⭐ 왼쪽 정렬 */
+  margin-left: -40px;          /* ⭐ 살짝 왼쪽 이동 */
 }
 
 .file-group input[type="file"] {
+  width: 180px;   /* ⭐ 넓힘 */
   height: 36px;
 }
 
 .file-group button {
   height: 36px;
-  padding: 0 12px;
+  padding: 0 14px;
 }
 
 /* ================= 🔥 배합표 (유지) ================= */
