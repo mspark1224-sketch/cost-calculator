@@ -667,7 +667,7 @@ function loadProducts(){
   if(filtered.length === 0){
 
     list.innerHTML =
-    `<tr><td colspan="5" class="empty">저장된 제품이 없습니다.</td></tr>`
+    `<tr><td colspan="4" class="empty">저장된 제품이 없습니다.</td></tr>`
 
     return
   }
@@ -680,8 +680,10 @@ function loadProducts(){
       <td>${p.name}</td>
       <td>${formatNumber(p.materialCost || 0)} 원</td>
       <td>${p.date}</td>
-      <td><button onclick="loadProduct(${p.id})">불러오기</button></td>
-      <td><button class="danger" onclick="deleteProduct(${p.id})">삭제</button></td>
+      <td>
+        <button onclick="loadProduct(${p.id})">불러오기</button>
+        <button class="danger" onclick="deleteProduct(${p.id})">삭제</button>
+      </td>
     `
 
     list.appendChild(tr)
