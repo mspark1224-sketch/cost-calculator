@@ -113,54 +113,28 @@
 <div id="recipe" class="page" style="display:none;">
   <h2>배합표 작성</h2>
 
-  <!-- ⭐ 제품 정보 박스 -->
+  <!-- 상단 -->
   <div class="product-box">
 
-    <div class="product-info">
-
-      <!-- 1줄 -->
-      <div class="row">
-        <div class="field">
-          <label>유형</label>
-          <select id="productType">
-            <option value="">선택</option>
-            <option>가공치즈</option>
-            <option>치즈</option>
-            <option>가공유</option>
-            <option>우유</option>
-            <option>발효유</option>
-            <option>농후발효유</option>
-            <option>아이스밀크믹스</option>
-          </select>
-        </div>
-
-        <div class="field" style="flex:2;">
-          <label>제품명</label>
-          <input id="productName" type="text" placeholder="예: 고추장 크림치즈">
-        </div>
+    <div class="row">
+      <div class="field">
+        <label>유형</label>
+        <select id="productType">
+          <option value="">선택</option>
+          <option>가공치즈</option>
+          <option>치즈</option>
+          <option>발효유</option>
+          <option>농후발효유</option>
+          <option>우유</option>
+          <option>가공유</option>
+          <option>아이스밀크믹스류</option>
+        </select>
       </div>
 
-      <!-- 2줄 -->
-      <div class="row">
-        <div class="field">
-          <label>내용량</label>
-          <input id="productVolume" type="number">
-        </div>
-
-        <div class="field">
-          <label>단위</label>
-          <select id="productUnit">
-            <option value="g">g</option>
-            <option value="ml">mL</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>비중</label>
-          <input id="productDensity" type="number" step="0.01" value="1">
-        </div>
+      <div class="field" style="flex:2;">
+        <label>제품명</label>
+        <input id="productName" placeholder="제품명 입력">
       </div>
-
     </div>
 
   </div>
@@ -168,11 +142,10 @@
   <!-- 버튼 -->
   <div class="button-row">
     <button onclick="addRecipe()">원재료 추가</button>
-    <button onclick="saveRecipe()">제품 저장</button>
     <button class="secondary" onclick="resetRecipeTable()">배합표 초기화</button>
   </div>
 
-  <!-- 합계 -->
+  <!-- 배합비 -->
   <div class="ratio-box">
     배합비 합계 :
     <strong id="ratioTotal">0</strong> %
@@ -183,23 +156,23 @@
     <strong id="materialCostSum">0</strong> 원
   </div>
 
-  <!-- 배합표 -->
+  <!-- 테이블 -->
   <table id="recipeTable">
     <thead>
       <tr>
         <th>원재료</th>
-        <th style="width:120px;">코드</th>
-        <th style="width:160px;">최신단가</th>
-        <th style="width:140px;">배합비 (%)</th>
-        <th style="width:180px;">원재료 원가</th>
-        <th style="width:100px;">삭제</th>
+        <th>코드</th>
+        <th>최신단가</th>
+        <th>배합비 (%)</th>
+        <th>원재료 원가 (원/kg)</th>
+        <th>삭제</th>
       </tr>
     </thead>
 
     <tbody></tbody>
 
     <tfoot>
-      <tr class="sum-row">
+      <tr>
         <td colspan="3"><strong>합계</strong></td>
         <td id="ratioSum">0</td>
         <td id="costSum">0 원</td>
@@ -207,6 +180,47 @@
       </tr>
     </tfoot>
   </table>
+
+  <!-- 하단 영역 -->
+  <div class="bottom-area">
+
+    <!-- 좌측 -->
+    <div class="bottom-left">
+
+      <div class="field">
+        <label>내용량</label>
+        <input id="productVolume" type="number" value="0">
+      </div>
+
+      <div class="field">
+        <label>단위</label>
+        <select id="productUnit">
+          <option value="g">g</option>
+          <option value="ml">mL</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>비중</label>
+        <input id="productDensity" type="number" step="0.001" value="1">
+      </div>
+
+    </div>
+
+    <!-- 우측 -->
+    <div class="bottom-right">
+      <label>단위 원가</label>
+      <input id="unitCost" type="number" readonly>
+    </div>
+
+  </div>
+
+  <!-- 저장 버튼 -->
+  <div style="text-align:right; margin-top:20px;">
+    <button onclick="saveRecipe()">제품 저장</button>
+  </div>
+
+</div>
 
   <!-- ⭐ 저장된 제품 -->
   <div class="card">
