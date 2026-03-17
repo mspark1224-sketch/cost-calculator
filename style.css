@@ -124,30 +124,30 @@ th {
   padding: 0 12px;
 }
 
-/* 🔥 업로드 박스 완전 수정 */
+/* 🔥 업로드 영역 완전 수정 */
 .file-group {
   display: flex;
-  gap: 6px;
   align-items: center;
-  justify-content: flex-start;
+  gap: 8px;
 
-  background: #f8f9fb;
-  padding: 6px 10px;
-  border-radius: 8px;
-
-  width: 100%;
-  box-sizing: border-box;
+  background: transparent;   /* ⭐ 회색 제거 */
+  padding: 0;
+  margin-left: -10px;        /* ⭐ 살짝 왼쪽 이동 */
 }
 
+/* 파일 input 커스터마이징 */
 .file-group input[type="file"] {
-  width: 160px;
-  height: 34px;
+  height: 36px;
+  font-size: 13px;
 }
 
+/* 업로드 버튼 */
 .file-group button {
-  height: 34px;
-  padding: 0 12px;
+  height: 36px;
+  padding: 0 14px;
+  white-space: nowrap;
 }
+
 
 /* 검색 */
 #materialSearch {
