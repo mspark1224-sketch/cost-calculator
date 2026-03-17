@@ -636,57 +636,48 @@ function saveRecipe() {
   const materialCost = calculateMaterialCost(recipe)
 
 
-  let unitCost = materialCost
+// ⭐ 단위원가 계산 (기존 코드 삭제하고 이걸로 교체)
+const unitCost = calculateUnitCostByProduct(materialCost, volume, unit, density);
 
-  if (unit === "g") {
-    unitCost = materialCost * (volume / 1000)
-  } else if (unit === "ml") {
-    const weightKg = (volume * density) / 1000
-    unitCost = materialCost * weightKg
-  }
+const existing = products.find(p => p.name === name);
 
-  const existing = products.find(p=>p.name === name)
+const newData = {
 
-  const newData = {
+  id: existing ? existing.id : Date.now() + Math.random(),
 
-    id: existing ? existing.id : Date.now()+Math.random(),
+  name,
+  type,
+  volume,
+  unit,
+  density,
 
-    name,
-    type,
-    volume,
-    unit,
-    density,
+  recipe,
+  materialCost,
+  unitCost,
 
-    recipe,
-    materialCost,
-    unitCost, 
+  date: new Date().toLocaleString()
 
-    date: new Date().toLocaleString()
+};
 
-  }
+if (existing) {
 
-  if(existing){
+  const ok = confirm("같은 제품명이 있습니다. 덮어쓸까요?");
+  if (!ok) return;
 
-    const ok = confirm("같은 제품명이 있습니다. 덮어쓸까요?")
-    if(!ok) return
+  products = products.map(p =>
+    p.name === name ? newData : p
+  );
 
-    products = products.map(p =>
-      p.name === name ? newData : p
-    )
+} else {
 
-  }else{
-
-    products.push(newData)
-
-  }
-
-  saveAll()
-  loadProducts()
-
-  alert("제품이 저장되었습니다.")
+  products.push(newData);
 
 }
 
+saveAll();
+loadProducts();
+
+alert("제품이 저장되었습니다.");
 
 function loadProducts(){
 
