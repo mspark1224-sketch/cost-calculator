@@ -244,14 +244,11 @@ th {
 }
 
 .material-inline {
-  grid-template-columns: 
-    120px   /* 코드 */
-    200px   /* 이름 */
-    140px   /* 단가 */
-    160px   /* 날짜 */
-    auto;
+  display: grid;
+  grid-template-columns: 120px 220px 140px 170px auto;
+  gap: 12px;
+  align-items: end;
 }
-
 
 .material-inline .field {
   display: flex;
@@ -265,15 +262,18 @@ th {
 }
 
 .material-inline input {
+  width: 100%;
   height: 36px;
   padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  box-sizing: border-box;
 }
 
 .button-group {
   display: flex;
   gap: 6px;
+  align-items: end;
 }
 
 .button-group button {
@@ -282,9 +282,8 @@ th {
   border-radius: 6px;
 }
 
-/* 업로드 영역 여백 */
 .upload-box {
-  margin-top: 16px;
+  margin-top: 14px;
   padding-top: 12px;
   border-top: 1px solid #eee;
 }
