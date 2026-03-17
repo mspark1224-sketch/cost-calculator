@@ -12,80 +12,86 @@
     <h1>제품 원가 견적 시스템</h1>
 
     <div class="menu">
-      <button onclick="showPage('db')">1 원재료 DB</button>
-      <button onclick="showPage('recipe')">2 배합표</button>
-      <button onclick="showPage('calc')">3 원가 계산</button>
-      <button onclick="showPage('history')">4 견적 조회</button>
+      <button type="button" onclick="showPage('db')">1 원재료 DB</button>
+      <button type="button" onclick="showPage('recipe')">2 배합표</button>
+      <button type="button" onclick="showPage('calc')">3 원가 계산</button>
+      <button type="button" onclick="showPage('history')">4 견적 조회</button>
     </div>
 
     <!-- ===================== -->
     <!-- 원재료 DB -->
     <!-- ===================== -->
     <div id="db" class="page">
-<h2>원재료 데이터베이스</h2>
+      <h2>원재료 데이터베이스</h2>
 
-<div class="card">
-  <div class="material-inline">
+      <div class="card">
+        <div class="material-inline">
 
-    <div class="field">
-      <label>원재료 코드</label>
-      <input id="materialCode" />
-    </div>
+          <div class="field">
+            <label for="materialCode">원재료 코드</label>
+            <input id="materialCode" type="text" />
+          </div>
 
-    <div class="field">
-      <label>원재료 이름</label>
-      <input id="materialName" />
-    </div>
+          <div class="field">
+            <label for="materialName">원재료 이름</label>
+            <input id="materialName" type="text" />
+          </div>
 
-    <div class="field">
-      <label>단가 (원/kg)</label>
-      <input id="materialPrice" type="number" />
-    </div>
+          <div class="field">
+            <label for="materialPrice">단가 (원/kg)</label>
+            <input id="materialPrice" type="number" />
+          </div>
 
-    <div class="field">
-      <label>적용 날짜</label>
-      <input id="materialDate" type="date" />
-    </div>
+          <div class="field">
+            <label for="materialDate">적용 날짜</label>
+            <input id="materialDate" type="date" />
+          </div>
 
-    <div class="button-group">
-      <button onclick="saveMaterial()">저장</button>
-      <button onclick="updateMaterial()">수정</button>
-      <button class="secondary" onclick="clearMaterialInputs()">초기화</button>
-    </div>
+          <div class="button-group">
+            <button type="button" onclick="saveMaterial()">저장</button>
+            <button type="button" onclick="updateMaterial()">수정</button>
+            <button type="button" class="secondary" onclick="clearMaterialInputs()">초기화</button>
+          </div>
 
-    <div class="file-group">
-      <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" />
-      <button onclick="handleExcelUpload()">업로드</button>
-    </div>
+          <div class="file-group">
+            <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" />
+            <button type="button" onclick="handleExcelUpload()">업로드</button>
+          </div>
 
-  </div>
-</div>   <!-- ⭐ 이거 추가됨 (핵심) -->
+        </div>
+      </div>
 
-<div class="card">
-  <input id="materialSearch" placeholder="검색" oninput="loadMaterials()" />
+      <div class="card">
+        <input
+          id="materialSearch"
+          type="text"
+          placeholder="원재료명 또는 코드 검색"
+          oninput="loadMaterials()"
+        />
 
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>코드</th>
-        <th>이름</th>
-        <th>단가</th>
-        <th>적용일</th>
-        <th>수정</th>
-        <th>삭제</th>
-      </tr>
-    </thead>
-    <tbody id="materialList"></tbody>
-  </table>
-</div>
-
-<div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>코드</th>
+              <th>이름</th>
+              <th>단가</th>
+              <th>적용일</th>
+              <th>수정</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+          <tbody id="materialList"></tbody>
+        </table>
+      </div>
+            <div class="card">
         <h3>가격 히스토리</h3>
 
-        <input id="priceSearch" placeholder="검색" />
-        <button onclick="searchPriceHistory()">검색</button>
-        <button onclick="loadPriceHistory(null)">전체</button>
+        <div class="history-search-row">
+          <input id="priceSearch" type="text" placeholder="원재료명 또는 코드 검색" />
+          <button type="button" onclick="searchPriceHistory()">검색</button>
+          <button type="button" onclick="loadPriceHistory('')">전체</button>
+        </div>
 
         <table>
           <thead>
@@ -107,31 +113,31 @@
     <div id="recipe" class="page" style="display:none;">
       <h2>배합표 작성</h2>
 
-    <div class="product-box">
-  <div class="product-inline">
-    
-    <div class="field field-type">
-      <label>유형</label>
-      <select id="productType">
-        <option value="">선택</option>
-        <option>가공치즈</option>
-        <option>치즈</option>
-        <option>발효유</option>
-        <option>농후발효유</option>
-      </select>
-    </div>
+      <div class="product-box">
+        <div class="product-inline">
 
-    <div class="field field-name">
-      <label>제품명</label>
-      <input id="productName" />
-    </div>
+          <div class="field field-type">
+            <label for="productType">유형</label>
+            <select id="productType">
+              <option value="">선택</option>
+              <option value="가공치즈">가공치즈</option>
+              <option value="치즈">치즈</option>
+              <option value="발효유">발효유</option>
+              <option value="농후발효유">농후발효유</option>
+            </select>
+          </div>
 
-  </div>
-</div>
+          <div class="field field-name">
+            <label for="productName">제품명</label>
+            <input id="productName" type="text" />
+          </div>
+
+        </div>
+      </div>
 
       <div class="button-row">
-        <button onclick="addRecipe()">원재료 추가</button>
-        <button onclick="resetRecipeTable()">초기화</button>
+        <button type="button" onclick="addRecipe()">원재료 추가</button>
+        <button type="button" onclick="resetRecipeTable()">초기화</button>
       </div>
 
       <div class="recipe-summary">
@@ -161,44 +167,47 @@
           </tr>
         </tfoot>
       </table>
-
-      <div class="bottom-row">
+            <div class="bottom-row">
         <div class="left-box">
           <div class="inline-group">
+
             <div class="mini-col">
-              <label>내용량</label>
-              <input id="productVolume" type="number" />
+              <label for="productVolume">내용량</label>
+              <input id="productVolume" type="number" oninput="updateUnitCost()" />
             </div>
 
             <div class="mini-col">
-              <label>단위</label>
-              <select id="productUnit">
+              <label for="productUnit">단위</label>
+              <select id="productUnit" onchange="updateUnitCost()">
                 <option value="g">g</option>
                 <option value="ml">ml</option>
               </select>
             </div>
 
             <div class="mini-col">
-              <label>비중</label>
-              <input id="productDensity" type="number" step="0.001" value="1" />
+              <label for="productDensity">비중</label>
+              <input id="productDensity" type="number" step="0.001" value="1" oninput="updateUnitCost()" />
             </div>
 
             <div class="mini-col">
-             <button type="button" onclick="updateUnitCost()">환산</button>
+              <button type="button" onclick="updateUnitCost()">환산</button>
             </div>
+
           </div>
         </div>
 
         <div class="right-box">
           <div class="result-row">
+
             <div class="mini-col">
-              <label>단위원가</label>
-              <input id="recipeUnitCost" value="0" readonly />
+              <label for="recipeUnitCost">단위원가</label>
+              <input id="recipeUnitCost" type="text" value="0" readonly />
             </div>
 
             <div class="mini-col">
               <button type="button" onclick="saveRecipe()">제품 저장</button>
             </div>
+
           </div>
         </div>
       </div>
@@ -232,36 +241,53 @@
       <h2>원가 계산</h2>
 
       <div class="card">
-        <label>제품 선택</label>
+        <label for="calcProductSelect">제품 선택</label>
         <select id="calcProductSelect" onchange="loadMaterialCostFromProduct()">
           <option value="">선택</option>
         </select>
       </div>
 
-      <div class="card">
-        <label>원재료 원가</label>
-        <input id="materialCostInput" readonly>
+      <div class="card calc-form-card">
+        <div class="calc-grid">
 
-        <label>제조비</label>
-        <input id="mfg" type="number">
+          <div class="field">
+            <label for="materialCostInput">원재료 원가</label>
+            <input id="materialCostInput" type="text" readonly />
+          </div>
 
-        <label>포장비</label>
-        <input id="pack" type="number">
+          <div class="field">
+            <label for="mfg">제조비</label>
+            <input id="mfg" type="number" />
+          </div>
 
-        <label>물류비</label>
-        <input id="logi" type="number">
+          <div class="field">
+            <label for="pack">포장비</label>
+            <input id="pack" type="number" />
+          </div>
 
-        <label>마진</label>
-        <input id="margin" type="number">
+          <div class="field">
+            <label for="logi">물류비</label>
+            <input id="logi" type="number" />
+          </div>
 
-        <label>단위원가</label>
-        <input id="calcUnitCost" readonly>
+          <div class="field">
+            <label for="margin">마진 (%)</label>
+            <input id="margin" type="number" />
+          </div>
 
-        <button onclick="calculate()">계산</button>
-        <button onclick="saveQuote()">저장</button>
+          <div class="field">
+            <label for="calcUnitCost">단위원가</label>
+            <input id="calcUnitCost" type="text" readonly />
+          </div>
+
+        </div>
+
+        <div class="button-row">
+          <button type="button" onclick="calculate()">계산</button>
+          <button type="button" onclick="saveQuote()">저장</button>
+        </div>
       </div>
-
-      <div class="card">
+            <div class="card">
         <p>제품명: <span id="calcProductName">-</span></p>
         <p>원재료: <span id="materialCostText">0</span></p>
         <p>부대비: <span id="extraCostText">0</span></p>
@@ -271,25 +297,33 @@
     </div>
 
     <!-- ===================== -->
-    <!-- 견적 -->
+    <!-- 견적 조회 -->
     <!-- ===================== -->
     <div id="history" class="page" style="display:none;">
       <h2>견적 조회</h2>
 
-      <input id="quoteSearch" oninput="loadQuotes()" />
+      <div class="card">
+        <input
+          id="quoteSearch"
+          type="text"
+          placeholder="제품명 검색"
+          oninput="loadQuotes()"
+        />
 
-      <table>
-        <thead>
-          <tr>
-            <th>제품명</th>
-            <th>견적가</th>
-            <th>날짜</th>
-            <th>삭제</th>
-          </tr>
-        </thead>
-        <tbody id="quoteList"></tbody>
-      </table>
+        <table>
+          <thead>
+            <tr>
+              <th>제품명</th>
+              <th>견적가</th>
+              <th>날짜</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+          <tbody id="quoteList"></tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 
   <script src="app.js"></script>
