@@ -251,3 +251,45 @@ th {
     160px   /* 날짜 */
     auto;
 }
+.material-inline {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1.2fr 1.2fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.material-inline .field {
+  display: flex;
+  flex-direction: column;
+}
+
+.material-inline label {
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.material-inline input {
+  height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.button-group {
+  display: flex;
+  gap: 6px;
+}
+
+.button-group button {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 6px;
+}
+
+/* 업로드 영역 여백 */
+.upload-box {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
