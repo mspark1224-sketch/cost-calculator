@@ -1060,3 +1060,26 @@ loadCalcProducts();
 refreshRecipeMaterialOptions();
 refreshRecipePrices();
 updateRatioTotal();
+
+function syncAndCalculateUnitCost() {
+  const volumePreview = document.getElementById("calcVolumePreview");
+  const unitPreview = document.getElementById("calcUnitPreview");
+  const densityPreview = document.getElementById("calcDensityPreview");
+
+  const volume = document.getElementById("productVolume");
+  const unit = document.getElementById("productUnit");
+  const density = document.getElementById("productDensity");
+
+  if (volumePreview && volume) volume.value = volumePreview.value;
+  if (unitPreview && unit) unit.value = unitPreview.value;
+  if (densityPreview && density) density.value = densityPreview.value;
+
+  calculateUnitCost();
+
+  const result = document.getElementById("recipeUnitCost");
+  const resultPreview = document.getElementById("recipeUnitCostPreview");
+
+  if (result && resultPreview) {
+    resultPreview.value = result.value || 0;
+  }
+}
