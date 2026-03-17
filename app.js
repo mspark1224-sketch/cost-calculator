@@ -428,6 +428,7 @@ function getRecipeTbody() {
 function resetRecipeTable(){
 
 const tbody = getRecipeTbody()
+if(!tbody) return
 
 tbody.innerHTML = ""
 
