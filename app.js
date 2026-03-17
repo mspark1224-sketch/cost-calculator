@@ -954,7 +954,6 @@ function loadCalcProducts(){
 
 }
 
-
 function loadMaterialCostFromProduct(){
 
   const select = document.getElementById("calcProductSelect");
@@ -963,7 +962,10 @@ function loadMaterialCostFromProduct(){
   if(!id){
     document.getElementById("materialCostInput").value = 0;
     document.getElementById("calcProductName").innerText = "-";
-    document.getElementById("unitCost").value = 0;
+
+    const unitCostEl = document.getElementById("unitCost");
+    if(unitCostEl) unitCostEl.value = 0;
+
     return;
   }
 
@@ -978,31 +980,21 @@ function loadMaterialCostFromProduct(){
   document.getElementById("calcProductName").innerText = product.name;
 
   // ✅ 원재료 원가
-  const materialCost = product.materialCost || 0;
+  const materialCost = Number(product.materialCost || 0);
   document.getElementById("materialCostInput").value = materialCost;
 
-  // ⭐ 단위원가 계산 (g / ml 분기 포함)
-  const volume = Number(product.volume || 0);
-  const density = Number(product.density || 1);
-  const unit = product.unit || "g";
+  // ⭐⭐⭐ 핵심 (이걸로 통일)
+  const unitCost = calculateUnitCostByProduct(
+    materialCost,
+    product.volume,
+    product.unit,
+    product.density
+  );
 
-  let weightKg = 0;
-
-  if (unit === "g") {
-    weightKg = volume / 1000;
-  } else if (unit === "ml") {
-    weightKg = (volume * density) / 1000;
-  }
-
-  if (weightKg === 0) {
-    document.getElementById("unitCost").value = 0;
-    return;
-  }
-
-  const unitCost = materialCost / weightKg;
-
-  document.getElementById("unitCost").value = Math.round(unitCost);
+  const unitCostEl = document.getElementById("unitCost");
+  if(unitCostEl) unitCostEl.value = unitCost;
 }
+
 
 
 // ⭐⭐⭐ 여기부터 추가 (맨 아래 붙여넣기)
