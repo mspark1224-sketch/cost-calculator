@@ -249,6 +249,23 @@ th {
   box-sizing: border-box;
 }
 
+.product-inline {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+}
+
+.field-type {
+  width: 180px;
+}
+
+.field-name {
+  flex: 1;
+}
+
+.field-name input {
+  width: 100%;
+}
 /* ================= 검색 ================= */
 .card input#materialSearch {
   margin-bottom: 10px;
