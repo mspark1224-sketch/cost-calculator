@@ -969,7 +969,7 @@ function loadMaterialCostFromProduct(){
   if(!id){
     document.getElementById("materialCostInput").value = 0;
     document.getElementById("calcProductName").innerText = "-";
-    document.getElementById("unitCost").value = 0; // ⭐ 추가
+    document.getElementById("unitCost").value = 0;
     return;
   }
 
@@ -980,24 +980,69 @@ function loadMaterialCostFromProduct(){
     return;
   }
 
-  // ✅ 제품명 표시
+  // ✅ 제품명
   document.getElementById("calcProductName").innerText = product.name;
 
   // ✅ 원재료 원가
   const materialCost = product.materialCost || 0;
   document.getElementById("materialCostInput").value = materialCost;
 
-  // ⭐⭐⭐ 여기부터 핵심 (단위원가 계산)
+  // ⭐ 단위원가 계산 (g / ml 분기 포함)
   const volume = Number(product.volume || 0);
   const density = Number(product.density || 1);
+  const unit = product.unit || "g";
 
-  if(volume > 0){
-    const weightKg = (volume * density) / 1000;
-    const unitCost = materialCost / weightKg;
+  let weightKg = 0;
 
-    document.getElementById("unitCost").value = Math.round(unitCost);
-  } else {
-    document.getElementById("unitCost").value = 0;
+  if (unit === "g") {
+    weightKg = volume / 1000;
+  } else if (unit === "ml") {
+    weightKg = (volume * density) / 1000;
   }
 
+  if (weightKg === 0) {
+    document.getElementById("unitCost").value = 0;
+    return;
+  }
+
+  const unitCost = materialCost / weightKg;
+
+  document.getElementById("unitCost").value = Math.round(unitCost);
+}
+
+
+// ⭐⭐⭐ 여기부터 추가 (맨 아래 붙여넣기)
+
+// ⭐ 단위원가 실시간 계산 (배합표용)
+function updateUnitCost() {
+
+  const totalCost = Number(
+    document.getElementById("materialCostSum").innerText.replace(/[^0-9]/g, "")
+  );
+
+  const volume = Number(document.getElementById("productVolume").value || 0);
+  const density = Number(document.getElementById("productDensity").value || 1);
+  const unit = document.getElementById("productUnit").value;
+
+  if (volume === 0) {
+    document.getElementById("unitCost").value = 0;
+    return;
+  }
+
+  let weightKg = 0;
+
+  if (unit === "g") {
+    weightKg = volume / 1000;
+  } else if (unit === "ml") {
+    weightKg = (volume * density) / 1000;
+  }
+
+  if (weightKg === 0) {
+    document.getElementById("unitCost").value = 0;
+    return;
+  }
+
+  const unitCost = totalCost / weightKg;
+
+  document.getElementById("unitCost").value = Math.round(unitCost);
 }
