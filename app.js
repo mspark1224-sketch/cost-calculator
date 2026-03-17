@@ -20,7 +20,26 @@ function saveAll() {
 function formatNumber(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
+function getAllLatestMaterials() {
+  const map = {};
 
+  materials.forEach((m) => {
+    const key = String(m.code);
+
+    if (!map[key]) {
+      map[key] = m;
+    } else {
+      const prev = new Date(map[key].date);
+      const curr = new Date(m.date);
+
+      if (curr > prev) {
+        map[key] = m;
+      }
+    }
+  });
+
+  return Object.values(map);
+}
 // =============================
 // 날짜 처리
 // =============================
