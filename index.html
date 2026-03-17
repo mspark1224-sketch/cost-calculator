@@ -145,7 +145,7 @@
 
       <div>
         배합비 합계: <span id="ratioTotal">0</span> %
-        원가 합계: <span id="materialCostSum">0</span> 원
+        원가(원/kg) 합계: <span id="materialCostSum">0</span> 원
       </div>
 
       <table id="recipeTable">
@@ -155,7 +155,7 @@
             <th>코드</th>
             <th>단가</th>
             <th>배합비</th>
-            <th>원가</th>
+            <th>원가(원/kg)</th>
             <th>삭제</th>
           </tr>
         </thead>
@@ -191,7 +191,7 @@
   </div>
 
   <div>
-    <label>단위원가</label>
+    <label>단위 원가 (원/단위)</label>
     <input id="recipeUnitCost" readonly>
   </div>
 
@@ -230,7 +230,7 @@
   <!-- 우측 -->
   <div style="flex:1; border:1px solid #ddd; padding:15px; border-radius:6px;">
     
-    <label>단위원가</label><br>
+    <label>단위 원가(원/단위)</label><br>
     <input id="recipeUnitCost" value="0" readonly>
 
     <div style="margin-top:15px;">
@@ -251,7 +251,8 @@
           <thead>
             <tr>
               <th>제품명</th>
-              <th>원가</th>
+              <th>원가(원/kg)</th>
+              <th>단위 원가(원/단위)</th>
               <th>날짜</th>
               <th>관리</th>
             </tr>
