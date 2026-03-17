@@ -235,5 +235,12 @@ table th {
   display: flex;
   flex-direction: column;
 }
+.product-box {
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #f9fbff;
+}
   
 }
