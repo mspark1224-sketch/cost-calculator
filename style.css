@@ -235,3 +235,28 @@ table th {
     padding: 18px;
   }
 }
+
+.bottom-area {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.bottom-left {
+  display: flex;
+  gap: 10px;
+  flex: 2;
+}
+
+.bottom-left .field {
+  flex: 1;
+}
+
+.bottom-right {
+  flex: 1;
+}
+
+.bottom-right input {
+  width: 100%;
+}
