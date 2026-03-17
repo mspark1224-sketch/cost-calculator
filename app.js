@@ -72,20 +72,8 @@ function showPage(id) {
 // 날짜 처리
 // =============================
 function normalizeDate(dateValue) {
-  if (dateValue === null || dateValue === undefined || dateValue === "") return "";
-
-  if (typeof dateValue === "number" || (!isNaN(dateValue) && String(dateValue).trim() !== "")) {
-    const excelEpoch = new Date(1899, 11, 30);
-    const d = new Date(excelEpoch.getTime() + Number(dateValue) * 86400000);
-
-    if (!Number.isNaN(d.getTime())) {
-      return d.toISOString().slice(0, 10);
-    }
-  }
-
-  const text = String(dateValue).trim();
-  const d = new Date(text);
-
+  if (!dateValue) return "";
+  const d = new Date(dateValue);
   if (Number.isNaN(d.getTime())) return "";
   return d.toISOString().slice(0, 10);
 }
@@ -97,48 +85,27 @@ function getLatestRecordByCode(code) {
   const rows = materials.filter((m) => String(m.code) === String(code));
   if (rows.length === 0) return null;
 
-  rows.sort((a, b) => {
-    const ad = new Date(normalizeDate(a.date) || "1900-01-01").getTime();
-    const bd = new Date(normalizeDate(b.date) || "1900-01-01").getTime();
-    return bd - ad;
-  });
-
+  rows.sort((a, b) => new Date(b.date) - new Date(a.date));
   return rows[0];
 }
 
 function getAllLatestMaterials() {
-  const codeMap = {};
+  const map = {};
 
-  materials.forEach((row) => {
-    const key = String(row.code);
-    const latest = codeMap[key];
+  materials.forEach((m) => {
+    const key = String(m.code);
 
-    if (!latest) {
-      codeMap[key] = row;
-      return;
-    }
-
-    const latestTime = new Date(normalizeDate(latest.date) || "1900-01-01").getTime();
-    const rowTime = new Date(normalizeDate(row.date) || "1900-01-01").getTime();
-
-    if (rowTime > latestTime) {
-      codeMap[key] = row;
+    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
+      map[key] = m;
     }
   });
 
-  return Object.values(codeMap).sort((a, b) =>
-    String(a.code).localeCompare(String(b.code))
-  );
+  return Object.values(map);
 }
 
 function getLatestPriceByCode(code) {
   const latest = getLatestRecordByCode(code);
   return latest ? Number(latest.price || 0) : 0;
-}
-
-function getLatestNameByCode(code) {
-  const latest = getLatestRecordByCode(code);
-  return latest ? latest.name : "";
 }
 
 // =============================
@@ -153,35 +120,6 @@ function clearMaterialInputs() {
   editMaterialCode = null;
 }
 
-// =============================
-// 원가 계산 공통
-// =============================
-function calculateMaterialCost(recipe) {
-  let total = 0;
-
-  recipe.forEach((item) => {
-    const price = getLatestPriceByCode(item.materialCode);
-    const ratio = Number(item.ratio || 0);
-    total += price * (ratio / 100);
-  });
-
-  return Math.round(total);
-}
-
-function calculateUnitCostByProduct(materialCost, volume, unit, density) {
-  const cost = Number(materialCost || 0);
-  const qty = Number(volume || 0);
-  const specGravity = Number(density || 1);
-
-  if (qty <= 0) return 0;
-
-  let weightKg = 0;
-
-  if (unit === "g") weightKg = qty / 1000;
-  else if (unit === "ml") weightKg = (qty * specGravity) / 1000;
-
-  return Math.round(cost * weightKg);
-}
 // =============================
 // 원재료 저장 / 수정 / 삭제
 // =============================
@@ -221,7 +159,7 @@ function editMaterial(code) {
   document.getElementById("materialCode").value = latest.code;
   document.getElementById("materialName").value = latest.name;
   document.getElementById("materialPrice").value = latest.price;
-  document.getElementById("materialDate").value = normalizeDate(latest.date);
+  document.getElementById("materialDate").value = latest.date;
 
   loadPriceHistory(code);
 }
@@ -242,7 +180,7 @@ function deleteMaterial(code) {
 // =============================
 function loadMaterials() {
   const list = document.getElementById("materialList");
-  const keyword = document.getElementById("materialSearch").value.toLowerCase();
+  const keyword = (document.getElementById("materialSearch")?.value || "").toLowerCase();
 
   list.innerHTML = "";
 
@@ -253,7 +191,7 @@ function loadMaterials() {
   );
 
   if (!data.length) {
-    list.innerHTML = `<tr><td colspan="7">없음</td></tr>`;
+    list.innerHTML = `<tr><td colspan="7" class="empty">데이터 없음</td></tr>`;
     return;
   }
 
@@ -261,19 +199,19 @@ function loadMaterials() {
     list.innerHTML += `
       <tr>
         <td>${i + 1}</td>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
+        <td>${escapeHtml(m.code)}</td>
+        <td>${escapeHtml(m.name)}</td>
         <td>${formatNumber(m.price)} 원</td>
         <td>${m.date}</td>
-        <td><button onclick="editMaterial('${m.code}')">수정</button></td>
-        <td><button class="danger" onclick="deleteMaterial('${m.code}')">삭제</button></td>
+        <td><button onclick="editMaterial('${escapeJsString(m.code)}')">수정</button></td>
+        <td><button class="danger" onclick="deleteMaterial('${escapeJsString(m.code)}')">삭제</button></td>
       </tr>
     `;
   });
 }
 
 // =============================
-// 🔥 가격 히스토리 (삭제 포함)
+// 🔥 가격 히스토리 (완전 수정본)
 // =============================
 function loadPriceHistory(keyword) {
   const table = document.getElementById("priceHistoryTable");
@@ -292,36 +230,43 @@ function loadPriceHistory(keyword) {
   list.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (!list.length) {
-    table.innerHTML = `<tr><td colspan="5">없음</td></tr>`;
+    table.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
     return;
   }
 
   list.forEach((m) => {
     table.innerHTML += `
       <tr>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
+        <td>${escapeHtml(m.code)}</td>
+        <td>${escapeHtml(m.name)}</td>
         <td>${formatNumber(m.price)} 원</td>
         <td>${m.date}</td>
-        <td><button class="danger" onclick="deletePriceHistory('${m.id}')">삭제</button></td>
+        <td>
+          <button class="danger" onclick="deletePriceHistory('${escapeJsString(String(m.id))}')">삭제</button>
+        </td>
       </tr>
     `;
   });
 }
 
+// 🔥 히스토리 삭제 기능
 function deletePriceHistory(id) {
-  const ok = confirm("이 이력 삭제?");
+  const ok = confirm("이 가격 이력을 삭제할까요?");
   if (!ok) return;
 
   materials = materials.filter((m) => String(m.id) !== String(id));
 
   saveAll();
   loadMaterials();
-  loadPriceHistory("");
+  loadPriceHistory(document.getElementById("priceSearch")?.value || "");
 }
 
+// =============================
+// 검색
+// =============================
 function searchPriceHistory() {
-  loadPriceHistory(document.getElementById("priceSearch").value);
+  const keyword = document.getElementById("priceSearch")?.value || "";
+  loadPriceHistory(keyword);
 }
 
 // =============================
