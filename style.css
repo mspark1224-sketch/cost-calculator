@@ -150,7 +150,7 @@ th {
 /* 파일 input 커스터마이징 */
 .file-group input[type="file"] {
   height: 36px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 /* 업로드 버튼 */
