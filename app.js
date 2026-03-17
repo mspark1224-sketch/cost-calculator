@@ -472,9 +472,14 @@ function searchPriceHistory() {
 // =============================
 // 엑셀 업로드
 // =============================
-function handleExcelUpload(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
+function handleExcelUpload() {
+  const fileInput = document.getElementById("excelFile");
+  const file = fileInput?.files?.[0];
+
+  if (!file) {
+    alert("파일을 선택하세요.");
+    return;
+  }
 
   const reader = new FileReader();
 
@@ -524,6 +529,7 @@ function handleExcelUpload(event) {
         }
       });
 
+      // 🔥 제품 원가 재계산
       products.forEach((product) => {
         product.materialCost = calculateMaterialCost(product.recipe);
         product.unitCost = calculateUnitCostByProduct(
@@ -548,19 +554,12 @@ function handleExcelUpload(event) {
       console.error(err);
       alert("엑셀 업로드 중 오류가 발생했습니다.");
     } finally {
-      event.target.value = "";
+      fileInput.value = ""; // 🔥 초기화 (이거 중요)
     }
   };
 
   reader.readAsArrayBuffer(file);
 }
-// =============================
-// 배합표
-// =============================
-function getRecipeTbody() {
-  return document.querySelector("#recipeTable tbody");
-}
-
 function resetRecipeTable() {
   const tbody = getRecipeTbody();
   if (tbody) tbody.innerHTML = "";
