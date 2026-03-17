@@ -509,3 +509,16 @@ table th {
   border-radius: 8px;
   background: #fff;
 }
+.bottom-row {
+  display: flex !important;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.left-box {
+  flex: 2;
+}
+
+.right-box {
+  flex: 1;
+}
