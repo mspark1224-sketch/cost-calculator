@@ -104,25 +104,27 @@
     <div id="recipe" class="page" style="display:none;">
       <h2>배합표 작성</h2>
 
-      <div class="product-box">
-        <div class="row">
-          <div class="field field-type">
-            <label>유형</label>
-            <select id="productType">
-              <option value="">선택</option>
-              <option>가공치즈</option>
-              <option>치즈</option>
-              <option>발효유</option>
-              <option>농후발효유</option>
-            </select>
-          </div>
+    <div class="product-box">
+  <div class="product-inline">
+    
+    <div class="field field-type">
+      <label>유형</label>
+      <select id="productType">
+        <option value="">선택</option>
+        <option>가공치즈</option>
+        <option>치즈</option>
+        <option>발효유</option>
+        <option>농후발효유</option>
+      </select>
+    </div>
 
-          <div class="field field-name">
-            <label>제품명</label>
-            <input id="productName" />
-          </div>
-        </div>
-      </div>
+    <div class="field field-name">
+      <label>제품명</label>
+      <input id="productName" />
+    </div>
+
+  </div>
+</div>
 
       <div class="button-row">
         <button onclick="addRecipe()">원재료 추가</button>
