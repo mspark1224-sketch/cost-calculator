@@ -242,3 +242,12 @@ th {
 .field-name input {
   width: 100%;
 }
+
+.material-inline {
+  grid-template-columns: 
+    120px   /* 코드 */
+    200px   /* 이름 */
+    140px   /* 단가 */
+    160px   /* 날짜 */
+    auto;
+}
