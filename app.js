@@ -713,7 +713,7 @@ function loadProducts(){
 
     tr.innerHTML = `
       <td>${p.name}</td>
-      <td>${formatNumber(p.materialCost || 0)} 원</td>
+      <td>${formatNumber(p.unitCost || 0)} 원</td>
       <td>${p.date}</td>
       <td>
         <button onclick="loadProduct(${p.id})">불러오기</button>
