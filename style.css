@@ -288,6 +288,7 @@ th {
 }
 /* ================= 검색 ================= */
 .card input#materialSearch {
+  margin-top: 20px;   /* ⭐ 위 간격 추가 */
   margin-bottom: 10px;
   height: 36px;
   padding: 6px 8px;
