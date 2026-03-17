@@ -103,14 +103,26 @@ th {
   align-items: end;
 }
 
+/* 필드 정렬 */
 .material-inline .field {
   display: flex;
   flex-direction: column;
 }
 
-.material-inline input {
+/* 🔥 모든 입력요소 높이 통일 (핵심) */
+.material-inline input,
+.material-inline select,
+.material-inline button {
   height: 36px;
+  box-sizing: border-box;
 }
+
+/* 버튼 찌그러짐 방지 */
+.material-inline button {
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
 
 /* 버튼 그룹 */
 .button-group {
