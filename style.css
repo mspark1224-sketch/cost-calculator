@@ -226,3 +226,19 @@ th {
 #productName {
   width: 100% !important;
 }
+
+.field-type {
+  flex: 0 0 180px;
+}
+
+.field-name {
+  flex: 1;
+}
+
+.field-type select {
+  width: 100%;
+}
+
+.field-name input {
+  width: 100%;
+}
