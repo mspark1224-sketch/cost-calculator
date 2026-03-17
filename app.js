@@ -21,52 +21,6 @@ function formatNumber(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
 
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function escapeJsString(str) {
-  return String(str ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'");
-}
-
-// =============================
-// 페이지 전환
-// =============================
-function showPage(id) {
-  document.querySelectorAll(".page").forEach((p) => {
-    p.style.display = "none";
-  });
-
-  const target = document.getElementById(id);
-  if (target) target.style.display = "block";
-
-  if (id === "db") {
-    loadMaterials();
-    loadPriceHistory(document.getElementById("priceSearch")?.value || "");
-  }
-
-  if (id === "recipe") {
-    loadProducts();
-    refreshRecipeMaterialOptions();
-    refreshRecipePrices();
-    updateRatioTotal();
-  }
-
-  if (id === "calc") {
-    loadCalcProducts();
-  }
-
-  if (id === "history") {
-    loadQuotes();
-  }
-}
-
 // =============================
 // 날짜 처리
 // =============================
@@ -85,34 +39,61 @@ function normalizeDate(dateValue) {
 }
 
 // =============================
-// 원재료 공통
+// 최신 원재료
 // =============================
-function getLatestRecordByCode(code) {
-  const rows = materials.filter((m) => String(m.code) === String(code));
-  if (!rows.length) return null;
+function getAllLatestMaterials() {
+  const map = {};
 
-  return rows.sort((a, b) =>
-    new Date(b.date) - new Date(a.date)
-  )[0];
+  materials.forEach((m) => {
+    const key = String(m.code);
+
+    if (!map[key]) {
+      map[key] = m;
+    } else {
+      const prev = new Date(map[key].date);
+      const curr = new Date(m.date);
+
+      if (curr > prev) {
+        map[key] = m;
+      }
+    }
+  });
+
+  return Object.values(map);
 }
 
 function getLatestPriceByCode(code) {
-  return getLatestRecordByCode(code)?.price || 0;
+  const list = materials.filter((m) => String(m.code) === String(code));
+  if (!list.length) return 0;
+
+  return list.sort((a, b) => new Date(b.date) - new Date(a.date))[0].price;
 }
 
 // =============================
-// 원재료 저장
+// 입력 초기화
+// =============================
+function clearMaterialInputs() {
+  document.getElementById("materialCode").value = "";
+  document.getElementById("materialName").value = "";
+  document.getElementById("materialPrice").value = "";
+  document.getElementById("materialDate").value = "";
+}
+
+// =============================
+// 원재료 저장 (🔥완성)
 // =============================
 function saveMaterial() {
-  const code = materialCode.value.trim();
-  const name = materialName.value.trim();
-  const price = Number(materialPrice.value);
-  const date = normalizeDate(materialDate.value);
+  const code = document.getElementById("materialCode").value.trim();
+  const name = document.getElementById("materialName").value.trim();
+  const priceValue = document.getElementById("materialPrice").value;
+  const date = normalizeDate(document.getElementById("materialDate").value);
 
-  if (!code || !name || !price || !date) {
+  if (!code || !name || priceValue === "" || !date) {
     alert("모든 값을 입력하세요");
     return;
   }
+
+  const price = Number(priceValue);
 
   materials.push({
     id: Date.now(),
@@ -142,7 +123,7 @@ function loadMaterials() {
         <td>${i + 1}</td>
         <td>${m.code}</td>
         <td>${m.name}</td>
-        <td>${formatNumber(m.price)}</td>
+        <td>${formatNumber(m.price)} 원</td>
         <td>${m.date}</td>
         <td><button onclick="editMaterial('${m.code}')">수정</button></td>
         <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
@@ -152,7 +133,7 @@ function loadMaterials() {
 }
 
 // =============================
-// 엑셀 업로드 (최종 완성)
+// 엑셀 업로드
 // =============================
 function handleExcelUpload() {
   const file = document.getElementById("excelFile").files[0];
@@ -170,11 +151,13 @@ function handleExcelUpload() {
     const rows = XLSX.utils.sheet_to_json(sheet);
 
     rows.forEach((row) => {
+      if (!row["코드"] || !row["원재료명"]) return;
+
       materials.push({
-        id: Date.now(),
+        id: Date.now() + Math.random(),
         code: row["코드"],
         name: row["원재료명"],
-        price: Number(row["단가"]),
+        price: Number(row["단가"] || 0),
         date: normalizeDate(row["적용일"])
       });
     });
@@ -191,9 +174,12 @@ function handleExcelUpload() {
 // =============================
 function calculateMaterialCost(recipe) {
   let total = 0;
+
   recipe.forEach((r) => {
-    total += getLatestPriceByCode(r.materialCode) * (r.ratio / 100);
+    const price = getLatestPriceByCode(r.materialCode);
+    total += price * (r.ratio / 100);
   });
+
   return Math.round(total);
 }
 
@@ -201,22 +187,35 @@ function updateUnitCost() {
   const recipe = getRecipeData();
   const total = calculateMaterialCost(recipe);
 
-  const volume = Number(productVolume.value);
-  const density = Number(productDensity.value);
-  const unit = productUnit.value;
+  const volume = Number(document.getElementById("productVolume").value || 0);
+  const density = Number(document.getElementById("productDensity").value || 1);
+  const unit = document.getElementById("productUnit").value;
 
-  let weight = unit === "g" ? volume / 1000 : (volume * density) / 1000;
+  let weight = unit === "g"
+    ? volume / 1000
+    : (volume * density) / 1000;
 
-  recipeUnitCost.value = Math.round(total * weight);
+  document.getElementById("recipeUnitCost").value =
+    Math.round(total * weight);
 }
 
 // =============================
 // 제품 저장
 // =============================
 function saveRecipe() {
-  const name = productName.value.trim();
+  const name = document.getElementById("productName").value.trim();
+
+  if (!name) {
+    alert("제품명 입력");
+    return;
+  }
 
   const recipe = getRecipeData();
+
+  if (!recipe.length) {
+    alert("배합 추가하세요");
+    return;
+  }
 
   const materialCost = calculateMaterialCost(recipe);
 
@@ -229,6 +228,7 @@ function saveRecipe() {
 
   saveAll();
   loadProducts();
+
   alert("저장 완료");
 }
 
@@ -245,14 +245,14 @@ function loadProducts() {
     list.innerHTML += `
       <tr>
         <td>${p.name}</td>
-        <td>${formatNumber(p.materialCost)}</td>
+        <td>${formatNumber(p.materialCost)} 원</td>
       </tr>
     `;
   });
 }
 
 // =============================
-// 원가 계산 페이지
+// 원가 계산
 // =============================
 function loadCalcProducts() {
   const select = document.getElementById("calcProductSelect");
@@ -268,7 +268,8 @@ function loadCalcProducts() {
 }
 
 function calculate() {
-  const id = calcProductSelect.value;
+  const id = document.getElementById("calcProductSelect").value;
+
   const product = products.find((p) => String(p.id) === String(id));
 
   if (!product) {
@@ -276,13 +277,14 @@ function calculate() {
     return;
   }
 
-  const mfg = Number(mfgInput.value || 0);
-  const pack = Number(packInput.value || 0);
-  const logi = Number(logiInput.value || 0);
-  const margin = Number(marginInput.value || 0) / 100;
+  const mfg = Number(document.getElementById("mfgInput").value || 0);
+  const pack = Number(document.getElementById("packInput").value || 0);
+  const logi = Number(document.getElementById("logiInput").value || 0);
+  const margin = Number(document.getElementById("marginInput").value || 0) / 100;
 
   const total = product.materialCost + mfg + pack + logi;
   const quote = Math.round(total * (1 + margin));
 
-  result.innerText = formatNumber(quote) + " 원";
+  document.getElementById("result").innerText =
+    formatNumber(quote) + " 원";
 }
