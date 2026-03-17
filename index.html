@@ -22,44 +22,44 @@
     <!-- 원재료 DB -->
     <!-- ===================== -->
     <div id="db" class="page">
- <h2>원재료 데이터베이스</h2>
+<h2>원재료 데이터베이스</h2>
 
 <div class="card">
-<div class="material-inline">
+  <div class="material-inline">
 
-  <div class="field">
-    <label>원재료 코드</label>
-    <input id="materialCode" />
+    <div class="field">
+      <label>원재료 코드</label>
+      <input id="materialCode" />
+    </div>
+
+    <div class="field">
+      <label>원재료 이름</label>
+      <input id="materialName" />
+    </div>
+
+    <div class="field">
+      <label>단가 (원/kg)</label>
+      <input id="materialPrice" type="number" />
+    </div>
+
+    <div class="field">
+      <label>적용 날짜</label>
+      <input id="materialDate" type="date" />
+    </div>
+
+    <div class="button-group">
+      <button onclick="saveMaterial()">저장</button>
+      <button onclick="updateMaterial()">수정</button>
+      <button class="secondary" onclick="clearMaterialInputs()">초기화</button>
+    </div>
+
+    <div class="file-group">
+      <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" />
+      <button onclick="handleExcelUpload()">업로드</button>
+    </div>
+
   </div>
-
-  <div class="field">
-    <label>원재료 이름</label>
-    <input id="materialName" />
-  </div>
-
-  <div class="field">
-    <label>단가 (원/kg)</label>
-    <input id="materialPrice" type="number" />
-  </div>
-
-  <div class="field">
-    <label>적용 날짜</label>
-    <input id="materialDate" type="date" />
-  </div>
-
-  <div class="button-group">
-    <button onclick="saveMaterial()">저장</button>
-    <button onclick="updateMaterial()">수정</button>
-    <button class="secondary" onclick="clearMaterialInputs()">초기화</button>
-  </div>
-
-  <!-- 🔥 추가 -->
-  <div class="file-group">
-   <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" />
-<button onclick="handleExcelUpload()">업로드</button>
-  </div>
-
-</div>
+</div>   <!-- ⭐ 이거 추가됨 (핵심) -->
 
 <div class="card">
   <input id="materialSearch" placeholder="검색" oninput="loadMaterials()" />
