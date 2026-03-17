@@ -567,6 +567,9 @@ function updateRatioTotal() {
   if (materialCostSumEl) materialCostSumEl.innerText = formatNumber(costSum);
   if (ratioSumEl) ratioSumEl.innerText = total;
   if (costSumEl) costSumEl.innerText = `${formatNumber(costSum)} 원`;
+
+  // ⭐⭐⭐ 여기 추가 (핵심)
+  updateUnitCost();
 }
 
 function getRecipeData() {
