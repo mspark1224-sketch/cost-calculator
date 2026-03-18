@@ -461,21 +461,38 @@ window.resetRecipeTable = function () {
 // =============================
 // 히스토리
 // =============================
-function loadPriceHistory() {
+function loadPriceHistory(keyword = "") {
   const table = document.getElementById("priceHistoryTable");
+  const card = document.getElementById("priceHistoryCard");
+
   table.innerHTML = "";
 
-materials.forEach((m) => {
-  table.innerHTML += `
-    <tr>
-      <td>${m.code}</td>
-      <td>${m.name}</td>
-      <td>${m.price}</td>
-      <td>${m.date}</td>
-      <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
-    </tr>
-  `;
-});
+  const filtered = materials.filter(m =>
+    !keyword ||
+    m.name.toLowerCase().includes(keyword.toLowerCase()) ||
+    String(m.code).includes(keyword)
+  );
+
+  // 🔥 핵심: 검색 없으면 숨김
+  if (!keyword) {
+    card.style.display = "none";
+    return;
+  }
+
+  // 🔥 검색하면 보이기
+  card.style.display = "block";
+
+  filtered.forEach((m) => {
+    table.innerHTML += `
+      <tr>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
+        <td>${m.price}</td>
+        <td>${m.date}</td>
+        <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
+      </tr>
+    `;
+  });
 }
 
 function deletePriceHistory(id) {
