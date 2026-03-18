@@ -102,7 +102,7 @@ function normalizeDate(dateValue) {
 // 원재료 공통
 // =============================
 function getLatestRecordByCode(code) {
-  const rows = materials.filter((m) => String(m.code) === String(code));
+  const rows = materials.filter((m) => String(p.code) === String(code));
   if (rows.length === 0) return null;
   rows.sort((a, b) => new Date(b.date) - new Date(a.date));
   return rows[0];
@@ -111,8 +111,8 @@ function getLatestRecordByCode(code) {
 function getAllLatestMaterials() {
   const map = {};
   materials.forEach((m) => {
-    const key = String(m.code);
-    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
+    const key = String(p.code);
+    if (!map[key] || new Date(p.date) > new Date(map[key].date)) {
       map[key] = m;
     }
   });
@@ -315,8 +315,8 @@ function loadMaterials() {
 
   const data = getAllLatestMaterials().filter(
     (m) =>
-      m.name.toLowerCase().includes(keyword) ||
-      String(m.code).toLowerCase().includes(keyword)
+      p.name.toLowerCase().includes(keyword) ||
+      String(p.code).toLowerCase().includes(keyword)
   );
 
   if (!data.length) {
@@ -328,12 +328,12 @@ function loadMaterials() {
     list.innerHTML += `
       <tr>
         <td>${i + 1}</td>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
-        <td>${formatNumber(m.price)} 원</td>
-        <td>${m.date}</td>
-        <td><button onclick="editMaterial('${m.code}')">수정</button></td>
-        <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
+        <td>${p.code}</td>
+        <td>${p.name}</td>
+        <td>${formatNumber(p.price)} 원</td>
+        <td>${p.date}</td>
+        <td><button onclick="editMaterial('${p.code}')">수정</button></td>
+        <td><button onclick="deleteMaterial('${p.code}')">삭제</button></td>
       </tr>
     `;
   });
@@ -344,7 +344,7 @@ function loadMaterials() {
 // =============================
 function deleteMaterial(code) {
   if (!confirm("삭제?")) return;
-  materials = materials.filter((m) => m.code !== code);
+  materials = materials.filter((m) => p.code !== code);
   saveAll();
   loadMaterials();
 }
@@ -366,8 +366,8 @@ document.getElementById("productDensity").value = product.density || 1;
   (product.recipe || []).forEach(item => {
     const materialsList = getAllLatestMaterials();
     const options = materialsList.map(m => {
-      const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
-      return `<option value="${m.code}" ${selected}>${m.name}</option>`;
+      const selected = String(p.code) === String(item.materialCode) ? "selected" : "";
+      return `<option value="${p.code}" ${selected}>${p.name}</option>`;
     }).join("");
 
     const row = document.createElement("tr");
@@ -430,18 +430,18 @@ function loadPriceHistory() {
   materials.forEach((m) => {
     table.innerHTML += `
       <tr>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
-        <td>${m.price}</td>
-        <td>${m.date}</td>
-        <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
+        <td>${p.code}</td>
+        <td>${p.name}</td>
+        <td>${p.price}</td>
+        <td>${p.date}</td>
+        <td><button onclick="deletePriceHistory(${p.id})">삭제</button></td>
       </tr>
     `;
   });
 }
 
 function deletePriceHistory(id) {
-  materials = materials.filter((m) => m.id !== id);
+  materials = materials.filter((m) => p.id !== id);
   saveAll();
   loadPriceHistory();
 }
@@ -453,7 +453,7 @@ function addRecipe() {
   const materials = getAllLatestMaterials();
 
   const options = materials.map(m => 
-    `<option value="${m.name}" data-code="${m.code}"></option>`
+    `<option value="${p.name}" data-code="${p.code}"></option>`
   ).join("");
 
   const row = document.createElement("tr");
@@ -490,7 +490,7 @@ function updateRecipeRow(input) {
   const materials = getAllLatestMaterials();
 
   // 🔥 name으로 찾기
-  const material = materials.find(m => m.name === name);
+  const material = materials.find(m => p.name === name);
 
   if (!material) {
     // ❗ 못찾으면 초기화 (NaN 방지)
