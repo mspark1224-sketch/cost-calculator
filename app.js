@@ -498,7 +498,7 @@ function updateRecipeRow(input) {
   const materials = getAllLatestMaterials();
 
   // 🔥 name으로 찾기
-  const material = materials.find(m => p.name === name);
+  const material = materials.find(m => m.name === name);
 
   if (!material) {
     // ❗ 못찾으면 초기화 (NaN 방지)
