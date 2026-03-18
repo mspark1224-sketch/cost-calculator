@@ -653,7 +653,7 @@ function loadQuotes() {
   list.innerHTML = "";
 
   if (!quotes || quotes.length === 0) {
-    list.innerHTML = `<tr><td colspan="6">데이터 없음</td></tr>`;
+    list.innerHTML = `<tr><td colspan="7">데이터 없음</td></tr>`;
     return;
   }
 
@@ -673,3 +673,4 @@ function loadQuotes() {
     `;
   });
 }
+  
