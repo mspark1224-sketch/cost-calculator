@@ -382,7 +382,7 @@ document.getElementById("productDensity").value = product.density || 1;
   (product.recipe || []).forEach(item => {
     const materialsList = getAllLatestMaterials();
     const options = materialsList.map(m => {
-      const selected = String(p.code) === String(item.materialCode) ? "selected" : "";
+      const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
       return `<option value="${p.code}" ${selected}>${p.name}</option>`;
     }).join("");
 
