@@ -436,7 +436,10 @@ function updateRecipeRow(input) {
   if (!name) return;
 
   const materials = getAllLatestMaterials();
-  const material = materials.find(m => m.name === name);
+
+  const material = materials.find(m => 
+    m.name.includes(name) || String(m.code) === name
+  );
 
   if (!material) return;
 
