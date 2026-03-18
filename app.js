@@ -482,3 +482,46 @@ function updateRecipeCalc() {
 // =============================
 loadMaterials();
 loadPriceHistory();
+function loadCalcProducts() {
+  const select = document.getElementById("calcProductSelect");
+  if (!select) return;
+
+  select.innerHTML = `<option value="">선택</option>`;
+
+  products.forEach(p => {
+    select.innerHTML += `
+      <option value="${p.id}">
+        ${p.name}
+      </option>
+    `;
+  });
+}
+window.loadMaterialCostFromProduct = function () {
+  const select = document.getElementById("calcProductSelect");
+  const productId = select.value;
+
+  if (!productId) return;
+
+  const product = products.find(p => String(p.id) === String(productId));
+  if (!product) return;
+
+  document.getElementById("materialCostInput").value = product.costPerKg || 0;
+};
+window.calculateCost = function () {
+  const material = parseFloat(document.getElementById("materialCostInput").value) || 0;
+  const mfg = parseFloat(document.getElementById("mfg").value) || 0;
+  const pack = parseFloat(document.getElementById("pack").value) || 0;
+  const logi = parseFloat(document.getElementById("logi").value) || 0;
+  const margin = parseFloat(document.getElementById("margin").value) || 0;
+
+  const baseCost = material + mfg + pack + logi;
+  const finalCost = baseCost * (1 + margin / 100);
+
+  document.getElementById("unitCost").value = finalCost.toFixed(2);
+
+  console.log("총원가:", baseCost);
+  console.log("견적가:", finalCost);
+};
+if (id === "calc") {
+  loadCalcProducts();
+}
