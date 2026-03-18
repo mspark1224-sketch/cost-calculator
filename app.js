@@ -289,7 +289,7 @@ function deleteMaterial(code) {
   saveAll();
   loadMaterials();
 }
-function loadProduct(id) {
+window.loadProduct = function(id) {
   const product = products.find(p => p.id === id);
   if (!product) return;
 
