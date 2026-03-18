@@ -190,19 +190,26 @@ function handleExcelUpload() {
       return;
     }
 
-  rows.forEach((row) => {
+ rows.forEach((row) => {
   const code = String(row["코드"] || "").trim();
   const name = String(row["이름"] || "").trim();
- const price = Number(String(row["단가"] || 0).replace(/,/g, "").trim()) || 0;
-  const date = new Date().toISOString().slice(0, 10); // 날짜 없으니까 자동 생성
+
+  const rawPrice = row["단가"] || "0";
+
+  // 🔥 수정 핵심
+  const price = parseFloat(
+    String(rawPrice).replace(/[^\d.]/g, "")
+  ) || 0;
+
+  const date = new Date().toISOString().slice(0, 10);
 
   if (!code || !name) return;
 
   materials.push({
-    id: Date.now() + Math.floor(Math.random() * 100000),
+    id: Date.now() + Math.random(),
     code,
     name,
-    price: price,   //⭐ 핵심 수정 (cost → price)
+    price,
     date
   });
 });
