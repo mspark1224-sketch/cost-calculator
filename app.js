@@ -208,6 +208,9 @@ window.saveRecipe = function () {
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   const unitCost = parseFloat(document.getElementById("recipeUnitCost")?.value) || 0;
+  const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
+const unit = document.getElementById("productUnit")?.value || "g";
+const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
 
   const recipe = [];
   document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
@@ -230,15 +233,18 @@ window.saveRecipe = function () {
     }
   });
 
-  const newProduct = {
-    id: Date.now(),
-    type,
-    name,
-    costPerKg,
-    unitCost,
-    date: new Date().toISOString(),
-    recipe
-  };
+const newProduct = {
+  id: Date.now(),
+  type,
+  name,
+  costPerKg,
+  unitCost,
+  volume,   // 🔥 추가
+  unit,     // 🔥 추가
+  density,  // 🔥 추가
+  recipe,
+  date: new Date().toISOString()
+};
 
   products.push(newProduct);
   saveAll();
