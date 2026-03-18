@@ -111,8 +111,8 @@ function getLatestRecordByCode(code) {
 function getAllLatestMaterials() {
   const map = {};
   materials.forEach((m) => {
-    const key = String(p.code);
-    if (!map[key] || new Date(p.date) > new Date(map[key].date)) {
+    const key = String(m.code);
+    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
       map[key] = m;
     }
   });
