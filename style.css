@@ -223,8 +223,14 @@ th {
   align-items: end;
 }
 
-.inline-group input {
+.inline-group input,
+.inline-group select {
   width: 120px;
+}
+
+.inline-group > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .right-box {
