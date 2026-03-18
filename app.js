@@ -477,11 +477,11 @@ function updateRecipeCalc() {
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
   document.getElementById("costSum").innerText = Math.round(totalCost) + " 원";
 }
-function deleteProduct(code) {
+function deleteProduct(id) {
   const ok = confirm("이 제품을 삭제할까요?");
   if (!ok) return;
 
-  products = products.filter((p) => p.code !== code);
+  products = products.filter((p) => p.id !== id);
   saveAll();
   loadProducts();
 }
