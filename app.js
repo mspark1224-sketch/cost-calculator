@@ -168,7 +168,7 @@ window.updateUnitCost = function () {
   const unit = document.getElementById("productUnit")?.value;
 
   // ✅ 합계만 정확히 가져오기
-  const costText = document.querySelector("tfoot tr:last-child td:last-child")?.innerText || "0";
+ const costText = document.querySelector("#recipeTable tbody tr:last-child td:nth-child(5)")?.innerText || "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   let volumeKg = 0;
