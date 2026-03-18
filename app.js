@@ -347,7 +347,7 @@ function loadMaterials() {
 // =============================
 function deleteMaterial(code) {
   if (!confirm("삭제?")) return;
-  materials = materials.filter((m) => p.code !== code);
+  materials = materials.filter((m) => m.code !== code);
   saveAll();
   loadMaterials();
 }
