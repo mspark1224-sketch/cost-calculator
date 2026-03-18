@@ -167,23 +167,27 @@ window.updateUnitCost = function () {
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
 
-  // ✅ 합계만 정확히 가져오기
-const costText = document.querySelector("#recipeTable tfoot td:nth-child(5)")?.innerText || "0";
+  const costText = document.querySelector("#recipeTable tfoot tr td:last-child")?.innerText || "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   let volumeKg = 0;
 
- if (unit === "g") {
-   volumeKg = volume / 1000;
- } else if (unit === "ml") {
-   volumeKg = (volume * density) / 1000;
- } else {
-   volumeKg = volume / 1000; // 기본값 g 처리
- }
+  if (unit === "g") {
+    volumeKg = volume / 1000;
+  } else if (unit === "ml") {
+    volumeKg = (volume * density) / 1000;
+  } else {
+    volumeKg = volume / 1000;
+  }
+
   const unitCost = totalCostPerKg * volumeKg;
 
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
 
+  console.log("volume:", volume);
+  console.log("unit:", unit);
+  console.log("density:", density);
+  console.log("costText:", costText);
   console.log("원/kg:", totalCostPerKg);
   console.log("단위원가:", unitCost);
 };
