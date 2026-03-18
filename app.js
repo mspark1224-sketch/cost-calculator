@@ -164,16 +164,9 @@ window.updateUnitCost = function () {
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = document.getElementById("productUnit")?.value;
 
-  // 🔥 원/kg 합계 찾기 (텍스트 기준)
-  const tfootCells = document.querySelectorAll("tfoot td");
-
-  let totalCostPerKg = 0;
-
-  tfootCells.forEach(td => {
-    if (td.innerText.includes("원")) {
-      totalCostPerKg = parseFloat(td.innerText.replace(/[^\d.]/g, ""));
-    }
-  });
+  // ✅ 합계만 정확히 가져오기
+  const costText = document.querySelector("tfoot tr:last-child td:last-child")?.innerText || "0";
+  const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   let volumeKg = 0;
 
