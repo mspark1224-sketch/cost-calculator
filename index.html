@@ -330,6 +330,10 @@
       <h2>견적 조회</h2>
 
       <div class="card">
+        <div class="top-actions">
+  <button onclick="loadSelected()">선택 불러오기</button>
+  <button onclick="deleteSelected()">선택 삭제</button>
+</div>
         <input
           id="quoteSearch"
           type="text"
@@ -340,6 +344,9 @@
         <table>
           <thead>
             <tr>
+              <th style="width:40px;">
+  <input type="checkbox" id="selectAll" onclick="toggleAll(this)">
+</th>
               <th>제품명</th>
               <th>견적가</th>
               <th>날짜</th>
