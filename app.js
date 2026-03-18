@@ -179,6 +179,45 @@ window.updateUnitCost = function () {
 
   console.log("총 원가:", totalCost);
 }
+window.saveRecipe = function () {
+  const name = prompt("제품명을 입력하세요");
+  if (!name) return;
+
+  const rows = document.querySelectorAll("#recipeTableBody tr");
+
+  const recipe = [];
+
+  rows.forEach((row) => {
+    const matName = row.querySelector(".mat-name")?.value || "";
+    const ratio = parseFloat(row.querySelector(".mat-ratio")?.value) || 0;
+    const cost = parseFloat(row.querySelector(".mat-cost")?.value) || 0;
+
+    if (matName && ratio > 0) {
+      recipe.push({
+        name: matName,
+        ratio,
+        cost
+      });
+    }
+  });
+
+  const newProduct = {
+    id: Date.now(),
+    name,
+    date: new Date().toISOString(),
+    recipe
+  };
+
+  products.push(newProduct);
+  saveAll();
+
+  alert("제품 저장 완료");
+
+  if (typeof window.loadProducts === "function") {
+    window.loadProducts();
+  }
+};
+
 // =============================
 // 목록
 // =============================
