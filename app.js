@@ -363,6 +363,21 @@ function deleteMaterial(code) {
   saveAll();
   loadMaterials();
 }
+  function editMaterial(code) {
+  const material = materials.find(m => m.code === code);
+  if (!material) return;
+
+  document.getElementById("materialCode").value = material.code;
+  document.getElementById("materialName").value = material.name;
+  document.getElementById("materialPrice").value = material.price;
+  document.getElementById("materialDate").value = material.date;
+
+  // 기존 데이터 제거 (수정용)
+  materials = materials.filter(m => m.code !== code);
+
+  saveAll();
+  loadMaterials();
+}
 window.loadProduct = function(id) {
   const product = products.find(p => p.id === id);
   if (!product) return;
