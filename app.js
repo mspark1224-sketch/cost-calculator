@@ -53,10 +53,6 @@ function showPage(id) {
 
   if (id === "recipe") {
     loadProducts();
-    refreshRecipeMaterialOptions();
-    refreshRecipePrices();
-    updateRatioTotal();
-    updateUnitCost();
   }
 
   if (id === "calc") {
@@ -84,22 +80,18 @@ function normalizeDate(dateValue) {
 function getLatestRecordByCode(code) {
   const rows = materials.filter((m) => String(m.code) === String(code));
   if (rows.length === 0) return null;
-
   rows.sort((a, b) => new Date(b.date) - new Date(a.date));
   return rows[0];
 }
 
 function getAllLatestMaterials() {
   const map = {};
-
   materials.forEach((m) => {
     const key = String(m.code);
-
     if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
       map[key] = m;
     }
   });
-
   return Object.values(map);
 }
 
@@ -107,7 +99,6 @@ function getLatestPriceByCode(code) {
   const latest = getLatestRecordByCode(code);
   return latest ? Number(latest.price || 0) : 0;
 }
-
 // =============================
 // 입력 초기화
 // =============================
@@ -116,12 +107,10 @@ function clearMaterialInputs() {
   document.getElementById("materialName").value = "";
   document.getElementById("materialPrice").value = "";
   document.getElementById("materialDate").value = "";
-
-  editMaterialCode = null;
 }
 
 // =============================
-// 원재료 저장 / 수정 / 삭제
+// 저장
 // =============================
 function saveMaterial() {
   const code = document.getElementById("materialCode").value.trim();
@@ -129,13 +118,13 @@ function saveMaterial() {
   const price = Number(document.getElementById("materialPrice").value);
   const date = normalizeDate(document.getElementById("materialDate").value);
 
-  if (!code || !name || !price || !date) {
+  if (!code || !name || date === "") {
     alert("모든 항목 입력");
     return;
   }
 
   materials.push({
-    id: Date.now() + Math.random(),
+    id: Date.now(),
     code,
     name,
     price,
@@ -143,40 +132,12 @@ function saveMaterial() {
   });
 
   saveAll();
-  selectedHistoryCode = code;
-
-  loadMaterials();
-  loadPriceHistory(code);
-}
-
-function editMaterial(code) {
-  const latest = getLatestRecordByCode(code);
-  if (!latest) return;
-
-  editMaterialCode = code;
-  selectedHistoryCode = code;
-
-  document.getElementById("materialCode").value = latest.code;
-  document.getElementById("materialName").value = latest.name;
-  document.getElementById("materialPrice").value = latest.price;
-  document.getElementById("materialDate").value = latest.date;
-
-  loadPriceHistory(code);
-}
-
-function deleteMaterial(code) {
-  const ok = confirm("전체 이력 삭제?");
-  if (!ok) return;
-
-  materials = materials.filter((m) => String(m.code) !== String(code));
-
-  saveAll();
   loadMaterials();
   loadPriceHistory("");
 }
 
 // =============================
-// 원재료 목록
+// 목록
 // =============================
 function loadMaterials() {
   const list = document.getElementById("materialList");
@@ -191,7 +152,7 @@ function loadMaterials() {
   );
 
   if (!data.length) {
-    list.innerHTML = `<tr><td colspan="7" class="empty">데이터 없음</td></tr>`;
+    list.innerHTML = `<tr><td colspan="7">데이터 없음</td></tr>`;
     return;
   }
 
@@ -199,84 +160,130 @@ function loadMaterials() {
     list.innerHTML += `
       <tr>
         <td>${i + 1}</td>
-        <td>${escapeHtml(m.code)}</td>
-        <td>${escapeHtml(m.name)}</td>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
         <td>${formatNumber(m.price)} 원</td>
         <td>${m.date}</td>
-        <td><button onclick="editMaterial('${escapeJsString(m.code)}')">수정</button></td>
-        <td><button class="danger" onclick="deleteMaterial('${escapeJsString(m.code)}')">삭제</button></td>
+        <td><button onclick="editMaterial('${m.code}')">수정</button></td>
+        <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
       </tr>
     `;
   });
 }
 
 // =============================
-// 🔥 가격 히스토리 (완전 수정본)
+// 삭제
 // =============================
-function loadPriceHistory(keyword) {
+function deleteMaterial(code) {
+  if (!confirm("삭제?")) return;
+  materials = materials.filter((m) => m.code !== code);
+  saveAll();
+  loadMaterials();
+}
+
+// =============================
+// 히스토리
+// =============================
+function loadPriceHistory() {
   const table = document.getElementById("priceHistoryTable");
   table.innerHTML = "";
 
-  let list = [...materials];
-
-  if (keyword) {
-    list = list.filter(
-      (m) =>
-        String(m.name).includes(keyword) ||
-        String(m.code).includes(keyword)
-    );
-  }
-
-  list.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  if (!list.length) {
-    table.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
-    return;
-  }
-
-  list.forEach((m) => {
+  materials.forEach((m) => {
     table.innerHTML += `
       <tr>
-        <td>${escapeHtml(m.code)}</td>
-        <td>${escapeHtml(m.name)}</td>
-        <td>${formatNumber(m.price)} 원</td>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
+        <td>${m.price}</td>
         <td>${m.date}</td>
-        <td>
-          <button class="danger" onclick="deletePriceHistory('${escapeJsString(String(m.id))}')">삭제</button>
-        </td>
+        <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
       </tr>
     `;
   });
 }
 
-// 🔥 히스토리 삭제 기능
 function deletePriceHistory(id) {
-  const ok = confirm("이 가격 이력을 삭제할까요?");
-  if (!ok) return;
-
-  materials = materials.filter((m) => String(m.id) !== String(id));
-
+  materials = materials.filter((m) => m.id !== id);
   saveAll();
-  loadMaterials();
-  loadPriceHistory(document.getElementById("priceSearch")?.value || "");
+  loadPriceHistory();
+}
+// =============================
+// 배합표 - 원재료 추가
+// =============================
+function addRecipe() {
+  const tbody = document.querySelector("#recipeTable tbody");
+
+  const materials = getAllLatestMaterials();
+
+  const options = materials.map(m => 
+    `<option value="${m.code}">${m.name}</option>`
+  ).join("");
+
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>
+      <select onchange="updateRecipeRow(this)">
+        <option value="">선택</option>
+        ${options}
+      </select>
+    </td>
+    <td class="code"></td>
+    <td class="price">0</td>
+    <td>
+      <input type="number" value="0" oninput="updateRecipeCalc()" />
+    </td>
+    <td class="cost">0</td>
+    <td>
+      <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
+    </td>
+  `;
+
+  tbody.appendChild(row);
 }
 
 // =============================
-// 검색
+// 선택 시 자동 입력
 // =============================
-function searchPriceHistory() {
-  const keyword = document.getElementById("priceSearch")?.value || "";
-  loadPriceHistory(keyword);
+function updateRecipeRow(select) {
+  const code = select.value;
+  const row = select.closest("tr");
+
+  if (!code) return;
+
+  const material = getLatestRecordByCode(code);
+
+  row.querySelector(".code").innerText = material.code;
+  row.querySelector(".price").innerText = material.price;
+
+  updateRecipeCalc();
 }
 
+// =============================
+// 계산
+// =============================
+function updateRecipeCalc() {
+  let totalRatio = 0;
+  let totalCost = 0;
+
+  document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
+    const price = Number(row.querySelector(".price").innerText || 0);
+    const ratio = Number(row.querySelector("input").value || 0);
+
+    const cost = price * (ratio / 100);
+
+    row.querySelector(".cost").innerText = Math.round(cost);
+
+    totalRatio += ratio;
+    totalCost += cost;
+  });
+
+  document.getElementById("ratioTotal").innerText = totalRatio.toFixed(1);
+  document.getElementById("materialCostSum").innerText = Math.round(totalCost);
+  document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
+  document.getElementById("costSum").innerText = Math.round(totalCost) + " 원";
+}
 // =============================
 // 초기 실행
 // =============================
 loadMaterials();
-loadProducts();
-loadQuotes();
-loadPriceHistory("");
-loadCalcProducts();
-refreshRecipeMaterialOptions();
-refreshRecipePrices();
-updateRatioTotal();
+loadPriceHistory();
