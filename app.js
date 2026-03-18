@@ -164,15 +164,13 @@ window.updateUnitCost = function () {
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = document.getElementById("productUnit")?.value;
 
-  // 🔥 이미 계산된 (원/kg 합계) 가져오기
-  const costText = document.getElementById("costSum")?.innerText || "0";
+  // 👉 진짜 합계값 가져오기 (tfoot 3700원)
+  const costText = document.querySelector("tfoot td:nth-child(2)")?.innerText || "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  // 🔥 g → kg 변환
   let volumeKg = volume;
   if (unit === "g") volumeKg = volume / 1000;
 
-  // 🔥 최종 계산
   const unitCost = totalCostPerKg * volumeKg * density;
 
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
