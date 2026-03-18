@@ -341,6 +341,29 @@ document.getElementById("productDensity").value = product.density || 1;
 
   updateRecipeCalc();
 }
+window.resetRecipeTable = function () {
+
+  // 1. 배합표 초기화
+  const tbody = document.querySelector("#recipeTable tbody");
+  if (tbody) tbody.innerHTML = "";
+
+  // 2. 합계 초기화
+  document.getElementById("ratioTotal").innerText = "0.0";
+  document.getElementById("materialCostSum").innerText = "0";
+  document.getElementById("ratioSum").innerText = "0.0";
+  document.getElementById("costSum").innerText = "0 원";
+
+  // 3. 입력값 초기화
+  document.getElementById("productVolume").value = "";
+  document.getElementById("productUnit").value = "g";
+  document.getElementById("productDensity").value = "1";
+
+  // 4. 단위원가 초기화
+  document.getElementById("recipeUnitCost").value = "0";
+
+  console.log("초기화 완료");
+};
+
 // =============================
 // 히스토리
 // =============================
