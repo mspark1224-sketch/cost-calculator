@@ -522,6 +522,3 @@ window.calculateCost = function () {
   console.log("총원가:", baseCost);
   console.log("견적가:", finalCost);
 };
-if (id === "calc") {
-  loadCalcProducts();
-}
