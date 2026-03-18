@@ -249,7 +249,7 @@ window.updateUnitCost = function () {
 
 window.saveRecipe = function () {
   const name = document.getElementById("productName")?.value.trim();
-  const type = document.getElementById("productType")?.value;
+  const type = document.getElementById("productType")?.value || "일반";
 
   if (!name) {
     alert("제품명을 입력하세요");
