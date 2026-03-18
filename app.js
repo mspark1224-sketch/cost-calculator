@@ -163,6 +163,7 @@ function saveMaterial() {
 // 원가 계산
 // =============================
 window.updateUnitCost = function () {
+  updateRecipeCalc(); // 🔥 이거 추가
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
