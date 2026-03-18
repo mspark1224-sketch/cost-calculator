@@ -398,21 +398,20 @@ function deletePriceHistory(id) {
 // =============================
 function addRecipe() {
   const tbody = document.querySelector("#recipeTable tbody");
-
   const materials = getAllLatestMaterials();
 
   const options = materials.map(m => 
-    `<option value="${m.code}">${m.name}</option>`
+    `<option value="${m.name}" data-code="${m.code}"></option>`
   ).join("");
 
   const row = document.createElement("tr");
 
   row.innerHTML = `
     <td>
-      <select onchange="updateRecipeRow(this)">
-        <option value="">선택</option>
+      <input list="materialListOptions" oninput="updateRecipeRow(this)" placeholder="원재료 검색" />
+      <datalist id="materialListOptions">
         ${options}
-      </select>
+      </datalist>
     </td>
     <td class="code"></td>
     <td class="price">0</td>
@@ -427,7 +426,6 @@ function addRecipe() {
 
   tbody.appendChild(row);
 }
-
 // =============================
 // 선택 시 자동 입력
 // =============================
