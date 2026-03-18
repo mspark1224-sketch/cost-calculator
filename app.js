@@ -187,16 +187,15 @@ window.updateUnitCost = function () {
   console.log("단위원가:", unitCost);
 };
 window.saveRecipe = function () {
-  const name = document.getElementById("productName")?.value.trim();
-  const type = document.querySelector("select")?.value; // 유형
-
+ const name = document.getElementById("productName")?.value.trim();
+const type = document.getElementById("productType")?.value;
   if (!name) {
     alert("제품명을 입력하세요");
     return;
   }
 
   // 🔥 원/kg 가져오기
-  const costText = document.getElementById("costSum")?.innerText || "0";
+   const costText = document.getElementById("materialCostSum")?.innerText || "0";
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   // 🔥 단위원가 가져오기
