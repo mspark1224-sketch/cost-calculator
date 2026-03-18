@@ -358,6 +358,10 @@ window.resetRecipeTable = function () {
   document.getElementById("productUnit").value = "g";
   document.getElementById("productDensity").value = "1";
 
+  // 🔥 추가
+  document.getElementById("productName").value = "";
+  document.getElementById("productType").value = "";
+  
   // 4. 단위원가 초기화
   document.getElementById("recipeUnitCost").value = "0";
 
