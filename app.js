@@ -33,7 +33,7 @@ function escapeJsString(str) {
 // =============================
 // 페이지 전환
 // =============================
-function showPage(id) {
+window.showPage = function(id) {
   document.querySelectorAll(".page").forEach((p) => {
     p.style.display = "none";
   });
