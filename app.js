@@ -165,7 +165,7 @@ function saveMaterial() {
 window.updateUnitCost = function () {
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
-  const unit = document.getElementById("productUnit")?.value;
+  const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
 
   // ✅ 합계만 정확히 가져오기
 const costText = document.querySelector("#recipeTable tfoot td:nth-child(5)")?.innerText || "0";
