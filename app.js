@@ -430,21 +430,21 @@ function loadPriceHistory() {
   const table = document.getElementById("priceHistoryTable");
   table.innerHTML = "";
 
-  materials.forEach((m) => {
-    table.innerHTML += `
-      <tr>
-        <td>${p.code}</td>
-        <td>${p.name}</td>
-        <td>${p.price}</td>
-        <td>${p.date}</td>
-        <td><button onclick="deletePriceHistory(${p.id})">삭제</button></td>
-      </tr>
-    `;
-  });
+materials.forEach((m) => {
+  table.innerHTML += `
+    <tr>
+      <td>${m.code}</td>
+      <td>${m.name}</td>
+      <td>${m.price}</td>
+      <td>${m.date}</td>
+      <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
+    </tr>
+  `;
+});
 }
 
 function deletePriceHistory(id) {
-  materials = materials.filter((m) => p.id !== id);
+  materials = materials.filter((m) => m.id !== id);
   saveAll();
   loadPriceHistory();
 }
