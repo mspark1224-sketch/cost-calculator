@@ -110,12 +110,15 @@ function getLatestRecordByCode(code) {
 
 function getAllLatestMaterials() {
   const map = {};
-  materials.forEach((p) => {
-    const key = String(p.code);
+
+  materials.forEach((m) => {
+    const key = String(m.code);
+
     if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
       map[key] = m;
     }
   });
+
   return Object.values(map);
 }
 
@@ -316,7 +319,7 @@ function loadMaterials() {
   const data = getAllLatestMaterials().filter(
     (m) =>
       m.name.toLowerCase().includes(keyword) ||
-      String(p.code).toLowerCase().includes(keyword)
+      String(m.code).toLowerCase().includes(keyword)
   );
 
   if (!data.length) {
