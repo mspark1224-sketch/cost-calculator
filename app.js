@@ -673,3 +673,4 @@ function loadQuotes() {
     `;
   });
 }
+console.log("끝까지 실행됨");
