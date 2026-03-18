@@ -498,18 +498,16 @@ function addRecipe() {
 // 선택 시 자동 입력
 // =============================
 function updateRecipeRow(input) {
-  const name = input.value;
+  const code = input.value;
   const row = input.closest("tr");
 
-  if (!name) return;
+  if (!code) return;
 
   const materials = getAllLatestMaterials();
 
-  // 🔥 name으로 찾기
-  const material = materials.find(m => m.name === name);
+  const material = materials.find(m => String(m.code) === String(code));
 
   if (!material) {
-    // ❗ 못찾으면 초기화 (NaN 방지)
     row.querySelector(".code").innerText = "";
     row.querySelector(".price").innerText = "0";
     updateRecipeCalc();
