@@ -162,25 +162,19 @@ function saveMaterial() {
 window.updateUnitCost = function () {
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
+  const unit = document.getElementById("productUnit")?.value;
 
-  const rows = document.querySelectorAll("#recipeTableBody tr");
+  // 🔥 이미 계산된 (원/kg 합계) 가져오기
+  const costText = document.getElementById("costSum")?.innerText || "0";
+  const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  let totalCostPerKg = 0;
+  // 🔥 g → kg 변환
+  let volumeKg = volume;
+  if (unit === "g") volumeKg = volume / 1000;
 
-  rows.forEach((row) => {
-    const ratio = parseFloat(row.querySelector(".mat-ratio")?.value) || 0;
-    const costInput = row.querySelector(".mat-cost");
+  // 🔥 최종 계산
+  const unitCost = totalCostPerKg * volumeKg * density;
 
-    // 👉 여기: 원재료 단가 필요 (임시로 ratio 사용중이면 교체 필요)
-    const materialCost = ratio; // ❗ 나중에 단가 연결해야 함
-
-    totalCostPerKg += materialCost;
-  });
-
-  // 👉 핵심 계산
-  const unitCost = totalCostPerKg * volume * density;
-
-  // 👉 출력
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
 
   console.log("단위원가:", unitCost);
