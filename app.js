@@ -194,7 +194,7 @@ function handleExcelUpload() {
         id: Date.now() + Math.floor(Math.random() * 100000),
         code,
         name,
-        price,
+        cost,
         date
       });
     });
