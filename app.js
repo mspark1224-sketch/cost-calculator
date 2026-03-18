@@ -161,7 +161,29 @@ function saveMaterial() {
   loadMaterials();
   loadPriceHistory("");
 }
+// =============================
+// 원가 계산
+// =============================
+function updateUnitCost() {
+  const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
 
+  const rows = document.querySelectorAll("#recipeTableBody tr");
+
+  let totalCost = 0;
+
+  rows.forEach((row) => {
+    const ratio = parseFloat(row.querySelector(".mat-ratio")?.value) || 0;
+    const costInput = row.querySelector(".mat-cost");
+
+    const cost = (ratio / 100) * volume;
+
+    if (costInput) costInput.value = cost.toFixed(2);
+
+    totalCost += cost;
+  });
+
+  console.log("총 원가:", totalCost);
+}
 // =============================
 // 목록
 // =============================
