@@ -296,6 +296,10 @@ window.loadProduct = function(id) {
   document.getElementById("productName").value = product.name || "";
   document.getElementById("productType").value = product.type || "";
   document.getElementById("recipeUnitCost").value = Number(product.unitCost || 0).toFixed(2);
+  // 🔥 이 3줄 추가
+document.getElementById("productVolume").value = product.volume || 0;
+document.getElementById("productUnit").value = product.unit || "g";
+document.getElementById("productDensity").value = product.density || 1;
 
   const tbody = document.querySelector("#recipeTable tbody");
   tbody.innerHTML = "";
