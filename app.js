@@ -463,19 +463,16 @@ window.resetRecipeTable = function () {
 // =============================
 function loadPriceHistory(keyword = "") {
   const table = document.getElementById("priceHistoryTable");
-  const result = document.getElementById("priceHistoryResult");
 
   table.innerHTML = "";
 
+  // 🔥 검색 없으면 그냥 아무것도 안 보여줌
+  if (!keyword) return;
+
   const filtered = materials.filter(m =>
-    keyword === "all" ||
     m.name.toLowerCase().includes(keyword.toLowerCase()) ||
     String(m.code).includes(keyword)
   );
-
-
-  // 🔥 검색하면 표시
-  result.style.display = "block";
 
   filtered.forEach((m) => {
     table.innerHTML += `
