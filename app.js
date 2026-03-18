@@ -201,7 +201,7 @@ function handleExcelUpload() {
   rows.forEach((row) => {
   const code = String(row["코드"] || "").trim();
   const name = String(row["이름"] || "").trim();
-  const price = Number(row["단가"] || 0);
+ const price = Number(String(row["단가"] || 0).replace(/,/g, "").trim()) || 0;
   const date = new Date().toISOString().slice(0, 10); // 날짜 없으니까 자동 생성
 
   if (!code || !name) return;
@@ -283,25 +283,27 @@ const unit = document.getElementById("productUnit")?.value || "g";
 const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
 
   const recipe = [];
-  document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
-    const select = row.querySelector("select");
-    const code = row.querySelector(".code")?.textContent || "";
-    const price = parseFloat(row.querySelector(".price")?.textContent) || 0;
-    const ratio = parseFloat(row.querySelector("input")?.value) || 0;
-    const cost = parseFloat(row.querySelector(".cost")?.textContent) || 0;
-    const nameText = select?.options[select.selectedIndex]?.text || "";
+ document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
+  const input = row.querySelector("td:nth-child(1) input");
+  const code = row.querySelector(".code")?.textContent || "";
+  const price = parseFloat(row.querySelector(".price")?.textContent) || 0;
+  const ratio = parseFloat(row.querySelector("td:nth-child(4) input")?.value) || 0;
+  const cost = parseFloat(row.querySelector(".cost")?.textContent) || 0;
 
-    if (code || ratio > 0) {
-      recipe.push({
-        materialCode: select?.value || "",
-        materialName: nameText,
-        code,
-        price,
-        ratio,
-        cost
-      });
-    }
-  });
+  const matched = getAllLatestMaterials().find(m => String(m.code) === String(code));
+  const nameText = matched?.name || "";
+
+  if (code || ratio > 0) {
+    recipe.push({
+      materialCode: code,
+      materialName: nameText,
+      code,
+      price,
+      ratio,
+      cost
+    });
+  }
+});
 
 const newProduct = {
   id: Date.now(),
@@ -397,11 +399,11 @@ document.getElementById("productDensity").value = product.density || 1;
 
   (product.recipe || []).forEach(item => {
     const materialsList = getAllLatestMaterials();
-    const options = materialsList.map(m => {
-      const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
-      return `<option value="${p.code}" ${selected}>${p.name}</option>`;
-    }).join("");
-
+   const options = materialsList.map(m => {
+  const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
+  return `<option value="${m.code}" ${selected}>${m.name}</option>`;
+}).join("");
+    
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>
@@ -485,14 +487,14 @@ function addRecipe() {
   const materials = getAllLatestMaterials();
 
   const options = materials.map(m => 
-    `<option value="${m.name}" data-code="${m.code}"></option>`
+    `<option value="${m.code}">${m.name}</option>`
   ).join("");
 
   const row = document.createElement("tr");
 
   row.innerHTML = `
     <td>
-      <input list="materialListOptions" oninput="updateRecipeRow(this)" placeholder="원재료 검색" />
+      <input list="materialListOptions" oninput="updateRecipeRow(this)" placeholder="원재료 코드 입력" />
       <datalist id="materialListOptions">
         ${options}
       </datalist>
