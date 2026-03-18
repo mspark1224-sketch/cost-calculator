@@ -121,10 +121,15 @@ function getAllLatestMaterials() {
 
   return Object.values(map);
 }
+function getLatestRecordByCode(code) {
+  const filtered = materials.filter((m) => m.code === code);
 
-function getLatestPriceByCode(code) {
-  const latest = getLatestRecordByCode(code);
-  return latest ? Number(latest.price || 0) : 0;
+  if (filtered.length === 0) return null;
+
+  // 날짜 최신순 정렬
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return filtered[0];
 }
 // =============================
 // 입력 초기화
@@ -197,7 +202,7 @@ function handleExcelUpload() {
     id: Date.now() + Math.floor(Math.random() * 100000),
     code,
     name,
-    cost: price,
+    price: price,   //⭐ 핵심 수정 (cost → price)
     date
   });
 });
