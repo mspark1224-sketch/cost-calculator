@@ -159,6 +159,58 @@ function saveMaterial() {
   loadMaterials();
   loadPriceHistory("");
 }
+function handleExcelUpload() {
+  const fileInput = document.getElementById("excelFile");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("엑셀 파일을 선택해주세요.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+    if (!rows.length) {
+      alert("엑셀 데이터가 없습니다.");
+      return;
+    }
+
+    rows.forEach((row) => {
+      const code = String(row["원재료 코드"] || "").trim();
+      const name = String(row["원재료 이름"] || "").trim();
+      const price = Number(row["단가 (원/kg)"] || row["단가"] || 0);
+      const date = normalizeDate(row["적용 날짜"] || row["날짜"] || "");
+
+      if (!code || !name || !price || !date) return;
+
+      materials.push({
+        id: Date.now() + Math.floor(Math.random() * 100000),
+        code,
+        name,
+        price,
+        date
+      });
+    });
+
+    saveAll();
+    loadMaterials();
+    loadPriceHistory("");
+
+    fileInput.value = "";
+    alert("엑셀 업로드가 완료되었습니다.");
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+
 // =============================
 // 원가 계산
 // =============================
