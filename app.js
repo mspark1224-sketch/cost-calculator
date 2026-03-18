@@ -129,16 +129,7 @@ function getAllLatestMaterials() {
 
   return Object.values(map);
 }
-function getLatestRecordByCode(code) {
-  const filtered = materials.filter((m) => m.code === code);
 
-  if (filtered.length === 0) return null;
-
-  // 날짜 최신순 정렬
-  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  return filtered[0];
-}
 // =============================
 // 입력 초기화
 // =============================
@@ -398,31 +389,30 @@ document.getElementById("productDensity").value = product.density || 1;
   tbody.innerHTML = "";
 
   (product.recipe || []).forEach(item => {
-    const materialsList = getAllLatestMaterials();
-   const options = materialsList.map(m => {
-  const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
-  return `<option value="${m.code}" ${selected}>${m.name}</option>`;
-}).join("");
-    
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>
-        <select onchange="updateRecipeRow(this)">
-          <option value="">선택</option>
-          ${options}
-        </select>
-      </td>
-      <td class="code">${item.code || ""}</td>
-      <td class="price">${item.price || 0}</td>
-      <td>
-        <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
-      </td>
-      <td class="cost">${item.cost || 0}</td>
-      <td>
-        <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
-      </td>
-    `;
-    tbody.appendChild(row);
+   const materialsList = getAllLatestMaterials();
+const options = materialsList.map(m =>
+  `<option value="${m.code}">${m.name}</option>`
+).join("");
+
+const row = document.createElement("tr");
+row.innerHTML = `
+  <td>
+    <input list="materialListOptions" value="${item.code || ""}" oninput="updateRecipeRow(this)" placeholder="원재료 코드 입력" />
+    <datalist id="materialListOptions">
+      ${options}
+    </datalist>
+  </td>
+  <td class="code">${item.code || ""}</td>
+  <td class="price">${item.price || 0}</td>
+  <td>
+    <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
+  </td>
+  <td class="cost">${item.cost || 0}</td>
+  <td>
+    <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
+  </td>
+`;
+tbody.appendChild(row);
   });
 
   updateRecipeCalc();
