@@ -173,12 +173,13 @@ const costText = document.querySelector("#recipeTable tfoot td:nth-child(5)")?.i
 
   let volumeKg = 0;
 
-  if (unit === "g") {
-    volumeKg = volume / 1000;
-  } else if (unit === "ml") {
-    volumeKg = (volume * density) / 1000;
-  }
-
+ if (unit === "g") {
+   volumeKg = volume / 1000;
+ } else if (unit === "ml") {
+   volumeKg = (volume * density) / 1000;
+ } else {
+   volumeKg = volume / 1000; // 기본값 g 처리
+ }
   const unitCost = totalCostPerKg * volumeKg;
 
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
