@@ -628,3 +628,28 @@ function loadSelected() {
 
   loadQuote(checked.value);
 }
+function loadQuotes() {
+  const list = document.getElementById("quoteList");
+  list.innerHTML = "";
+
+  if (!quotes || quotes.length === 0) {
+    list.innerHTML = `<tr><td colspan="6">데이터 없음</td></tr>`;
+    return;
+  }
+
+  quotes.forEach((q) => {
+    list.innerHTML += `
+      <tr>
+        <td><input type="checkbox" class="rowCheck" value="${q.id}"></td>
+        <td>${q.type || ""}</td>
+        <td>${q.name || ""}</td>
+        <td>${formatNumber(q.cost)} 원</td>
+        <td>${formatNumber(q.unitCost)} 원</td>
+        <td>${q.date || ""}</td>
+        <td>
+          <button onclick="loadQuote('${q.id}')">불러오기</button>
+        </td>
+      </tr>
+    `;
+  });
+}
