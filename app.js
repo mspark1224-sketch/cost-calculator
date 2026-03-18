@@ -195,19 +195,40 @@ window.updateUnitCost = function () {
 
 
 window.saveRecipe = function () {
- const name = document.getElementById("productName")?.value.trim();
-const type = document.getElementById("productType")?.value;
+  const name = document.getElementById("productName")?.value.trim();
+  const type = document.getElementById("productType")?.value;
+
   if (!name) {
     alert("제품명을 입력하세요");
     return;
   }
 
-  // 🔥 원/kg 가져오기
-   const costText = document.getElementById("materialCostSum")?.innerText || "0";
+  const costEl = document.getElementById("materialCostSum");
+  const costText = costEl ? costEl.textContent.trim() : "0";
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  // 🔥 단위원가 가져오기
   const unitCost = parseFloat(document.getElementById("recipeUnitCost")?.value) || 0;
+
+  const recipe = [];
+  document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
+    const select = row.querySelector("select");
+    const code = row.querySelector(".code")?.textContent || "";
+    const price = parseFloat(row.querySelector(".price")?.textContent) || 0;
+    const ratio = parseFloat(row.querySelector("input")?.value) || 0;
+    const cost = parseFloat(row.querySelector(".cost")?.textContent) || 0;
+    const nameText = select?.options[select.selectedIndex]?.text || "";
+
+    if (code || ratio > 0) {
+      recipe.push({
+        materialCode: select?.value || "",
+        materialName: nameText,
+        code,
+        price,
+        ratio,
+        cost
+      });
+    }
+  });
 
   const newProduct = {
     id: Date.now(),
@@ -215,22 +236,15 @@ const type = document.getElementById("productType")?.value;
     name,
     costPerKg,
     unitCost,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    recipe
   };
 
   products.push(newProduct);
   saveAll();
-
-  if (typeof loadProducts === "function") loadProducts();
-};
-function deleteProduct(id) {
-  const ok = confirm("삭제하시겠습니까?");
-  if (!ok) return;
-
-  products = products.filter(p => p.id !== id);
-  saveAll();
   loadProducts();
-}
+};
+
 // =============================
 // 목록
 // =============================
@@ -275,7 +289,47 @@ function deleteMaterial(code) {
   saveAll();
   loadMaterials();
 }
+function loadProduct(id) {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
 
+  document.getElementById("productName").value = product.name || "";
+  document.getElementById("productType").value = product.type || "";
+  document.getElementById("recipeUnitCost").value = Number(product.unitCost || 0).toFixed(2);
+
+  const tbody = document.querySelector("#recipeTable tbody");
+  tbody.innerHTML = "";
+
+  (product.recipe || []).forEach(item => {
+    const materialsList = getAllLatestMaterials();
+    const options = materialsList.map(m => {
+      const selected = String(m.code) === String(item.materialCode) ? "selected" : "";
+      return `<option value="${m.code}" ${selected}>${m.name}</option>`;
+    }).join("");
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>
+        <select onchange="updateRecipeRow(this)">
+          <option value="">선택</option>
+          ${options}
+        </select>
+      </td>
+      <td class="code">${item.code || ""}</td>
+      <td class="price">${item.price || 0}</td>
+      <td>
+        <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
+      </td>
+      <td class="cost">${item.cost || 0}</td>
+      <td>
+        <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  updateRecipeCalc();
+}
 // =============================
 // 히스토리
 // =============================
