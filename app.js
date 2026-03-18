@@ -259,7 +259,13 @@ window.saveRecipe = function () {
     alert("제품명을 입력하세요");
     return;
   }
+// 🔥 중복 체크 추가
+const exists = products.some(p => p.name === name);
 
+if (exists) {
+  alert("이미 동일한 제품명이 존재합니다.");
+  return;
+}
   const costEl = document.getElementById("materialCostSum");
   const costText = costEl ? costEl.textContent.trim() : "0";
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
@@ -626,6 +632,22 @@ function deleteSelected() {
 
   saveAll();
   loadQuotes();
+}
+function deleteSelectedProducts() {
+  const checked = Array.from(document.querySelectorAll(".rowCheck:checked"))
+    .map(cb => Number(cb.value));
+
+  if (!checked.length) {
+    alert("삭제할 제품을 선택하세요.");
+    return;
+  }
+
+  if (!confirm("선택한 제품을 삭제할까요?")) return;
+
+  products = products.filter(p => !checked.includes(Number(p.id)));
+
+  saveAll();
+  loadProducts();
 }
 
 function loadSelected() {
