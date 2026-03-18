@@ -51,8 +51,11 @@ function showPage(id) {
     loadPriceHistory(document.getElementById("priceSearch")?.value || "");
   }
 
+
 if (id === "recipe") {
-  if (typeof loadProducts === "function") loadProducts();
+  if (typeof window.loadProducts === "function") {
+    window.loadProducts();
+  }
 }
 
   if (id === "calc") {
@@ -63,7 +66,30 @@ if (id === "recipe") {
     loadQuotes();
   }
 }
+// =============================
+// 제품 목록 불러오기
+// =============================
+function loadProducts() {
+  const tbody = document.getElementById("productList");
+  if (!tbody) return;
 
+  tbody.innerHTML = "";
+
+  products.forEach((p) => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${p.name || ""}</td>
+      <td>${p.date ? new Date(p.date).toLocaleString() : ""}</td>
+      <td>
+        <button type="button" onclick="loadProductToRecipe('${p.id}')">불러오기</button>
+        <button type="button" onclick="deleteProduct('${p.id}')">삭제</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
 // =============================
 // 날짜 처리
 // =============================
