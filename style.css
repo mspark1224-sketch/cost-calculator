@@ -107,6 +107,11 @@ th, td {
 th {
   background: #f1f4f8;
 }
+/ * 제품명 효과 * 260318 /
+#productList td:hover {
+  background-color: #eef5ff;
+  cursor: pointer;
+}
 
 .center {
   text-align: center;
