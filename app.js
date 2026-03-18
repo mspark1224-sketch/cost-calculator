@@ -315,7 +315,7 @@ function loadMaterials() {
 
   const data = getAllLatestMaterials().filter(
     (m) =>
-      p.name.toLowerCase().includes(keyword) ||
+      m.name.toLowerCase().includes(keyword) ||
       String(p.code).toLowerCase().includes(keyword)
   );
 
