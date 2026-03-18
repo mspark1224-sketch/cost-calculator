@@ -76,7 +76,12 @@ function loadProducts() {
     tr.innerHTML = `
       <td><input type="checkbox" class="rowCheck" value="${p.id}"></td>
       <td>${p.type || "-"}</td>
-      <td>${p.name}</td>
+      <td 
+  style="cursor:pointer; color:#2563eb; font-weight:500;"
+  onclick="loadProduct(${p.id})"
+>
+  ${p.name}
+</td>
       <td>${formatNumber(p.costPerKg)} 원</td>
       <td>${formatNumber(p.unitCost)} 원</td>
       <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
