@@ -590,3 +590,41 @@ window.calculateCost = function () {
   console.log("총원가:", baseCost);
   console.log("견적가:", finalCost);
 };
+
+// =============================
+// 선택 기능 (견적 조회)
+// =============================
+
+function toggleAll(el) {
+  document.querySelectorAll(".rowCheck").forEach(cb => {
+    cb.checked = el.checked;
+  });
+}
+
+function deleteSelected() {
+  const checked = Array.from(document.querySelectorAll(".rowCheck:checked"))
+    .map(cb => Number(cb.value));
+
+  if (!checked.length) {
+    alert("삭제할 항목을 선택하세요.");
+    return;
+  }
+
+  if (!confirm("선택한 항목을 삭제할까요?")) return;
+
+  quotes = quotes.filter(q => !checked.includes(Number(q.id)));
+
+  saveAll();
+  loadQuotes();
+}
+
+function loadSelected() {
+  const checked = document.querySelector(".rowCheck:checked");
+
+  if (!checked) {
+    alert("하나 선택하세요.");
+    return;
+  }
+
+  loadQuote(checked.value);
+}
