@@ -161,24 +161,30 @@ function saveMaterial() {
 // =============================
 window.updateUnitCost = function () {
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
+  const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
 
   const rows = document.querySelectorAll("#recipeTableBody tr");
 
-  let totalCost = 0;
+  let totalCostPerKg = 0;
 
   rows.forEach((row) => {
     const ratio = parseFloat(row.querySelector(".mat-ratio")?.value) || 0;
     const costInput = row.querySelector(".mat-cost");
 
-    const cost = (ratio / 100) * volume;
+    // 👉 여기: 원재료 단가 필요 (임시로 ratio 사용중이면 교체 필요)
+    const materialCost = ratio; // ❗ 나중에 단가 연결해야 함
 
-    if (costInput) costInput.value = cost.toFixed(2);
-
-    totalCost += cost;
+    totalCostPerKg += materialCost;
   });
 
-  console.log("총 원가:", totalCost);
-}
+  // 👉 핵심 계산
+  const unitCost = totalCostPerKg * volume * density;
+
+  // 👉 출력
+  document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
+
+  console.log("단위원가:", unitCost);
+};
 window.saveRecipe = function () {
   const name = prompt("제품명을 입력하세요");
   if (!name) return;
