@@ -160,21 +160,33 @@ function saveMaterial() {
 // 원가 계산
 // =============================
 window.updateUnitCost = function () {
+  // 입력값
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = document.getElementById("productUnit")?.value;
 
-  // 👉 진짜 합계값 가져오기 (tfoot 3700원)
-  const costText = document.querySelector("tfoot td:nth-child(2)")?.innerText || "0";
+  // 🔥 (원/kg) 합계 가져오기 (tfoot 기준 3번째 컬럼)
+  const costText = document.querySelector("tfoot td:nth-child(3)")?.innerText || "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  let volumeKg = volume;
-  if (unit === "g") volumeKg = volume / 1000;
+  // 🔥 단위 변환 (kg 기준으로 통일)
+  let volumeKg = 0;
 
-  const unitCost = totalCostPerKg * volumeKg * density;
+  if (unit === "g") {
+    volumeKg = volume / 1000;
+  } else if (unit === "ml") {
+    volumeKg = (volume * density) / 1000;
+  }
 
+  // 🔥 최종 단위원가 계산
+  const unitCost = totalCostPerKg * volumeKg;
+
+  // 결과 출력
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
 
+  // 디버깅 로그
+  console.log("원/kg:", totalCostPerKg);
+  console.log("용량(kg):", volumeKg);
   console.log("단위원가:", unitCost);
 };
 window.saveRecipe = function () {
