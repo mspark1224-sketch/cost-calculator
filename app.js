@@ -213,6 +213,14 @@ window.saveRecipe = function () {
 
   if (typeof loadProducts === "function") loadProducts();
 };
+function deleteProduct(id) {
+  const ok = confirm("삭제하시겠습니까?");
+  if (!ok) return;
+
+  products = products.filter(p => p.id !== id);
+  saveAll();
+  loadProducts();
+}
 // =============================
 // 목록
 // =============================
