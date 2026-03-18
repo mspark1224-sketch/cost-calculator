@@ -257,6 +257,8 @@ window.updateUnitCost = function () {
   console.log("costText:", costText);
   console.log("원/kg:", totalCostPerKg);
   console.log("단위원가:", unitCost);
+  console.log("찾는코드:", code);
+  console.log("materials:", materials);
 };
 
 
