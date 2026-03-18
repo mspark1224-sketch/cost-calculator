@@ -212,7 +212,6 @@ if (!name) {
   products.push(newProduct);
   saveAll();
 
-  alert("제품 저장 완료");
 
   if (typeof window.loadProducts === "function") {
     window.loadProducts();
