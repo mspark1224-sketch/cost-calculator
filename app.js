@@ -429,13 +429,16 @@ function addRecipe() {
 // =============================
 // 선택 시 자동 입력
 // =============================
-function updateRecipeRow(select) {
-  const code = select.value;
-  const row = select.closest("tr");
+function updateRecipeRow(input) {
+  const name = input.value;
+  const row = input.closest("tr");
 
-  if (!code) return;
+  if (!name) return;
 
-  const material = getLatestRecordByCode(code);
+  const materials = getAllLatestMaterials();
+  const material = materials.find(m => m.name === name);
+
+  if (!material) return;
 
   row.querySelector(".code").innerText = material.code;
   row.querySelector(".price").innerText = material.price;
