@@ -463,24 +463,24 @@ window.resetRecipeTable = function () {
 // =============================
 function loadPriceHistory(keyword = "") {
   const table = document.getElementById("priceHistoryTable");
-  const card = document.getElementById("priceHistoryCard");
+  const result = document.getElementById("priceHistoryResult");
 
   table.innerHTML = "";
 
   const filtered = materials.filter(m =>
-    !keyword ||
+    keyword === "all" ||
     m.name.toLowerCase().includes(keyword.toLowerCase()) ||
     String(m.code).includes(keyword)
   );
 
-  // 🔥 핵심: 검색 없으면 숨김
+  // 🔥 검색 없으면 숨김
   if (!keyword) {
-    card.style.display = "none";
+    result.style.display = "none";
     return;
   }
 
-  // 🔥 검색하면 보이기
-  card.style.display = "block";
+  // 🔥 검색하면 표시
+  result.style.display = "block";
 
   filtered.forEach((m) => {
     table.innerHTML += `
