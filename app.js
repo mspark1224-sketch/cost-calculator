@@ -461,14 +461,14 @@ function updateRecipeCalc() {
   let totalCost = 0;
 
   document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
-    const price = Number(row.querySelector(".price").innerText || 0);
-    const ratio = Number(row.querySelector("input").value || 0);
+    const price = parseFloat(row.querySelector(".price")?.innerText) || 0;
+    const ratio = parseFloat(row.querySelector("td:nth-child(4) input")?.value) || 0;
 
     const cost = price * (ratio / 100);
 
     row.querySelector(".cost").innerText = Math.round(cost);
 
-totalRatio += parseFloat(ratio) || 0;
+    totalRatio += ratio;
     totalCost += cost;
   });
 
