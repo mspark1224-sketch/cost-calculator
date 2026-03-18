@@ -100,7 +100,33 @@
       </div>
 
       <!-- 가격 히스토리 -->
-      <div class="card db-history-card" id="priceHistoryCard" style="display:none;">
+      <div class="card db-history-card">
+
+  <!-- 🔍 검색 영역 (항상 보임) -->
+  <div class="search-row history-search-row">
+    <input
+      id="priceSearch"
+      type="text"
+      placeholder="원재료명 또는 코드 검색"
+      oninput="loadPriceHistory(this.value)"
+    />
+    <button onclick="searchPriceHistory()">검색</button>
+    <button onclick="loadPriceHistory('all')">전체</button>
+  </div>
+
+  <!-- 🔥 결과 영역만 숨김 -->
+  <div id="priceHistoryResult" style="display:none;">
+    
+    <div class="table-wrap">
+      <table class="data-table history-table">
+        <thead>...</thead>
+        <tbody id="priceHistoryTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
         <h3 class="section-title">가격 히스토리</h3>
 
         <div class="search-row history-search-row">
