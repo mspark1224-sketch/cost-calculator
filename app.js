@@ -90,7 +90,7 @@ function loadProducts() {
     tbody.appendChild(tr);
   });
 }
-function searchPriceHistory() {
+window.searchPriceHistory = function() {
   const keyword = document.getElementById("priceSearch").value;
   loadPriceHistory(keyword);
 }
