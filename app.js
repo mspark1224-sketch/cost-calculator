@@ -273,7 +273,7 @@ function updateRecipeCalc() {
 
     row.querySelector(".cost").innerText = Math.round(cost);
 
-    totalRatio += ratio;
+totalRatio += parseFloat(ratio) || 0;
     totalCost += cost;
   });
 
