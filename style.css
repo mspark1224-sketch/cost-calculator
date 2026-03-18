@@ -19,8 +19,11 @@ h3 { margin-bottom: 12px; }
 
 .section-title {
   margin-bottom: 12px;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 24px;           /* 🔥 1.5배 260318 추가 */
+  font-weight: 800;          /* 🔥 더 진하게 260318 추가 */
+  color: #444;               /* 🔥 회색 260318 추가 */
+  letter-spacing: -0.3px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
 
 .menu {
@@ -40,6 +43,9 @@ button {
   border-radius: 6px;
   cursor: pointer;
   white-space: nowrap;
+  /* 🔥 여기 추가 260318 추가 */
+  font-weight: 600;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
 
 button.secondary {
