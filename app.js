@@ -178,8 +178,11 @@ window.updateUnitCost = function () {
   console.log("단위원가:", unitCost);
 };
 window.saveRecipe = function () {
-  const name = prompt("제품명을 입력하세요");
-  if (!name) return;
+ const name = document.getElementById("productName")?.value.trim();
+if (!name) {
+  alert("제품명을 입력하세요");
+  return;
+}
 
   const rows = document.querySelectorAll("#recipeTableBody tr");
 
