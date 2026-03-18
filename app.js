@@ -159,7 +159,7 @@ function saveMaterial() {
 // =============================
 // 원가 계산
 // =============================
-function updateUnitCost() {
+window.updateUnitCost = function () {
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
 
   const rows = document.querySelectorAll("#recipeTableBody tr");
