@@ -437,18 +437,22 @@ function updateRecipeRow(input) {
 
   const materials = getAllLatestMaterials();
 
-  const material = materials.find(m => 
-    m.name.includes(name) || String(m.code) === name
-  );
+  // 🔥 name으로 찾기
+  const material = materials.find(m => m.name === name);
 
-  if (!material) return;
+  if (!material) {
+    // ❗ 못찾으면 초기화 (NaN 방지)
+    row.querySelector(".code").innerText = "";
+    row.querySelector(".price").innerText = "0";
+    updateRecipeCalc();
+    return;
+  }
 
   row.querySelector(".code").innerText = material.code;
   row.querySelector(".price").innerText = material.price;
 
   updateRecipeCalc();
 }
-
 // =============================
 // 계산
 // =============================
