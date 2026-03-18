@@ -182,22 +182,22 @@ function handleExcelUpload() {
       return;
     }
 
-    rows.forEach((row) => {
-      const code = String(row["원재료 코드"] || "").trim();
-      const name = String(row["원재료 이름"] || "").trim();
-      const price = Number(row["단가 (원/kg)"] || row["단가"] || 0);
-      const date = normalizeDate(row["적용 날짜"] || row["날짜"] || "");
+  rows.forEach((row) => {
+  const code = String(row["코드"] || "").trim();
+  const name = String(row["이름"] || "").trim();
+  const price = Number(row["단가"] || 0);
+  const date = new Date().toISOString().slice(0, 10); // 날짜 없으니까 자동 생성
 
-      if (!code || !name || !price || !date) return;
+  if (!code || !name) return;
 
-      materials.push({
-        id: Date.now() + Math.floor(Math.random() * 100000),
-        code,
-        name,
-        cost,
-        date
-      });
-    });
+  materials.push({
+    id: Date.now() + Math.floor(Math.random() * 100000),
+    code,
+    name,
+    cost: price,
+    date
+  });
+});
 
     saveAll();
     loadMaterials();
