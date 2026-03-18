@@ -461,7 +461,7 @@ function addRecipe() {
   const materials = getAllLatestMaterials();
 
   const options = materials.map(m => 
-    `<option value="${p.name}" data-code="${p.code}"></option>`
+    `<option value="${m.name}" data-code="${m.code}"></option>`
   ).join("");
 
   const row = document.createElement("tr");
