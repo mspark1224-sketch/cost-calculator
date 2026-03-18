@@ -357,13 +357,13 @@ function loadMaterials() {
 // =============================
 // 삭제
 // =============================
-function deleteMaterial(code) {
+window.deleteMaterial = function(code) {
   if (!confirm("삭제?")) return;
   materials = materials.filter((m) => m.code !== code);
   saveAll();
   loadMaterials();
 }
-  function editMaterial(code) {
+  window.editMaterial = function(code) {
   const material = materials.find(m => m.code === code);
   if (!material) return;
 
