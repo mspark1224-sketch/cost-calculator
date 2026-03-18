@@ -167,11 +167,11 @@ window.updateUnitCost = function () {
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
 
- const costText = document.getElementById("materialCostSum")?.innerText || "0";
+  const costEl = document.getElementById("materialCostSum");
+  const costText = costEl ? costEl.textContent.trim() : "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   let volumeKg = 0;
-
   if (unit === "g") {
     volumeKg = volume / 1000;
   } else if (unit === "ml") {
@@ -191,6 +191,9 @@ window.updateUnitCost = function () {
   console.log("원/kg:", totalCostPerKg);
   console.log("단위원가:", unitCost);
 };
+
+
+
 window.saveRecipe = function () {
  const name = document.getElementById("productName")?.value.trim();
 const type = document.getElementById("productType")?.value;
