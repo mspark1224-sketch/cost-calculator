@@ -473,11 +473,6 @@ function loadPriceHistory(keyword = "") {
     String(m.code).includes(keyword)
   );
 
-  // 🔥 검색 없으면 숨김
-  if (!keyword) {
-    result.style.display = "none";
-    return;
-  }
 
   // 🔥 검색하면 표시
   result.style.display = "block";
