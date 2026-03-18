@@ -119,36 +119,6 @@
 
 </div>
 
-</div>
-        <h3 class="section-title">가격 히스토리</h3>
-
-        <div class="search-row history-search-row">
-         <input
-  id="priceSearch"
-  type="text"
-  placeholder="원재료명 또는 코드 검색"
-  oninput="loadPriceHistory(this.value)"
-/>
-          <button type="button" onclick="searchPriceHistory()">검색</button>
-          <button type="button" class="secondary" onclick="loadPriceHistory('')">전체</button>
-        </div>
-
-        <div class="table-wrap">
-          <table class="data-table history-table">
-            <thead>
-              <tr>
-                <th class="col-code">코드</th>
-                <th class="col-name">이름</th>
-                <th class="col-price">단가</th>
-                <th class="col-date">날짜</th>
-                <th class="col-action center">삭제</th>
-              </tr>
-            </thead>
-            <tbody id="priceHistoryTable"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
 
     <!-- ===================== -->
     <!-- 배합표 -->
