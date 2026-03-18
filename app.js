@@ -667,7 +667,7 @@ function loadQuotes() {
         <td>${formatNumber(q.unitCost)} 원</td>
         <td>${q.date || ""}</td>
         <td>
-          <button onclick="loadQuote('${q.id}')">불러오기</button>
+          <button type="button" onclick="loadQuote('${q.id}')">불러오기</button>
         </td>
       </tr>
     `;
