@@ -51,9 +51,9 @@ function showPage(id) {
     loadPriceHistory(document.getElementById("priceSearch")?.value || "");
   }
 
-  if (id === "recipe") {
-    loadProducts();
-  }
+if (id === "recipe") {
+  if (typeof loadProducts === "function") loadProducts();
+}
 
   if (id === "calc") {
     loadCalcProducts();
