@@ -513,21 +513,27 @@ function addRecipe() {
 // 선택 시 자동 입력
 // =============================
 function updateRecipeRow(input) {
-  const code = input.value;
+  const value = input.value.trim();
   const row = input.closest("tr");
-
-  if (!code) return;
 
   const materials = getAllLatestMaterials();
 
-  const material = materials.find(m => String(m.code) === String(code));
+  // 🔥 코드 or 이름 둘 다 매칭
+  const material = materials.find(m => 
+    String(m.code) === value || m.name === value
+  );
 
+  // ❌ 못 찾으면 그냥 유지 (아무것도 안함)
   if (!material) {
     row.querySelector(".code").innerText = "";
     row.querySelector(".price").innerText = "0";
+    row.querySelector(".cost").innerText = "0";
     updateRecipeCalc();
     return;
   }
+
+  // 🔥 핵심: input 값을 "이름"으로 덮어씀
+  input.value = material.name;
 
   row.querySelector(".code").innerText = material.code;
   row.querySelector(".price").innerText = material.price;
