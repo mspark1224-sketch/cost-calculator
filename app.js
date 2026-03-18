@@ -73,14 +73,17 @@ function loadProducts() {
   products.forEach((p) => {
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${p.name || ""}</td>
-      <td>${p.date ? new Date(p.date).toLocaleString() : ""}</td>
-      <td>
-        <button type="button" onclick="loadProductToRecipe('${p.id}')">불러오기</button>
-        <button type="button" onclick="deleteProduct('${p.id}')">삭제</button>
-      </td>
-    `;
+   tr.innerHTML = `
+  <td>${p.type || "-"}</td>
+  <td>${p.name}</td>
+  <td>${formatNumber(p.costPerKg)} 원</td>
+  <td>${formatNumber(p.unitCost)} 원</td>
+  <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
+  <td>
+    <button onclick="loadProduct(${p.id})">불러오기</button>
+    <button onclick="deleteProduct(${p.id})">삭제</button>
+  </td>
+`;
 
     tbody.appendChild(tr);
   });
