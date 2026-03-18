@@ -184,46 +184,35 @@ window.updateUnitCost = function () {
   console.log("단위원가:", unitCost);
 };
 window.saveRecipe = function () {
- const name = document.getElementById("productName")?.value.trim();
-if (!name) {
-  alert("제품명을 입력하세요");
-  return;
-}
+  const name = document.getElementById("productName")?.value.trim();
+  const type = document.querySelector("select")?.value; // 유형
 
-  const rows = document.querySelectorAll("#recipeTableBody tr");
+  if (!name) {
+    alert("제품명을 입력하세요");
+    return;
+  }
 
-  const recipe = [];
+  // 🔥 원/kg 가져오기
+  const costText = document.getElementById("costSum")?.innerText || "0";
+  const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  rows.forEach((row) => {
-    const matName = row.querySelector(".mat-name")?.value || "";
-    const ratio = parseFloat(row.querySelector(".mat-ratio")?.value) || 0;
-    const cost = parseFloat(row.querySelector(".mat-cost")?.value) || 0;
-
-    if (matName && ratio > 0) {
-      recipe.push({
-        name: matName,
-        ratio,
-        cost
-      });
-    }
-  });
+  // 🔥 단위원가 가져오기
+  const unitCost = parseFloat(document.getElementById("recipeUnitCost")?.value) || 0;
 
   const newProduct = {
     id: Date.now(),
+    type,
     name,
-    date: new Date().toISOString(),
-    recipe
+    costPerKg,
+    unitCost,
+    date: new Date().toISOString()
   };
 
   products.push(newProduct);
   saveAll();
 
-
-  if (typeof window.loadProducts === "function") {
-    window.loadProducts();
-  }
+  if (typeof loadProducts === "function") loadProducts();
 };
-
 // =============================
 // 목록
 // =============================
