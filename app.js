@@ -167,7 +167,7 @@ window.updateUnitCost = function () {
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
 
-  const costText = document.querySelector("#recipeTable tfoot tr td:last-child")?.innerText || "0";
+ const costText = document.getElementById("materialCostSum")?.innerText || "0";
   const totalCostPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
   let volumeKg = 0;
