@@ -90,6 +90,10 @@ function loadProducts() {
     tbody.appendChild(tr);
   });
 }
+function searchPriceHistory() {
+  const keyword = document.getElementById("priceSearch").value;
+  loadPriceHistory(keyword);
+}
 
 // =============================
 // 날짜 처리
