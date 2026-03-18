@@ -21,7 +21,7 @@ h3 { margin-bottom: 12px; }
   margin-bottom: 12px;
   font-size: 24px;           /* 🔥 1.5배 260318 추가 */
   font-weight: 800;          /* 🔥 더 진하게 260318 추가 */
-  color: #444;               /* 🔥 회색 260318 추가 */
+  color: #243a5e;               /* 🔥 회색444에서 네이비로 바꿈 260318 추가 */
   letter-spacing: -0.3px;
   font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
