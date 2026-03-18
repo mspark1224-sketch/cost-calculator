@@ -81,7 +81,7 @@ function loadProducts() {
   <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
   <td>
     <button onclick="loadProduct(${p.id})">불러오기</button>
-    <button onclick="deleteProduct(${p.id})">삭제</button>
+    <button class="danger" onclick="deleteMaterial(${m.id})">삭제</button>
   </td>
 `;
 
