@@ -633,7 +633,7 @@ function deleteSelected() {
   saveAll();
   loadQuotes();
 }
-function deleteSelectedProducts() {
+window.deleteSelectedProducts = function () {
   const checked = Array.from(document.querySelectorAll(".rowCheck:checked"))
     .map(cb => Number(cb.value));
 
@@ -648,7 +648,7 @@ function deleteSelectedProducts() {
 
   saveAll();
   loadProducts();
-}
+};
 
 function loadSelected() {
   const checked = document.querySelector(".rowCheck:checked");
