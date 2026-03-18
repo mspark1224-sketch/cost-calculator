@@ -327,19 +327,19 @@ function loadMaterials() {
     return;
   }
 
-  data.forEach((m, i) => {
-    list.innerHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${p.code}</td>
-        <td>${p.name}</td>
-        <td>${formatNumber(p.price)} 원</td>
-        <td>${p.date}</td>
-        <td><button onclick="editMaterial('${p.code}')">수정</button></td>
-        <td><button onclick="deleteMaterial('${p.code}')">삭제</button></td>
-      </tr>
-    `;
-  });
+ data.forEach((m, i) => {
+  list.innerHTML += `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${m.code}</td>
+      <td>${m.name}</td>
+      <td>${formatNumber(m.price)} 원</td>
+      <td>${m.date}</td>
+      <td><button onclick="editMaterial('${m.code}')">수정</button></td>
+      <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
+    </tr>
+  `;
+});
 }
 
 // =============================
