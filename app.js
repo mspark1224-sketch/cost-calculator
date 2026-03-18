@@ -102,12 +102,18 @@ function normalizeDate(dateValue) {
 // 원재료 공통
 // =============================
 function getLatestRecordByCode(code) {
-  const rows = materials.filter((m) => String(p.code) === String(code));
-  if (rows.length === 0) return null;
-  rows.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return rows[0];
-}
+  const cleanCode = String(code).trim();
 
+  const filtered = materials.filter((m) => 
+    String(m.code).trim() === cleanCode
+  );
+
+  if (filtered.length === 0) return null;
+
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return filtered[0];
+}
 function getAllLatestMaterials() {
   const map = {};
 
