@@ -364,7 +364,7 @@ window.deleteMaterial = function(code) {
   loadMaterials();
 }
   window.editMaterial = function(code) {
-  const material = materials.find(m => m.code === code);
+  const material = materials.find(m => String(m.code) === String(code));
   if (!material) return;
 
   document.getElementById("materialCode").value = material.code;
