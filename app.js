@@ -586,25 +586,34 @@ function addRecipe() {
   const tbody = document.querySelector("#recipeTable tbody");
   const materials = getAllLatestMaterials();
 
+  // 🔥 이름 기준으로 변경
   const options = materials.map(m => 
-    `<option value="${m.code}">${m.name}</option>`
+    `<option value="${m.name}"></option>`
   ).join("");
 
   const row = document.createElement("tr");
 
   row.innerHTML = `
     <td>
-      <input list="materialListOptions" oninput="updateRecipeRow(this)" placeholder="원재료 코드 입력" />
+      <input 
+        list="materialListOptions" 
+        oninput="updateRecipeRow(this)" 
+        placeholder="원재료명 입력" 
+      />
       <datalist id="materialListOptions">
         ${options}
       </datalist>
     </td>
+
     <td class="code"></td>
-    <td class="price">0</td>
+    <td class="price" data-price="0">0</td>
+
     <td>
       <input type="number" value="0" oninput="updateRecipeCalc()" />
     </td>
+
     <td class="cost">0</td>
+
     <td>
       <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
     </td>
@@ -621,35 +630,23 @@ function updateRecipeRow(input) {
 
   const materials = getAllLatestMaterials();
 
-  // 1️⃣ code 먼저 찾기
-  let material = materials.find(m => String(m.code) === value);
+  // 🔥 이름 기준 매칭
+  const material = materials.find(m => m.name === value);
 
-  // 2️⃣ 없으면 name으로 찾기
-  if (!material) {
-    const matches = materials.filter(m => m.name === value);
-
-    if (matches.length === 1) {
-      material = matches[0];
-    } else if (matches.length > 1) {
-      alert("동일한 이름의 원재료가 여러 개 있습니다. 코드로 입력해주세요.");
-      return;
-    }
-  }
-
-  // ❌ 못 찾으면 초기화
   if (!material) {
     row.querySelector(".code").innerText = "";
     row.querySelector(".price").innerText = "0";
+    row.querySelector(".price").dataset.price = "0";
     row.querySelector(".cost").innerText = "0";
     updateRecipeCalc();
     return;
   }
 
-  // 🔥 핵심: input은 무조건 code로 유지
-  input.value = material.code;
-
+  // 🔥 내부 값 세팅
   row.querySelector(".code").innerText = material.code;
+
   row.querySelector(".price").innerText = material.price;
+  row.querySelector(".price").dataset.price = material.price;
 
   updateRecipeCalc();
 }
