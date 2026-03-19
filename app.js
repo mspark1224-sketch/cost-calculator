@@ -498,6 +498,27 @@ function deletePriceHistory(id) {
   loadPriceHistory();
 }
 // =============================
+// 실시간 원가 계산 (🔥 여기 추가) 0319
+// =============================
+function calculateLiveCost(product) {
+  let total = 0;
+
+  product.recipe.forEach(item => {
+    const latest = getLatestRecordByCode(item.code);
+
+    if (!latest) return;
+
+    const price = latest.price;
+    const ratio = item.ratio;
+
+    total += price * (ratio / 100);
+  });
+
+  return Math.round(total);
+}
+
+
+// =============================
 // 배합표 - 원재료 추가
 // =============================
 function addRecipe() {
