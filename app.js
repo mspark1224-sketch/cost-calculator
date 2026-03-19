@@ -432,7 +432,11 @@ document.getElementById("productDensity").value = product.density || 1;
   tbody.innerHTML = "";
 
   (product.recipe || []).forEach(item => {
-   const materialsList = getAllLatestMaterials();
+  const latest = getLatestRecordByCode(item.code);
+  const livePrice = latest ? latest.price : item.price;
+  const liveCost = livePrice * (item.ratio / 100);
+    
+  const materialsList = getAllLatestMaterials();
 const options = materialsList.map(m =>
   `<option value="${m.code}">${m.name}</option>`
 ).join("");
