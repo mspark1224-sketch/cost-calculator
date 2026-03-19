@@ -469,14 +469,28 @@ row.innerHTML = `
     </datalist>
   </td>
   <td class="code">${item.code || ""}</td>
-  <td class="price">${livePrice}</td>   <!-- 🔥 수정 -->
-  <td>
-    <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
-  </td>
-  <td class="cost">${Math.round(liveCost)}</td>  <!-- 🔥 수정 -->
-  <td>
-    <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
-  </td>
+
+<td class="price">
+  ${formatNumber(item.price)}
+  ${livePrice !== item.price 
+    ? `<span style="color:red; font-weight:600;"> → ${formatNumber(livePrice)}</span>` 
+    : ""}
+</td>
+
+<td>
+  <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
+</td>
+
+<td class="cost">
+  ${Math.round(item.cost)}
+  ${liveCost !== item.cost 
+    ? `<span style="color:red; font-weight:600;"> → ${Math.round(liveCost)}</span>` 
+    : ""}
+</td>
+
+<td>
+  <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
+</td>
 `;
 tbody.appendChild(row);
   });
