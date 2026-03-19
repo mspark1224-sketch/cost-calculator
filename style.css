@@ -63,6 +63,7 @@ button.danger {
   border-color: #d83b3b;
 }
 
+
 /* ================= 카드 ================= */
 .page {
   background: white;
@@ -102,6 +103,8 @@ table {
 th, td {
   border: 1px solid #d6d6d6;
   padding: 10px;
+  text-align: center;
+  vertical-align: middle; 
 }
 
 th {
