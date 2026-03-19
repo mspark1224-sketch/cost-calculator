@@ -499,7 +499,9 @@ row.innerHTML = `
 </td>
 
 <td>
-  <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
+ <button class="delete-btn" onclick="this.closest('tr').remove(); updateRecipeCalc();">
+  삭제
+</button>
 </td>
 `;
 tbody.appendChild(row);
