@@ -283,7 +283,6 @@ function handleExcelUpload() {
 // 원가 계산
 // =============================
 window.updateUnitCost = function () {
-  updateRecipeCalc(); // 🔥 이거 추가
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
   const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
   const unit = (document.getElementById("productUnit")?.value || "").toLowerCase();
@@ -302,18 +301,8 @@ window.updateUnitCost = function () {
   }
 
   const unitCost = totalCostPerKg * volumeKg;
-
   document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
-
-  console.log("volume:", volume);
-  console.log("unit:", unit);
-  console.log("density:", density);
-  console.log("costText:", costText);
-  console.log("원/kg:", totalCostPerKg);
-  console.log("단위원가:", unitCost);
-  console.log("materials:", materials);
 };
-
 
 
 window.saveRecipe = function () {
@@ -469,7 +458,7 @@ document.getElementById("productDensity").value = product.density || 1;
     
   const materialsList = getAllLatestMaterials();
 const options = materialsList.map(m =>
-  `<option value="${m.code}">${m.name}</option>`
+  `<option value="${m.name}"></option>`
 ).join("");
 
 const row = document.createElement("tr");
