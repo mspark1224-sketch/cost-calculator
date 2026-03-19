@@ -106,8 +106,6 @@ if (p.volume) {
   ${liveUnitCost !== p.unitCost ? `<span style="color:red;">→ ${formatNumber(liveUnitCost)}</span>` : ""}
 </td>
       <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
-      <td>
-  <button onclick="updateProductCost(${p.id})">갱신</button>
 </td>
     `;
 
