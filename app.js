@@ -474,8 +474,8 @@ function loadPriceHistory(keyword = "") {
   if (!keyword) return;
 
   const filtered = materials.filter(m =>
-    m.name.toLowerCase().includes(keyword.toLowerCase()) ||
-    String(m.code).includes(keyword)
+   m.name.toLowerCase().includes(keyword.toLowerCase()) ||
+String(m.code) === String(keyword)      // 여기 수정 0319 검색할때 지정된 값만 나오게
   );
 
   filtered.forEach((m) => {
