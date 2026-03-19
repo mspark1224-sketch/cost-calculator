@@ -71,7 +71,7 @@ if (id === "recipe") {
 // 제품 목록 불러오기
 // =============================
 function loadProducts() {
-  const tbody = document.getElementById("productList");
+  const tbody = document.getElementById("recipeProductList");
   if (!tbody) return;
 
   tbody.innerHTML = "";
@@ -750,7 +750,7 @@ window.calculateCost = function () {
 // =============================
 
 function toggleAll(el) {
-  document.querySelectorAll(".rowCheck").forEach(cb => {
+ document.querySelectorAll(".productCheck").forEach(cb => {
     cb.checked = el.checked;
   });
 }
