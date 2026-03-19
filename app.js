@@ -316,12 +316,16 @@ window.saveRecipe = function () {
     alert("제품명을 입력하세요");
     return;
   }
-// 🔥 중복 체크 추가
-const exists = products.some(p => p.name === name);
+// 🔥 기존 제품 덮어쓰기 처리 0319 수정
+const existingIndex = products.findIndex(p => p.name === name);
 
-if (exists) {
-  alert("이미 동일한 제품명이 존재합니다.");
-  return;
+if (existingIndex !== -1) {
+  if (!confirm("이미 동일한 제품이 있습니다. 덮어쓰시겠습니까?")) {
+    return;
+  }
+
+  // 기존 데이터 삭제
+  products.splice(existingIndex, 1);
 }
   const costEl = document.getElementById("materialCostSum");
   const costText = costEl ? costEl.textContent.trim() : "0";
@@ -336,9 +340,9 @@ const density = parseFloat(document.getElementById("productDensity")?.value) || 
  document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
   const input = row.querySelector("td:nth-child(1) input");
   const code = row.querySelector(".code")?.textContent || "";
-  const price = parseFloat(row.querySelector(".price")?.textContent) || 0;
+  const price = parseFloat(row.querySelector(".price")?.dataset.price) || 0;
   const ratio = parseFloat(row.querySelector("td:nth-child(4) input")?.value) || 0;
-  const cost = parseFloat(row.querySelector(".cost")?.textContent) || 0;
+  const cost = parseFloat(row.querySelector(".cost")?.textContent.replace(/[^\d.]/g, "")) || 0;
 
   const matched = getAllLatestMaterials().find(m => String(m.code) === String(code));
   const nameText = matched?.name || "";
