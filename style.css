@@ -279,12 +279,13 @@ th {
   width: 250px;
   margin-bottom: 10px;
 }
-/* 🔥 여기 추가 */
+/* ================= 0319 추가 ================= */
 .product-top-bar {
-  display: flex;
-  justify-content: space-between;
+  display: flex !important;
+  justify-content: space-between !important;
   align-items: center;
   margin-bottom: 10px;
+  width: 100%;
 }
 
 .left-group {
