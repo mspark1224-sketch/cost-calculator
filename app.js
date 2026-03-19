@@ -415,7 +415,7 @@ function loadMaterials() {
 // 삭제
 // =============================
 window.deleteMaterial = function(code) {
-  if (!confirm("삭제?")) return;
+  if (!confirm("삭제하시겠습니까?")) return;
   materials = materials.filter((m) => m.code !== code);
   saveAll();
   loadMaterials();
@@ -932,7 +932,7 @@ function loadSubMaterials() {
 // 삭제 / 수정
 // =============================
 function deleteSubMaterial(code) {
-  if (!confirm("삭제?")) return;
+  if (!confirm("삭제하시겠습니까?")) return;
   subMaterials = subMaterials.filter((m) => m.code !== code);
   saveAll();
   loadSubMaterials();
