@@ -183,6 +183,25 @@ function saveMaterial() {
     return;
   }
 
+  // 🔥 이름 중복 체크 (여기 추가)
+  const existsName = materials.some(m =>
+    m.name.trim().toLowerCase() === name.toLowerCase()
+  );
+
+  if (existsName) {
+    alert("같은 원재료명이 이미 존재합니다!");
+    return;
+  }
+  // 🔥 코드 중복 체크 (여기!)
+  const existsCode = materials.some(m =>
+    String(m.code) === String(code)
+  );
+
+  if (existsCode) {
+    alert("같은 코드가 이미 존재합니다!");
+    return;
+  }
+  
   materials.push({
     id: Date.now(),
     code,
