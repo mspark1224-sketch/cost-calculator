@@ -128,7 +128,116 @@
 
 </div>
 </div>
+<!-- ===================== -->
+<!-- 부재료 DB -->
+<!-- ===================== -->
+<div id="subDb" class="page" style="display:none;">
+  <h2>부재료 데이터베이스</h2>
 
+  <!-- 부재료 등록 -->
+  <div class="card db-top-card">
+    <h3 class="section-title">부재료 등록</h3>
+
+    <div class="material-form-row">
+
+      <div class="field field-code">
+        <label for="subMaterialCode">부재료 코드</label>
+        <input id="subMaterialCode" type="text" />
+      </div>
+
+      <div class="field field-name">
+        <label for="subMaterialName">부재료 이름</label>
+        <input id="subMaterialName" type="text" />
+      </div>
+
+      <div class="field field-price">
+        <label for="subMaterialPrice">단가 (원/kg)</label>
+        <input id="subMaterialPrice" type="number" />
+      </div>
+
+      <div class="field field-date">
+        <label for="subMaterialDate">적용 날짜</label>
+        <input id="subMaterialDate" type="date" />
+      </div>
+
+      <div class="action-group material-action-group">
+        <button type="button" onclick="saveSubMaterial()">저장</button>
+        <button type="button" onclick="updateSubMaterial()">수정</button>
+        <button type="button" class="secondary" onclick="clearSubMaterialInputs()">초기화</button>
+      </div>
+
+      <div class="upload-group material-upload-group">
+        <div class="file-input-wrap">
+          <input id="subExcelFile" type="file" accept=".xlsx,.xls,.csv" />
+        </div>
+        <button type="button" class="upload-btn" onclick="handleSubExcelUpload()">업로드</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 부재료 검색 -->
+  <div class="card db-list-card">
+    <h3 class="section-title">부재료 검색 (최신)</h3>
+
+    <div class="search-row material-search-row">
+      <input
+        id="subMaterialSearch"
+        type="text"
+        placeholder="부재료명 또는 코드 검색"
+        oninput="loadSubMaterials()"
+      />
+      <button type="button" onclick="loadSubMaterials()">검색</button>
+      <button type="button" class="secondary" onclick="document.getElementById('subMaterialSearch').value=''; loadSubMaterials();">전체</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table material-table">
+        <thead>
+          <tr>
+            <th class="col-no">No</th>
+            <th class="col-code">코드</th>
+            <th class="col-name">이름</th>
+            <th class="col-price">단가</th>
+            <th class="col-date">적용일</th>
+            <th class="col-action center">수정</th>
+            <th class="col-action center">삭제</th>
+          </tr>
+        </thead>
+        <tbody id="subMaterialList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 가격 히스토리 -->
+  <div class="card db-history-card">
+
+    <h3 class="section-title">가격 히스토리</h3>
+
+    <div class="search-row history-search-row">
+      <input id="subPriceSearch" type="text" placeholder="부재료명 또는 코드 검색" />
+      <button onclick="searchSubPriceHistory()">검색</button>
+      <button onclick="loadSubPriceHistory('')">전체</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table history-table">
+        <thead>
+          <tr>
+            <th>코드</th>
+            <th>이름</th>
+            <th>단가</th>
+            <th>적용일</th>
+            <th>삭제</th>
+          </tr>
+        </thead>
+        <tbody id="subPriceHistoryTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+    
     <!-- ===================== -->
     <!-- 배합표 -->
     <!-- ===================== -->
