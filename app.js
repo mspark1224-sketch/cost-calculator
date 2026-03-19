@@ -446,11 +446,11 @@ row.innerHTML = `
     </datalist>
   </td>
   <td class="code">${item.code || ""}</td>
-  <td class="price">${item.price || 0}</td>
+  <td class="price">${livePrice}</td>   <!-- 🔥 수정 -->
   <td>
     <input type="number" value="${item.ratio || 0}" oninput="updateRecipeCalc()" />
   </td>
-  <td class="cost">${item.cost || 0}</td>
+  <td class="cost">${Math.round(liveCost)}</td>  <!-- 🔥 수정 -->
   <td>
     <button onclick="this.closest('tr').remove(); updateRecipeCalc();">삭제</button>
   </td>
