@@ -461,7 +461,7 @@ const options = materialsList.map(m =>
 const row = document.createElement("tr");
 row.innerHTML = `
   <td>
-    <input list="materialListOptions" value="${item.code || ""}" oninput="updateRecipeRow(this)" placeholder="원재료 코드 입력" />
+    <input list="materialListOptions" value="${item.code || ""}" oninput="updateRecipeRow(this)" placeholder="원재료명 입력" />
     <datalist id="materialListOptions">
       ${options}
     </datalist>
