@@ -265,6 +265,25 @@
             <label for="productName">제품명</label>
             <input id="productName" type="text" />
           </div>
+          <div class="field mini-col">
+    <label>내용량</label>
+    <input id="productVolume" type="number" value="1000" oninput="updateUnitCost()" />
+  </div>
+
+  <div class="field mini-col">
+    <label>단위</label>
+    <select id="productUnit" onchange="updateUnitCost()">
+      <option value="g">g</option>
+      <option value="ml">ml</option>
+    </select>
+  </div>
+
+  <div class="field mini-col">
+    <label>비중</label>
+    <input id="productDensity" type="number" step="0.001" value="1" oninput="updateUnitCost()" />
+  </div>
+
+</div>
 
         </div>
       </div>
