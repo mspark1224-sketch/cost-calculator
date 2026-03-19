@@ -310,10 +310,17 @@ window.updateUnitCost = function () {
 
   const unitCost = totalCostPerKg * volumeKg;
 
-const unitText = unit === "g" ? "kg" : "L";
+  // 🔥 여기 수정 (kg → 그대로 표시)
+  const unitText = unit;
 
-document.getElementById("unitLabel").innerText = unitText;
-document.getElementById("unitCostDisplay").innerText = Math.round(unitCost);
+  document.getElementById("unitLabel").innerText = unitText;
+  document.getElementById("unitCostDisplay").innerText = Math.round(unitCost);
+
+  // 🔥 여기 추가 (니가 원한 부분)
+  const volumeDisplay = document.getElementById("volumeDisplay");
+  if (volumeDisplay) {
+    volumeDisplay.innerText = `${volume} ${unit}`;
+  }
 };
 
 
