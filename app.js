@@ -110,8 +110,10 @@ if (p.volume) {
   ${
     diff !== 0
       ? `(
-          ${formatNumber(p.costPerKg)} + 
-          <span style="color:red;">${formatNumber(diff)}</span>
+          ${formatNumber(p.costPerKg)} 
+          <span style="color:${diff < 0 ? '#2979ff' : '#e53935'}; font-weight:600;">
+            ${formatDiffText(diff)}
+          </span>
         )`
       : ""
   }
