@@ -659,7 +659,7 @@ function updateRecipeCalc() {
   let totalCost = 0;
 
   document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
-    const price = parseFloat(row.querySelector(".price")?.innerText) || 0;
+    const price = parseFloat(row.querySelector(".price")?.dataset.price) || 0;
     const ratio = parseFloat(row.querySelector("td:nth-child(4) input")?.value) || 0;
 
     const cost = price * (ratio / 100);
