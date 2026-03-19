@@ -74,6 +74,7 @@ function loadProducts() {
     const tr = document.createElement("tr");
 const liveCost = calculateLiveCost(p);
 const diff = liveCost - p.costPerKg;
+tr.style = diff !== 0 ? "background:#fff1f2;" : "";   
     // 🔥 추가 단위원가도 변경
 let liveUnitCost = 0;
 if (p.volume) {
