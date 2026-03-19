@@ -342,6 +342,13 @@ tbody tr:hover {
   align-items: end;
 }
 
+.volume-summary {  
+  text-align: right;  
+  margin-top: 10px;  
+  font-size: 14px;  
+  color: #555;  
+}
+
 .field-type {
   width: 180px;
 }
