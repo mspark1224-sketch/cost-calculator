@@ -376,6 +376,8 @@ const newProduct = {
   products.push(newProduct);
   saveAll();
   loadProducts();
+  // 🔥 추가 (핵심) 0319 저장하면 초기
+resetRecipeTable();
 };
 
 // =============================
