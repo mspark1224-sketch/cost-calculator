@@ -62,7 +62,15 @@ button.danger {
   background: #d83b3b;
   border-color: #d83b3b;
 }
+.bottom-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
 
+.bottom-action button {
+  min-width: 120px;
+}
 
 /* ================= 카드 ================= */
 .page {
