@@ -74,7 +74,9 @@ function loadProducts() {
     const tr = document.createElement("tr");
 const liveCost = calculateLiveCost(p);
 const diff = liveCost - p.costPerKg;
-tr.style = diff !== 0 ? "background:#fff1f2;" : "";   
+tr.style = diff !== 0
+  ? `background:${diff > 0 ? '#fff1f2' : '#eff6ff'};`
+  : "";
     // 🔥 추가 단위원가도 변경
 let liveUnitCost = 0;
 if (p.volume) {
@@ -99,14 +101,13 @@ if (p.volume) {
 </td>
       <td>
   ${formatNumber(p.costPerKg)} 원
-  ${diff !== 0 ? `<span style="color:red;">(+${formatNumber(diff)})</span>` : ""}
+  ${diff !== 0 ? `<span style="color:red;">(${formatNumber(diff)})</span>` : ""}
 </td>
      <td>
   ${formatNumber(p.unitCost)} 원
-  ${liveUnitCost !== p.unitCost ? `<span style="color:red;">→ ${formatNumber(liveUnitCost)}</span>` : ""}
+  ${Math.round(liveUnitCost) !== Math.round(p.unitCost) ? `<span style="color:red;">→ ${formatNumber(liveUnitCost)}</span>` : ""}
 </td>
       <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
-</td>
     `;
 
     tbody.appendChild(tr);
