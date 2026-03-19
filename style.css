@@ -371,33 +371,27 @@ tbody tr:hover {
   font-size: 15px;
   color: #374151;
 }
-/* 🔥 단위원가 정렬 */
-.unit-cost-box {
-  margin-top: 10px;
+
+.unit-inline {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  font-size: 15px;
 }
 
-.unit-cost-table {
-  border-collapse: collapse;
-}
-
-.unit-cost-table td {
-  border: none;
-  padding: 4px 0;
-  text-align: left;
-}
-
-.unit-cost-table .label {
-  width: 220px;
+.unit-inline #volumeDisplay {
   font-weight: 600;
+  min-width: 100px;
 }
 
-.unit-cost-table .value {
-  text-align: right;
-  width: 80px;
+.unit-inline .unit-label {
+  color: #666;
 }
 
+.unit-inline #unitCostDisplay {
+  font-weight: 700;
+  margin-left: auto; /* 🔥 오른쪽 끝 정렬 */
+}
 /* ================= 하단 계산 ================= */
 .bottom-row {
   display: flex;
