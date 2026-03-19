@@ -310,19 +310,18 @@ window.updateUnitCost = function () {
 
   const unitCost = totalCostPerKg * volumeKg;
 
-  // 🔥 여기 수정 (kg → 그대로 표시)
-  const unitText = unit;
+  // ✅ 단위원가 표시
+  const costDisplay = document.getElementById("unitCostDisplay");
+  if (costDisplay) {
+    costDisplay.innerText = Math.round(unitCost);
+  }
 
-  document.getElementById("unitLabel").innerText = unitText;
-  document.getElementById("unitCostDisplay").innerText = Math.round(unitCost);
-
-  // 🔥 여기 추가 (니가 원한 부분)
+  // ✅ 내용량 표시 (이게 핵심🔥)
   const volumeDisplay = document.getElementById("volumeDisplay");
   if (volumeDisplay) {
     volumeDisplay.innerText = `${volume} ${unit}`;
   }
 };
-
 
 window.saveRecipe = function () {
   const name = document.getElementById("productName")?.value.trim();
