@@ -892,3 +892,59 @@ function deleteSubPriceHistory(id) {
   saveAll();
   loadSubPriceHistory("");
 }
+function handleSubExcelUpload() {
+  const fileInput = document.getElementById("subExcelFile");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("엑셀 파일을 선택해주세요.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+    if (!rows.length) {
+      alert("엑셀 데이터가 없습니다.");
+      return;
+    }
+
+    rows.forEach((row) => {
+      const code = String(row["코드"] || "").trim();
+      const name = String(row["이름"] || "").trim();
+
+      const rawPrice = row["단가"] || "0";
+
+      const price = parseFloat(
+        String(rawPrice).replace(/[^\d.]/g, "")
+      ) || 0;
+
+      const date = new Date().toISOString().slice(0, 10);
+
+      if (!code || !name) return;
+
+      subMaterials.push({
+        id: Date.now() + Math.random(),
+        code,
+        name,
+        price,
+        date
+      });
+    });
+
+    saveAll();
+    loadSubMaterials();
+    loadSubPriceHistory("");
+
+    fileInput.value = "";
+    alert("부재료 엑셀 업로드 완료");
+  };
+
+  reader.readAsArrayBuffer(file);
+}
