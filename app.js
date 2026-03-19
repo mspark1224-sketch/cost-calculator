@@ -874,7 +874,7 @@ function loadSubPriceHistory(keyword = "") {
       <tr>
         <td>${m.code}</td>
         <td>${m.name}</td>
-        <td>${m.price}</td>
+       <td>${formatNumber(m.price)} 원/ea</td>
         <td>${m.date}</td>
         <td><button onclick="deleteSubPriceHistory(${m.id})">삭제</button></td>
       </tr>
