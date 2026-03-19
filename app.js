@@ -16,6 +16,13 @@ function formatNumber(num) {
   return Number(num || 0).toLocaleString("ko-KR");
 }
 
+function formatDiffText(diff) {
+  const abs = Math.abs(diff);
+  return diff < 0
+    ? `- ${formatNumber(abs)}`
+    : `+ ${formatNumber(abs)}`;
+}
+
 function escapeHtml(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
@@ -29,7 +36,6 @@ function escapeJsString(str) {
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'");
 }
-
 // =============================
 // 페이지 전환
 // =============================
