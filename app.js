@@ -520,7 +520,7 @@ window.resetRecipeTable = function () {
   if (tbody) tbody.innerHTML = "";
 
   // 2. 합계 초기화
-  document.getElementById("ratioTotal").innerText = "0.0";
+  document.getElementById("ratioSum").innerText = "0.0";
   document.getElementById("materialCostSum").innerText = "0";
   document.getElementById("ratioSum").innerText = "0.0";
   document.getElementById("costSum").innerText = "0 원";
@@ -685,7 +685,7 @@ function updateRecipeCalc() {
     totalCost += cost;
   });
 
-  document.getElementById("ratioTotal").innerText = totalRatio.toFixed(1);
+  document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
   document.getElementById("materialCostSum").innerText = Math.round(totalCost);
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
   document.getElementById("costSum").innerText = Math.round(totalCost) + " 원";
