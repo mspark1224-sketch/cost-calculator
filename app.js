@@ -584,12 +584,22 @@ function updateRecipeRow(input) {
 
   const materials = getAllLatestMaterials();
 
-  // 🔥 코드 or 이름 둘 다 매칭
-  const material = materials.find(m => 
-    String(m.code) === value || m.name === value
-  );
+  // 1️⃣ code 먼저 찾기
+  let material = materials.find(m => String(m.code) === value);
 
-  // ❌ 못 찾으면 그냥 유지 (아무것도 안함)
+  // 2️⃣ 없으면 name으로 찾기
+  if (!material) {
+    const matches = materials.filter(m => m.name === value);
+
+    if (matches.length === 1) {
+      material = matches[0];
+    } else if (matches.length > 1) {
+      alert("동일한 이름의 원재료가 여러 개 있습니다. 코드로 입력해주세요.");
+      return;
+    }
+  }
+
+  // ❌ 못 찾으면 초기화
   if (!material) {
     row.querySelector(".code").innerText = "";
     row.querySelector(".price").innerText = "0";
@@ -598,8 +608,8 @@ function updateRecipeRow(input) {
     return;
   }
 
-  // 🔥 핵심: input 값을 "이름"으로 덮어씀
-  input.value = material.name;
+  // 🔥 핵심: input은 무조건 code로 유지
+  input.value = material.code;
 
   row.querySelector(".code").innerText = material.code;
   row.querySelector(".price").innerText = material.price;
