@@ -310,12 +310,12 @@
 
             <div class="mini-col">
               <label for="productVolume">내용량</label>
-             <input id="productVolume" type="number" value="1000"/>
+            <input id="productVolume" type="number" value="1000" oninput="updateUnitCost()" />
             </div>
 
             <div class="mini-col">
               <label for="productUnit">단위</label>
-             <select id="productUnit" onchange="updateUnitCost() oninput="updateUnitCost()"/>
+              <select id="productUnit" onchange="updateUnitCost()">
                 <option value="g">g</option>
                 <option value="ml">ml</option>
               </select>
@@ -328,13 +328,12 @@
           </div>
         </div>
 
-        <div class="right-box">
-          <div class="result-row">
+       <div class="right-box">
+  <div class="result-row">
 
-            <div class="mini-col">
-              <label for="recipeUnitCost">단위원가(단위/kg)</label>
-              <input id="recipeUnitCost" type="text" value="0" readonly />
-            </div>
+    <div class="mini-col">
+      <button type="button" onclick="saveRecipe()">제품 저장</button>
+    </div>
 
             <div class="mini-col">
               <button type="button" onclick="saveRecipe()">제품 저장</button>
