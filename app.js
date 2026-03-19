@@ -72,7 +72,21 @@ function loadProducts() {
 
   products.forEach((p) => {
     const tr = document.createElement("tr");
+const liveCost = calculateLiveCost(p);
+const diff = liveCost - p.costPerKg;
+    // 🔥 추가 단위원가도 변경
+let liveUnitCost = 0;
+if (p.volume) {
+  let volumeKg = 0;
 
+  if (p.unit === "g") {
+    volumeKg = p.volume / 1000;
+  } else if (p.unit === "ml") {
+    volumeKg = (p.volume * (p.density || 1)) / 1000;
+  }
+
+  liveUnitCost = liveCost * volumeKg;
+}
     tr.innerHTML = `
       <td><input type="checkbox" class="rowCheck" value="${p.id}"></td>
       <td>${p.type || "-"}</td>
@@ -82,8 +96,14 @@ function loadProducts() {
 >
   ${p.name}
 </td>
-      <td>${formatNumber(p.costPerKg)} 원</td>
-      <td>${formatNumber(p.unitCost)} 원</td>
+      <td>
+  ${formatNumber(p.costPerKg)} 원
+  ${diff !== 0 ? `<span style="color:red;">(+${formatNumber(diff)})</span>` : ""}
+</td>
+     <td>
+  ${formatNumber(p.unitCost)} 원
+  ${liveUnitCost !== p.unitCost ? `<span style="color:red;">→ ${formatNumber(liveUnitCost)}</span>` : ""}
+</td>
       <td>${new Date(p.date).toLocaleString("ko-KR")}</td>
     `;
 
