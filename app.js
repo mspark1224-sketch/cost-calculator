@@ -99,9 +99,16 @@ if (p.volume) {
 >
   ${p.name}
 </td>
-      <td>
-  ${formatNumber(p.costPerKg)} 원
-  ${diff !== 0 ? `<span style="color:red;">(${formatNumber(diff)})</span>` : ""}
+     <td>
+  <div>${formatNumber(liveCost)} 원</div>
+  ${
+    diff !== 0
+      ? `<div style="font-size:12px; color:#666;">
+          ${formatNumber(p.costPerKg)} + 
+          <span style="color:red;">${formatNumber(diff)}</span>
+        </div>`
+      : ""
+  }
 </td>
      <td>
   ${formatNumber(p.unitCost)} 원
