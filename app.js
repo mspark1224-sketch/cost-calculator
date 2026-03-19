@@ -403,7 +403,7 @@ function loadMaterials() {
       <td>${i + 1}</td>
       <td>${m.code}</td>
       <td>${m.name}</td>
-      <td>${formatNumber(m.price)} 원/ea</td>
+      <td>${formatNumber(m.price)} 원</td>
       <td>${m.date}</td>
       <td><button onclick="editMaterial('${m.code}')">수정</button></td>
       <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
@@ -986,7 +986,7 @@ function loadSubPriceHistory(keyword = "") {
       <tr>
         <td>${m.code}</td>
         <td>${m.name}</td>
-       <td>${formatNumber(m.price)} 원/ea</td>
+       <td>${formatNumber(m.price)} 원</td>
         <td>${m.date}</td>
         <td><button onclick="deleteSubPriceHistory(${m.id})">삭제</button></td>
       </tr>
