@@ -846,6 +846,25 @@ function saveSubMaterial() {
     alert("모든 항목 입력");
     return;
   }
+  // 🔥 이름 중복 체크
+  const existsName = subMaterials.some(m =>
+    m.name.trim().toLowerCase() === name.toLowerCase()
+  );
+
+  if (existsName) {
+    alert("같은 부재료명이 이미 존재합니다!");
+    return;
+  }
+
+  // 🔥 코드 중복 체크
+  const existsCode = subMaterials.some(m =>
+    String(m.code) === String(code)
+  );
+
+  if (existsCode) {
+    alert("같은 코드가 이미 존재합니다!");
+    return;
+  }
 
   subMaterials.push({
     id: Date.now(),
