@@ -679,6 +679,7 @@ function updateRecipeCalc() {
   document.getElementById("materialCostSum").innerText = Math.round(totalCost);
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
   document.getElementById("costSum").innerText = Math.round(totalCost) + " 원";
+  updateUnitCost();
 }
 function deleteProduct(id) {
   const ok = confirm("이 제품을 삭제할까요?");
