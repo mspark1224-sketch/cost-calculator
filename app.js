@@ -318,15 +318,16 @@ const newProduct = {
   id: Date.now(),
   type,
   name,
-  costPerKg,
+  costPerKg,   // 저장 당시 원가
   unitCost,
-  volume,   // 🔥 추가
-  unit,     // 🔥 추가
-  density,  // 🔥 추가
+  volume,
+  unit,
+  density,
   recipe,
+  lastUpdated: new Date().toISOString(),  // 🔥 이 줄 추가
   date: new Date().toISOString()
 };
-
+  
   products.push(newProduct);
   saveAll();
   loadProducts();
