@@ -309,7 +309,11 @@ window.updateUnitCost = function () {
   }
 
   const unitCost = totalCostPerKg * volumeKg;
-  document.getElementById("recipeUnitCost").value = unitCost.toFixed(2);
+
+const unitText = unit === "g" ? "kg" : "L";
+
+document.getElementById("unitLabel").innerText = unitText;
+document.getElementById("unitCostDisplay").innerText = Math.round(unitCost);
 };
 
 
