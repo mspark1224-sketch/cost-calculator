@@ -343,17 +343,22 @@
           </div>
         </div>
       </div>
+<div class="product-top-bar">
 
-      <div class="product-list-box">
-       <div style="display:flex; gap:10px; margin-bottom:10px;">
-  <input
-    id="productSearch"
-    type="text"
-    placeholder="제품 검색"
-    oninput="loadProducts()"
-    style="width:200px;"
-  />
-  <button onclick="deleteSelectedProducts()" class="danger">삭제</button>
+  <div class="left-group">
+    <input
+      id="productSearch"
+      type="text"
+      placeholder="제품 검색"
+      style="width:200px;"
+    />
+    <button onclick="loadProducts()">검색</button>
+  </div>
+
+  <div class="right-group">
+    <button onclick="deleteSelectedProducts()" class="danger">삭제</button>
+  </div>
+
 </div>
 
         <table>
