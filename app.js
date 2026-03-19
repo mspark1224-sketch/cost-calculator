@@ -468,10 +468,12 @@ row.innerHTML = `
   </td>
   <td class="code">${item.code || ""}</td>
 
-<td class="price">
+<td class="price" data-price="${livePrice}">
   ${formatNumber(item.price)}
   ${livePrice !== item.price 
-    ? `<span style="color:red; font-weight:600;"> → ${formatNumber(livePrice)}</span>` 
+    ? `<span style="color:red; font-weight:600;">
+         → ${formatNumber(livePrice)} (${latest.date})
+       </span>` 
     : ""}
 </td>
 
