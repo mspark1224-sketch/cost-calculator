@@ -717,3 +717,178 @@ function loadQuotes() {
   });
 }
 console.log("끝까지 실행됨");
+// =============================
+// 부재료 데이터
+// =============================
+let subMaterials = JSON.parse(localStorage.getItem("subMaterials")) || [];
+
+// =============================
+// 저장 확장
+// =============================
+const originalSaveAll = saveAll;
+saveAll = function () {
+  originalSaveAll();
+  localStorage.setItem("subMaterials", JSON.stringify(subMaterials));
+};
+
+// =============================
+// 페이지 전환 추가
+// =============================
+const originalShowPage = window.showPage;
+window.showPage = function (id) {
+  originalShowPage(id);
+
+  if (id === "subDb") {
+    loadSubMaterials();
+    loadSubPriceHistory(document.getElementById("subPriceSearch")?.value || "");
+  }
+};
+
+// =============================
+// 입력 초기화
+// =============================
+function clearSubMaterialInputs() {
+  document.getElementById("subMaterialCode").value = "";
+  document.getElementById("subMaterialName").value = "";
+  document.getElementById("subMaterialPrice").value = "";
+  document.getElementById("subMaterialDate").value = "";
+}
+
+// =============================
+// 저장
+// =============================
+function saveSubMaterial() {
+  const code = document.getElementById("subMaterialCode").value.trim();
+  const name = document.getElementById("subMaterialName").value.trim();
+  const price = Number(document.getElementById("subMaterialPrice").value);
+  const date = normalizeDate(document.getElementById("subMaterialDate").value);
+
+  if (!code || !name || date === "") {
+    alert("모든 항목 입력");
+    return;
+  }
+
+  subMaterials.push({
+    id: Date.now(),
+    code,
+    name,
+    price,
+    date
+  });
+
+  saveAll();
+  loadSubMaterials();
+  loadSubPriceHistory("");
+}
+
+// =============================
+// 목록
+// =============================
+function getAllLatestSubMaterials() {
+  const map = {};
+
+  subMaterials.forEach((m) => {
+    const key = String(m.code);
+
+    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
+      map[key] = m;
+    }
+  });
+
+  return Object.values(map);
+}
+
+function loadSubMaterials() {
+  const list = document.getElementById("subMaterialList");
+  const keyword = (document.getElementById("subMaterialSearch")?.value || "").toLowerCase();
+
+  list.innerHTML = "";
+
+  const data = getAllLatestSubMaterials().filter(
+    (m) =>
+      m.name.toLowerCase().includes(keyword) ||
+      String(m.code).toLowerCase().includes(keyword)
+  );
+
+  if (!data.length) {
+    list.innerHTML = `<tr><td colspan="7">데이터 없음</td></tr>`;
+    return;
+  }
+
+  data.forEach((m, i) => {
+    list.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
+        <td>${formatNumber(m.price)} 원</td>
+        <td>${m.date}</td>
+        <td><button onclick="editSubMaterial('${m.code}')">수정</button></td>
+        <td><button onclick="deleteSubMaterial('${m.code}')">삭제</button></td>
+      </tr>
+    `;
+  });
+}
+
+// =============================
+// 삭제 / 수정
+// =============================
+function deleteSubMaterial(code) {
+  if (!confirm("삭제?")) return;
+  subMaterials = subMaterials.filter((m) => m.code !== code);
+  saveAll();
+  loadSubMaterials();
+}
+
+function editSubMaterial(code) {
+  const material = subMaterials.find(m => String(m.code) === String(code));
+  if (!material) return;
+
+  document.getElementById("subMaterialCode").value = material.code;
+  document.getElementById("subMaterialName").value = material.name;
+  document.getElementById("subMaterialPrice").value = material.price;
+  document.getElementById("subMaterialDate").value = material.date;
+
+  subMaterials = subMaterials.filter(m => m.code !== code);
+
+  saveAll();
+  loadSubMaterials();
+}
+
+// =============================
+// 히스토리
+// =============================
+function loadSubPriceHistory(keyword = "") {
+  const table = document.getElementById("subPriceHistoryTable");
+  table.innerHTML = "";
+
+  if (!keyword) return;
+
+  const filtered = subMaterials.filter(m =>
+    m.name.toLowerCase().includes(keyword.toLowerCase()) ||
+    String(m.code).includes(keyword)
+  );
+
+  filtered.forEach((m) => {
+    table.innerHTML += `
+      <tr>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
+        <td>${m.price}</td>
+        <td>${m.date}</td>
+        <td><button onclick="deleteSubPriceHistory(${m.id})">삭제</button></td>
+      </tr>
+    `;
+  });
+}
+
+function searchSubPriceHistory() {
+  const keyword = document.getElementById("subPriceSearch").value;
+  loadSubPriceHistory(keyword);
+}
+
+function deleteSubPriceHistory(id) {
+  subMaterials = subMaterials.filter((m) => m.id !== id);
+  saveAll();
+  loadSubPriceHistory("");
+}
