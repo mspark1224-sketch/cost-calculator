@@ -1091,7 +1091,7 @@ function login() {
   const pw = document.getElementById("loginPw").value;
 
   // 🔥 여기서 계정 설정
-  if (id === "admin" && pw === "1234") {
+  if (id === "rnd" && pw === "1q2q3q4q@") {
     localStorage.setItem("isLogin", "true");
 
     document.getElementById("loginPage").style.display = "none";
