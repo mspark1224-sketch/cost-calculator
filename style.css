@@ -397,8 +397,7 @@ tbody tr:hover {
 
 .unit-inline #unitCostDisplay {
   font-weight: 700;
-  margin-left: auto; /* 🔥 오른쪽 끝 정렬 */
-}
+ }
 /* ================= 하단 계산 ================= */
 .bottom-row {
   display: flex;
