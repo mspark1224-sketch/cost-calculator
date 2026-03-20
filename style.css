@@ -380,6 +380,12 @@ tbody tr:hover {
   font-size: 15px;
 }
 
+.unit-cost-box {
+  display: flex;
+  justify-content: center;   /* 가운데 정렬 핵심 */
+  margin-top: 12px;
+}
+
 .unit-inline #volumeDisplay {
   font-weight: 600;
   min-width: 100px;
