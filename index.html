@@ -337,40 +337,40 @@
       
 <div class="card">
   <h3 class="section-title">제품 검색</h3>
-<div class="product-top-bar">
 
-  <div class="left-group">
-    <input
-      id="productSearch"
-      type="text"
-      placeholder="제품 검색"
-      style="width:200px;"
-    />
-    <button onclick="loadProducts()">검색</button>
-  </div>
-
-  <div class="right-group">
-    <button onclick="deleteSelectedProducts()" class="danger">삭제</button>
-  </div>
-
-</div>
-
-        <table>
-          <thead>
-     <tr>
-  <th style="width:60px;">선택</th>
-  <th>유형</th>
-  <th>제품명</th>
-  <th>원가(원/kg)</th>
-  <th>단위원가(단위/kg)</th>
-  <th>날짜</th>
- </tr>
-          </thead>
-          <tbody id="recipeProductList"></tbody>
-        </table>
-      </div>
+  <div class="product-top-bar">
+    <div class="left-group">
+      <input
+        id="productSearch"
+        type="text"
+        placeholder="제품 검색"
+        style="width:200px;"
+      />
+      <button onclick="loadProducts()">검색</button>
     </div>
-  
+
+    <div class="right-group">
+      <button onclick="deleteSelectedProducts()" class="danger">삭제</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table product-table">
+      <thead>
+        <tr>
+          <th style="width:60px;">선택</th>
+          <th>유형</th>
+          <th>제품명</th>
+          <th class="right">원가(원/kg)</th>
+          <th class="right">단위원가(단위/kg)</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody id="recipeProductList"></tbody>
+    </table>
+  </div>
+</div>
+     
     <!-- ===================== -->
     <!-- 원가 계산 -->
     <!-- ===================== -->
