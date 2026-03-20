@@ -20,12 +20,13 @@
 </div>
 
   <div id="mainPage" style="display:none;">
-  <div style="text-align:right; padding:10px;">
-   <button onclick="logout()">로그아웃</button>
-  </div>
-  <div class="container">
-    <h1>제품 원가 견적 시스템</h1>
 
+  <div class="container">
+     <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1>제품 원가 견적 시스템</h1>
+      <button onclick="logout()">로그아웃</button>
+    </div>
+ 
   <div class="menu">
   <button type="button" onclick="showPage('db')">1 원재료 DB</button>
   <button type="button" onclick="showPage('subDb')">2 부재료 DB</button>
