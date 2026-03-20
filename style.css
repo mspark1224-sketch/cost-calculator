@@ -114,6 +114,7 @@ button.danger:hover {
 
 /* ================= 카드 ================= */
 .page {
+  display: none;
   background: #f9fafb; /* 🔥 살짝 회색 (애플 느낌 핵심) */
   padding: 28px;
   border-radius: 16px;
