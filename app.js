@@ -317,10 +317,10 @@ window.updateUnitCost = function () {
   }
 
   // ✅ 내용량 표시 (이게 핵심🔥)
-  const volumeDisplay = document.getElementById("volumeDisplay");
-  if (volumeDisplay) {
-    volumeDisplay.innerText = `${volume} ${unit}`;
-  }
+ const volumeDisplay = document.getElementById("volumeDisplayText");
+ if (volumeDisplay) {
+  volumeDisplay.innerText = `${volume} ${unit}`;
+}
 };
 
 window.saveRecipe = function () {
