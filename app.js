@@ -37,6 +37,18 @@ function escapeJsString(str) {
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'");
 }
+
+function logout() {
+  // 로그인 상태 삭제
+  localStorage.removeItem("isLogin");
+
+  // 🔥 로그인 화면으로 강제 이동
+  document.getElementById("mainPage").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+
+  // 🔥 혹시 열린 페이지들 숨김
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+}
 // =============================
 // 페이지 전환
 // =============================
