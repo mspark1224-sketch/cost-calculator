@@ -1086,3 +1086,30 @@ function handleSubExcelUpload() {
 
   reader.readAsArrayBuffer(file);
 }
+function login() {
+  const id = document.getElementById("loginId").value;
+  const pw = document.getElementById("loginPw").value;
+
+  // 🔥 여기서 계정 설정
+  if (id === "admin" && pw === "1234") {
+    localStorage.setItem("isLogin", "true");
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+  } else {
+    alert("아이디 또는 비밀번호 오류");
+  }
+}
+
+// 🔥 페이지 로드시 로그인 체크
+window.addEventListener("DOMContentLoaded", () => {
+  const isLogin = localStorage.getItem("isLogin");
+
+  if (isLogin === "true") {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+  } else {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("mainPage").style.display = "none";
+  }
+});
