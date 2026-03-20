@@ -313,7 +313,7 @@ window.updateUnitCost = function () {
   // ✅ 단위원가 표시
   const costDisplay = document.getElementById("unitCostDisplay");
   if (costDisplay) {
-    costDisplay.innerText = Math.round(unitCost);
+    costDisplay.innerText = formatNumber(Math.round(unitCost));
   }
 
   // ✅ 내용량 표시 (이게 핵심🔥)
@@ -667,7 +667,7 @@ function updateRecipeRow(input) {
   // 🔥 내부 값 세팅
   row.querySelector(".code").innerText = material.code;
 
-  row.querySelector(".price").innerText = material.price;
+  row.querySelector(".price").innerText = formatNumber(material.price);
   row.querySelector(".price").dataset.price = material.price;
 
   updateRecipeCalc();
@@ -685,16 +685,16 @@ function updateRecipeCalc() {
 
     const cost = price * (ratio / 100);
 
-    row.querySelector(".cost").innerText = Math.round(cost);
+    row.querySelector(".cost").innerText = formatNumber(Math.round(cost));
 
     totalRatio += ratio;
     totalCost += cost;
   });
 
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
-  document.getElementById("materialCostSum").innerText = Math.round(totalCost);
+  document.getElementById("materialCostSum").innerText = formatNumber(Math.round(totalCost));
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
-  document.getElementById("costSum").innerText = Math.round(totalCost) + " 원";
+  document.getElementById("costSum").innerText = formatNumber(Math.round(totalCost)) + " 원";
   updateUnitCost();
 }
 function deleteProduct(id) {
