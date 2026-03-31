@@ -142,10 +142,9 @@ if (p.volume) {
   });
 }
 window.searchPriceHistory = function() {
-  const keyword = document.getElementById("priceSearch").value;
+  const keyword = document.getElementById("priceSearch")?.value || "";
   loadPriceHistory(keyword);
 }
-
 // =============================
 // 날짜 처리
 // =============================
