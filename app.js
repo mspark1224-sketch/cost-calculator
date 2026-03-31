@@ -1160,8 +1160,6 @@ function login() {
 
   // 🔥 여기서 계정 설정
   if (id === "rnd" && pw === "1q2q3q4q@") {
-    localStorage.setItem("isLogin", "true");
-
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("mainPage").style.display = "block";
   } else {
@@ -1169,15 +1167,10 @@ function login() {
   }
 }
 
-// 🔥 페이지 로드시 로그인 체크
+// 20260331 자동 로그인 삭제
 window.addEventListener("DOMContentLoaded", () => {
-  const isLogin = localStorage.getItem("isLogin");
+  localStorage.removeItem("isLogin");
 
-  if (isLogin === "true") {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("mainPage").style.display = "block";
-  } else {
-    document.getElementById("loginPage").style.display = "flex";
-    document.getElementById("mainPage").style.display = "none";
-  }
+  document.getElementById("loginPage").style.display = "flex";
+  document.getElementById("mainPage").style.display = "none";
 });
