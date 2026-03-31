@@ -566,13 +566,24 @@ window.resetRecipeTable = function () {
 // =============================
 function loadPriceHistory(keyword = "") {
   const table = document.getElementById("priceHistoryTable");
+  if (!table) return;
+
   table.innerHTML = "";
 
-  if (!keyword) return;
+  const search = String(keyword).trim().toLowerCase();
 
-  const filtered = priceHistory.filter(m =>
-    String(m.code) === String(keyword)
-  );
+  let filtered = priceHistory;
+
+  // 검색어가 있으면 이름/코드 부분검색
+  if (search) {
+    filtered = priceHistory.filter(m =>
+      String(m.code || "").toLowerCase().includes(search) ||
+      String(m.name || "").toLowerCase().includes(search)
+    );
+  }
+
+  // 최신순 정렬
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (!filtered.length) {
     table.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
