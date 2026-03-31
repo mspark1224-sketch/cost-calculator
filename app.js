@@ -43,7 +43,41 @@ function escapeJsString(str) {
     .replace(/\\/g, "\\\\")
     .replace(/'/g, "\\'");
 }
+function isLoggedIn() {
+  return sessionStorage.getItem("isLogin") === "true";
+}
 
+function startIdleTimer() {
+  clearTimeout(idleTimer);
+  clearTimeout(warningTimer);
+
+  if (!isLoggedIn()) return;
+
+  idleTimer = setTimeout(() => {
+    const keepLogin = confirm("장기간 사용하지 않아 1분 후 로그아웃됩니다.\n로그인을 연장하시겠습니까?");
+
+    if (keepLogin) {
+      resetIdleTimer();
+      return;
+    }
+
+    warningTimer = setTimeout(() => {
+      logout();
+      alert("장시간 미사용으로 로그아웃되었습니다.");
+    }, WARNING_DURATION);
+  }, IDLE_LIMIT);
+}
+
+function resetIdleTimer() {
+  if (!isLoggedIn()) return;
+  startIdleTimer();
+}
+
+function bindActivityEvents() {
+  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(eventName => {
+    document.addEventListener(eventName, resetIdleTimer);
+  });
+}
 function logout() {
   // 로그인 상태 삭제
   localStorage.removeItem("isLogin");
