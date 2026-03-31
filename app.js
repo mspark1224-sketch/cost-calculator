@@ -360,7 +360,8 @@ if (existingIndex !== -1) {
   const costText = costEl ? costEl.textContent.trim() : "0";
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
 
-  const unitCost = parseFloat(document.getElementById("recipeUnitCost")?.value) || 0;
+  const unitCost =
+  parseFloat((document.getElementById("unitCostDisplay")?.innerText || "0").replace(/[^\d.]/g, "")) || 0;
   const volume = parseFloat(document.getElementById("productVolume")?.value) || 0;
 const unit = document.getElementById("productUnit")?.value || "g";
 const density = parseFloat(document.getElementById("productDensity")?.value) || 1;
@@ -534,28 +535,18 @@ tbody.appendChild(row);
   updateRecipeCalc();
 }
 window.resetRecipeTable = function () {
-
-  // 1. 배합표 초기화
   const tbody = document.querySelector("#recipeTable tbody");
   if (tbody) tbody.innerHTML = "";
 
-  // 2. 합계 초기화
   document.getElementById("ratioSum").innerText = "0.0";
   document.getElementById("materialCostSum").innerText = "0";
-  document.getElementById("ratioSum").innerText = "0.0";
-  document.getElementById("costSum").innerText = "0 원";
+  document.getElementById("unitCostDisplay").innerText = "0";
 
-  // 3. 입력값 초기화
   document.getElementById("productVolume").value = "";
   document.getElementById("productUnit").value = "g";
   document.getElementById("productDensity").value = "1";
-
-  // 🔥 추가
   document.getElementById("productName").value = "";
   document.getElementById("productType").value = "";
-  
-  // 4. 단위원가 초기화
-  document.getElementById("recipeUnitCost").value = "0";
 
   console.log("초기화 완료");
 };
@@ -720,8 +711,7 @@ function updateRecipeCalc() {
 
   document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
   document.getElementById("materialCostSum").innerText = formatNumber(Math.round(totalCost));
-  document.getElementById("ratioSum").innerText = totalRatio.toFixed(1);
-  document.getElementById("costSum").innerText = formatNumber(Math.round(totalCost)) + " 원";
+
   updateUnitCost();
 }
 function deleteProduct(id) {
