@@ -79,14 +79,14 @@ function bindActivityEvents() {
   });
 }
 function logout() {
-  // 로그인 상태 삭제
-  localStorage.removeItem("isLogin");
+  sessionStorage.removeItem("isLogin");
 
-  // 🔥 로그인 화면으로 강제 이동
+  clearTimeout(idleTimer);
+  clearTimeout(warningTimer);
+
   document.getElementById("mainPage").style.display = "none";
   document.getElementById("loginPage").style.display = "flex";
 
-  // 🔥 혹시 열린 페이지들 숨김
   document.querySelectorAll(".page").forEach(p => p.style.display = "none");
 }
 // =============================
@@ -1198,10 +1198,13 @@ function login() {
   const pw = document.getElementById("loginPw").value;
 
   if (id === "rnd" && pw === "1q2q3q4q@") {
+    sessionStorage.setItem("isLogin", "true");
+
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("mainPage").style.display = "block";
 
-    showPage("db");   // 로그인 후 기본 화면
+    showPage("db");
+    startIdleTimer();
   } else {
     alert("아이디 또는 비밀번호 오류");
   }
@@ -1209,8 +1212,15 @@ function login() {
 
 // 20260331 자동 로그인 삭제
 window.addEventListener("DOMContentLoaded", () => {
-  localStorage.removeItem("isLogin");
+  bindActivityEvents();
 
-  document.getElementById("loginPage").style.display = "flex";
-  document.getElementById("mainPage").style.display = "none";
+  if (isLoggedIn()) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+    showPage("db");
+    startIdleTimer();
+  } else {
+    document.getElementById("loginPage").style.display = "flex";
+    document.getElementById("mainPage").style.display = "none";
+  }
 });
