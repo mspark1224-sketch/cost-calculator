@@ -211,27 +211,39 @@ function saveMaterial() {
     return;
   }
 
-  const existing = materials.find(m => m.code === code && m.name === name);
+  if (editingMaterialId) {
+    const target = materials.find(m => m.id === editingMaterialId);
 
-  if (existing) {
-    const ok = confirm("동일한 원재료가 있습니다. 덮어쓰겠습니까?");
-    if (!ok) return;
+    if (!target) {
+      alert("수정할 데이터를 찾을 수 없습니다.");
+      editingMaterialId = null;
+      return;
+    }
 
-    // ✅ 최신값 업데이트
-    existing.price = price;
-    existing.date = date;
-
+    target.code = code;
+    target.name = name;
+    target.price = price;
+    target.date = date;
   } else {
-    materials.push({
-      id: Date.now(),
-      code,
-      name,
-      price,
-      date
-    });
+    const existing = materials.find(m => m.code === code && m.name === name);
+
+    if (existing) {
+      const ok = confirm("동일한 원재료가 있습니다. 덮어쓰겠습니까?");
+      if (!ok) return;
+
+      existing.price = price;
+      existing.date = date;
+    } else {
+      materials.push({
+        id: Date.now(),
+        code,
+        name,
+        price,
+        date
+      });
+    }
   }
 
-  // 🔥 히스토리는 무조건 추가
   priceHistory.push({
     id: Date.now(),
     code,
@@ -240,10 +252,16 @@ function saveMaterial() {
     date
   });
 
+  editingMaterialId = null;
   saveAll();
   loadMaterials();
   loadPriceHistory("");
+  clearMaterialInputs();
 }
+
+
+
+
 function handleExcelUpload() {
   const fileInput = document.getElementById("excelFile");
   const file = fileInput.files[0];
