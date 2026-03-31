@@ -817,6 +817,104 @@ function deleteProduct(id) {
   saveAll();
   loadProducts();
 }
+function sanitizeSheetName(name) {
+  return String(name || "배합표")
+    .replace(/[\\/*?:[\]]/g, "")
+    .slice(0, 31);
+}
+
+window.exportSelectedProductExcel = function () {
+  const checked = Array.from(
+    document.querySelectorAll("#recipeProductList .rowCheck:checked")
+  ).map(cb => Number(cb.value));
+
+  if (checked.length === 0) {
+    alert("엑셀 다운로드할 제품을 하나 선택하세요.");
+    return;
+  }
+
+  if (checked.length > 1) {
+    alert("엑셀은 한 번에 하나의 제품만 다운로드할 수 있습니다.");
+    return;
+  }
+
+  const product = products.find(p => Number(p.id) === checked[0]);
+  if (!product) {
+    alert("선택한 제품 정보를 찾을 수 없습니다.");
+    return;
+  }
+
+  const rows = (product.recipe || []).map((item, idx) => {
+    const latest = getLatestRecordByCode(item.code);
+    const latestPrice = latest ? Number(latest.price || 0) : Number(item.price || 0);
+    const latestDate = latest ? latest.date || "" : "";
+    const savedPrice = Number(item.price || 0);
+    const ratio = Number(item.ratio || 0);
+    const savedCost = Number(item.cost || 0);
+    const latestCost = Math.round(latestPrice * (ratio / 100));
+
+    const increased = latestPrice > savedPrice;
+    const diff = latestPrice - savedPrice;
+
+    return [
+      idx + 1,
+      item.materialName || "",
+      item.code || "",
+      savedPrice,
+      latestPrice,
+      ratio,
+      savedCost,
+      latestCost,
+      increased ? `+${formatNumber(diff)}` : "",
+      increased ? latestDate : ""
+    ];
+  });
+
+  const aoa = [
+    [`${product.name || "제품"} 배합표`],
+    [],
+    ["제품명", product.name || ""],
+    ["유형", product.type || ""],
+    ["저장일", product.date ? new Date(product.date).toLocaleString("ko-KR") : ""],
+    ["저장 원가(원/kg)", Number(product.costPerKg || 0)],
+    ["단위원가(원/ea)", Number(product.unitCost || 0)],
+    [],
+    ["No", "원재료", "코드", "저장단가", "최신단가", "배합비(%)", "저장원가", "최신원가", "변동", "인상일"],
+    ...rows,
+    [],
+    ["합계 배합비", "", "", "", "", rows.reduce((sum, r) => sum + Number(r[5] || 0), 0), "", "", "", ""],
+    ["저장 원가 합계", "", "", "", "", "", Number(product.costPerKg || 0), "", "", ""],
+    ["단위원가", "", "", "", "", "", "", Number(product.unitCost || 0), "", ""]
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+  ws["!cols"] = [
+    { wch: 6 },   // No
+    { wch: 22 },  // 원재료
+    { wch: 12 },  // 코드
+    { wch: 14 },  // 저장단가
+    { wch: 14 },  // 최신단가
+    { wch: 12 },  // 배합비
+    { wch: 14 },  // 저장원가
+    { wch: 14 },  // 최신원가
+    { wch: 12 },  // 변동
+    { wch: 14 }   // 인상일
+  ];
+
+  ws["!merges"] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } }
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sanitizeSheetName(product.name || "배합표"));
+
+  const filename = `${product.name || "배합표"}_배합표.xlsx`;
+  XLSX.writeFile(wb, filename);
+};
+
+
+
 // =============================
 // 초기 실행
 // =============================
