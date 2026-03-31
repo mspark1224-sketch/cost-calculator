@@ -1158,10 +1158,11 @@ function login() {
   const id = document.getElementById("loginId").value;
   const pw = document.getElementById("loginPw").value;
 
-  // 🔥 여기서 계정 설정
   if (id === "rnd" && pw === "1q2q3q4q@") {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("mainPage").style.display = "block";
+
+    showPage("db");   // 로그인 후 기본 화면
   } else {
     alert("아이디 또는 비밀번호 오류");
   }
