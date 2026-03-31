@@ -5,6 +5,7 @@ let materials = JSON.parse(localStorage.getItem("materials")) || [];
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [];
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let priceHistory = JSON.parse(localStorage.getItem("priceHistory")) || [];
+let editingMaterialId = null;
 // 공통
 // =============================
 function saveAll() {
