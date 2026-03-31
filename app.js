@@ -152,6 +152,33 @@ window.showPriceHistoryByMaterial = function(code, name) {
 
   loadPriceHistoryByCode(code);
 };
+function loadPriceHistoryByCode(code) {
+  const table = document.getElementById("priceHistoryTable");
+  if (!table) return;
+
+  table.innerHTML = "";
+
+  const filtered = priceHistory
+    .filter(m => String(m.code).trim() === String(code).trim())
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (!filtered.length) {
+    table.innerHTML = `<tr><td colspan="4">데이터 없음</td></tr>`;
+    return;
+  }
+
+  filtered.forEach((m) => {
+    table.innerHTML += `
+      <tr>
+        <td>${m.code}</td>
+        <td>${m.name}</td>
+        <td>${formatNumber(m.price)} 원</td>
+        <td>${m.date}</td>
+      </tr>
+    `;
+  });
+}
+
 // =============================
 // 날짜 처리
 // =============================
