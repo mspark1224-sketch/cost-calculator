@@ -6,6 +6,11 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [];
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let priceHistory = JSON.parse(localStorage.getItem("priceHistory")) || [];
 let editingMaterialId = null;
+let idleTimer = null;
+let warningTimer = null;
+
+const IDLE_LIMIT = 10 * 60 * 1000;      // 10분
+const WARNING_DURATION = 1 * 60 * 1000; // 1분
 // 공통
 // =============================
 function saveAll() {
