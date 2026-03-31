@@ -193,6 +193,8 @@ function clearMaterialInputs() {
   document.getElementById("materialName").value = "";
   document.getElementById("materialPrice").value = "";
   document.getElementById("materialDate").value = "";
+
+  editingMaterialId = null;
 }
 
 // =============================
@@ -454,7 +456,7 @@ window.deleteMaterial = function(code) {
   saveAll();
   loadMaterials();
 }
-  window.editMaterial = function(code) {
+window.editMaterial = function(code) {
   const material = materials.find(m => String(m.code) === String(code));
   if (!material) return;
 
@@ -463,11 +465,8 @@ window.deleteMaterial = function(code) {
   document.getElementById("materialPrice").value = material.price;
   document.getElementById("materialDate").value = material.date;
 
-  // 기존 데이터 제거 (수정용)
-  materials = materials.filter(m => m.code !== code);
-
-  saveAll();
-  loadMaterials();
+  // 수정 중인 항목 id만 기억
+  editingMaterialId = material.id;
 }
 window.loadProduct = function(id) {
   const product = products.find(p => p.id === id);
