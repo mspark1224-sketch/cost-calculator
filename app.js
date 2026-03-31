@@ -146,6 +146,12 @@ window.searchPriceHistory = function() {
   const keyword = document.getElementById("priceSearch")?.value || "";
   loadPriceHistory(keyword);
 }
+window.showPriceHistoryByMaterial = function(code, name) {
+  const input = document.getElementById("priceSearch");
+  if (input) input.value = name;
+
+  loadPriceHistoryByCode(code);
+};
 // =============================
 // 날짜 처리
 // =============================
@@ -456,7 +462,12 @@ function loadMaterials() {
     <tr>
       <td>${i + 1}</td>
       <td>${m.code}</td>
-      <td>${m.name}</td>
+      <td
+  style="cursor:pointer; color:#2563eb; font-weight:500;"
+  onclick="showPriceHistoryByMaterial('${m.code}', '${m.name}')"
+>
+  ${m.name}
+</td>
       <td>${formatNumber(m.price)} 원</td>
       <td>${m.date}</td>
       <td><button onclick="editMaterial('${m.code}')">수정</button></td>
@@ -592,23 +603,23 @@ function loadPriceHistory(keyword = "") {
 
   // 최신순 정렬
   filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+if (!filtered.length) {
+  table.innerHTML = `<tr><td colspan="4">데이터 없음</td></tr>`;
+  return;
+}
 
-  if (!filtered.length) {
-    table.innerHTML = `<tr><td colspan="5">데이터 없음</td></tr>`;
-    return;
-  }
+filtered.forEach((m) => {
+  table.innerHTML += `
+    <tr>
+      <td>${m.code}</td>
+      <td>${m.name}</td>
+      <td>${formatNumber(m.price)} 원</td>
+      <td>${m.date}</td>
+    </tr>
+  `;
+});
 
-  filtered.forEach((m) => {
-    table.innerHTML += `
-      <tr>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
-        <td>${formatNumber(m.price)} 원</td>
-        <td>${m.date}</td>
-        <td><button onclick="deletePriceHistory(${m.id})">삭제</button></td>
-      </tr>
-    `;
-  });
+  
 }
 
 function deletePriceHistory(id) {
