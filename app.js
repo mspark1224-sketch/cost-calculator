@@ -823,52 +823,265 @@ function sanitizeSheetName(name) {
     .slice(0, 31);
 }
 
-window.exportSelectedProductExcel = function () {
-  const checked = Array.from(
-    document.querySelectorAll("#recipeProductList .rowCheck:checked")
-  ).map(cb => Number(cb.value));
+async function downloadStyledRecipeExcel(product, recipeRows) {
+  // product 예시:
+  // {
+  //   name: "오늘은조퇴",
+  //   type: "가공치즈",
+  //   savedAt: "2026-04-03 10:09:52",
+  //   savedCost: 4800,
+  //   unitCost: 14400
+  // }
 
-  if (checked.length === 0) {
-    alert("엑셀 다운로드할 제품을 하나 선택하세요.");
-    return;
-  }
+  // recipeRows 예시:
+  // [
+  //   {
+  //     materialName: "테스트10",
+  //     code: "1",
+  //     savedPrice: 4000,
+  //     latestPrice: 8000,
+  //     ratio: 40,
+  //     savedCost: 1600,
+  //     latestCost: 3200,
+  //     diff: 4000,
+  //     increaseDate: "2026-04-03"
+  //   }
+  // ]
 
-  if (checked.length > 1) {
-    alert("엑셀은 한 번에 하나의 제품만 다운로드할 수 있습니다.");
-    return;
-  }
-
-  const product = products.find(p => Number(p.id) === checked[0]);
-  if (!product) {
-    alert("선택한 제품 정보를 찾을 수 없습니다.");
-    return;
-  }
-
-  const rows = (product.recipe || []).map((item, idx) => {
-    const latest = getLatestRecordByCode(item.code);
-    const latestPrice = latest ? Number(latest.price || 0) : Number(item.price || 0);
-    const latestDate = latest ? latest.date || "" : "";
-    const savedPrice = Number(item.price || 0);
-    const ratio = Number(item.ratio || 0);
-    const savedCost = Number(item.cost || 0);
-    const latestCost = Math.round(latestPrice * (ratio / 100));
-
-    const increased = latestPrice > savedPrice;
-    const diff = latestPrice - savedPrice;
-
-    return [
-      idx + 1,
-      item.materialName || "",
-      item.code || "",
-      savedPrice,
-      latestPrice,
-      ratio,
-      savedCost,
-      latestCost,
-      increased ? `+${formatNumber(diff)}` : "",
-      increased ? latestDate : ""
-    ];
+  const workbook = new ExcelJS.Workbook();
+  const ws = workbook.addWorksheet(`${product.name} 배합표`, {
+    views: [{ state: "frozen", ySplit: 9 }]
   });
+
+  // 열 너비
+  ws.columns = [
+    { width: 6 },   // A No
+    { width: 20 },  // B 원재료
+    { width: 10 },  // C 코드
+    { width: 12 },  // D 저장단가
+    { width: 12 },  // E 최신단가
+    { width: 12 },  // F 배합비
+    { width: 12 },  // G 저장원가
+    { width: 12 },  // H 최신원가
+    { width: 12 },  // I 변동
+    { width: 14 }   // J 인상일
+  ];
+
+  const borderThin = {
+    top: { style: "thin", color: { argb: "FFD9D9D9" } },
+    left: { style: "thin", color: { argb: "FFD9D9D9" } },
+    bottom: { style: "thin", color: { argb: "FFD9D9D9" } },
+    right: { style: "thin", color: { argb: "FFD9D9D9" } }
+  };
+
+  const titleFill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF1F4E78" }
+  };
+
+  const headerFill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF2F75B5" }
+  };
+
+  const labelFill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FFF2F2F2" }
+  };
+
+  const totalFill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FFEAF3FF" }
+  };
+
+  const changedFill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FFFFF2CC" }
+  };
+
+  // 제목
+  ws.mergeCells("A1:J1");
+  ws.getCell("A1").value = `${product.name} 배합표`;
+  ws.getCell("A1").font = {
+    bold: true,
+    size: 16,
+    color: { argb: "FFFFFFFF" }
+  };
+  ws.getCell("A1").alignment = {
+    horizontal: "center",
+    vertical: "middle"
+  };
+  ws.getCell("A1").fill = titleFill;
+  ws.getCell("A1").border = borderThin;
+  ws.getRow(1).height = 26;
+
+  // 상단 정보
+  const metaRows = [
+    ["제품명", product.name],
+    ["유형", product.type],
+    ["저장일", product.savedAt],
+    ["저장 원가", product.savedCost],
+    ["단위원가", product.unitCost]
+  ];
+
+  metaRows.forEach((item, idx) => {
+    const rowNum = 3 + idx;
+
+    ws.getCell(`A${rowNum}`).value = item[0];
+    ws.getCell(`A${rowNum}`).fill = labelFill;
+    ws.getCell(`A${rowNum}`).font = { bold: true };
+    ws.getCell(`A${rowNum}`).border = borderThin;
+    ws.getCell(`A${rowNum}`).alignment = {
+      vertical: "middle",
+      horizontal: "center"
+    };
+
+    ws.getCell(`B${rowNum}`).value = item[1];
+    ws.getCell(`B${rowNum}`).border = borderThin;
+    ws.getCell(`B${rowNum}`).alignment = {
+      vertical: "middle",
+      horizontal: rowNum >= 6 ? "right" : "left"
+    };
+  });
+
+  ws.getCell("B6").numFmt = "#,##0";
+  ws.getCell("B7").numFmt = "#,##0";
+
+  // 헤더
+  const headerRow = 9;
+  const headers = [
+    "No", "원재료", "코드", "저장단가", "최신단가",
+    "배합비(%)", "저장원가", "최신원가", "변동", "인상일"
+  ];
+
+  headers.forEach((text, i) => {
+    const cell = ws.getCell(headerRow, i + 1);
+    cell.value = text;
+    cell.fill = headerFill;
+    cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
+    cell.border = borderThin;
+  });
+
+  ws.getRow(headerRow).height = 22;
+  ws.autoFilter = {
+    from: { row: headerRow, column: 1 },
+    to: { row: headerRow, column: 10 }
+  };
+
+  // 데이터
+  recipeRows.forEach((item, idx) => {
+    const rowNum = headerRow + 1 + idx;
+
+    const values = [
+      idx + 1,
+      item.materialName,
+      item.code,
+      item.savedPrice,
+      item.latestPrice,
+      item.ratio,
+      item.savedCost,
+      item.latestCost,
+      item.diff,
+      item.increaseDate || ""
+    ];
+
+    values.forEach((value, colIdx) => {
+      const cell = ws.getCell(rowNum, colIdx + 1);
+      cell.value = value;
+      cell.border = borderThin;
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: [1, 3].includes(colIdx + 1) ? "center"
+          : [2].includes(colIdx + 1) ? "left"
+          : "right"
+      };
+    });
+
+    // 숫자 포맷
+    ["D", "E", "G", "H", "I"].forEach(col => {
+      ws.getCell(`${col}${rowNum}`).numFmt = '#,##0;[Red](#,##0)';
+    });
+    ws.getCell(`F${rowNum}`).numFmt = '0.0';
+    ws.getCell(`J${rowNum}`).numFmt = 'yyyy-mm-dd';
+
+    // 변동 강조
+    if (Number(item.savedPrice) !== Number(item.latestPrice)) {
+      ["E", "H", "I", "J"].forEach(col => {
+        ws.getCell(`${col}${rowNum}`).fill = changedFill;
+      });
+      ws.getCell(`I${rowNum}`).font = {
+        bold: true,
+        color: { argb: "FFC00000" }
+      };
+    }
+  });
+
+  // 합계
+  const totalRow = headerRow + recipeRows.length + 2;
+
+  ws.mergeCells(`A${totalRow}:E${totalRow}`);
+  ws.getCell(`A${totalRow}`).value = "합계";
+  ws.getCell(`A${totalRow}`).font = { bold: true };
+  ws.getCell(`A${totalRow}`).fill = totalFill;
+  ws.getCell(`A${totalRow}`).alignment = { horizontal: "center", vertical: "middle" };
+  ws.getCell(`A${totalRow}`).border = borderThin;
+
+  ["F", "G", "H"].forEach(col => {
+    ws.getCell(`${col}${totalRow}`).fill = totalFill;
+    ws.getCell(`${col}${totalRow}`).font = { bold: true };
+    ws.getCell(`${col}${totalRow}`).border = borderThin;
+  });
+
+  ws.getCell(`F${totalRow}`).value = {
+    formula: `SUM(F${headerRow + 1}:F${headerRow + recipeRows.length})`
+  };
+  ws.getCell(`G${totalRow}`).value = {
+    formula: `SUM(G${headerRow + 1}:G${headerRow + recipeRows.length})`
+  };
+  ws.getCell(`H${totalRow}`).value = {
+    formula: `SUM(H${headerRow + 1}:H${headerRow + recipeRows.length})`
+  };
+
+  ws.getCell(`F${totalRow}`).numFmt = "0.0";
+  ws.getCell(`G${totalRow}`).numFmt = "#,##0";
+  ws.getCell(`H${totalRow}`).numFmt = "#,##0";
+
+  // 단위원가
+  const unitRow = totalRow + 1;
+  ws.mergeCells(`A${unitRow}:G${unitRow}`);
+  ws.getCell(`A${unitRow}`).value = "단위원가";
+  ws.getCell(`A${unitRow}`).font = { bold: true };
+  ws.getCell(`A${unitRow}`).fill = totalFill;
+  ws.getCell(`A${unitRow}`).alignment = { horizontal: "center", vertical: "middle" };
+  ws.getCell(`A${unitRow}`).border = borderThin;
+
+  ws.getCell(`H${unitRow}`).value = product.unitCost;
+  ws.getCell(`H${unitRow}`).numFmt = "#,##0";
+  ws.getCell(`H${unitRow}`).font = { bold: true };
+  ws.getCell(`H${unitRow}`).fill = totalFill;
+  ws.getCell(`H${unitRow}`).border = borderThin;
+  ws.getCell(`H${unitRow}`).alignment = { horizontal: "right", vertical: "middle" };
+
+  // 다운로드
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob(
+    [buffer],
+    { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${product.name}_배합표.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
   const aoa = [
     [`${product.name || "제품"} 배합표`],
