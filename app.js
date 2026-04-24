@@ -1083,50 +1083,7 @@ async function downloadStyledRecipeExcel(product, recipeRows) {
   URL.revokeObjectURL(url);
 }
 
-  const aoa = [
-    [`${product.name || "제품"} 배합표`],
-    [],
-    ["제품명", product.name || ""],
-    ["유형", product.type || ""],
-    ["저장일", product.date ? new Date(product.date).toLocaleString("ko-KR") : ""],
-    ["저장 원가(원/kg)", Number(product.costPerKg || 0)],
-    ["단위원가(원/ea)", Number(product.unitCost || 0)],
-    [],
-    ["No", "원재료", "코드", "저장단가", "최신단가", "배합비(%)", "저장원가", "최신원가", "변동", "인상일"],
-    ...rows,
-    [],
-    ["합계 배합비", "", "", "", "", rows.reduce((sum, r) => sum + Number(r[5] || 0), 0), "", "", "", ""],
-    ["저장 원가 합계", "", "", "", "", "", Number(product.costPerKg || 0), "", "", ""],
-    ["단위원가", "", "", "", "", "", "", Number(product.unitCost || 0), "", ""]
-  ];
-
-  const ws = XLSX.utils.aoa_to_sheet(aoa);
-
-  ws["!cols"] = [
-    { wch: 6 },   // No
-    { wch: 22 },  // 원재료
-    { wch: 12 },  // 코드
-    { wch: 14 },  // 저장단가
-    { wch: 14 },  // 최신단가
-    { wch: 12 },  // 배합비
-    { wch: 14 },  // 저장원가
-    { wch: 14 },  // 최신원가
-    { wch: 12 },  // 변동
-    { wch: 14 }   // 인상일
-  ];
-
-  ws["!merges"] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } }
-  ];
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, sanitizeSheetName(product.name || "배합표"));
-
-  const filename = `${product.name || "배합표"}_배합표.xlsx`;
-  XLSX.writeFile(wb, filename);
-};
-
-
+ 
 
 // =============================
 // 초기 실행
