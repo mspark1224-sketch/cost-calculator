@@ -114,6 +114,7 @@ if (id === "recipe") {
 
   if (id === "calc") {
     loadCalcProducts();
+    loadMaterialCostFromProduct();
   }
 
   if (id === "history") {
@@ -129,7 +130,10 @@ function loadProducts() {
 
   tbody.innerHTML = "";
 
-  products.forEach((p) => {
+  const keyword = document.getElementById("productSearch").value.trim().toLowerCase();
+  products.filter(p => [p.name, p.type].some(value =>
+    String(value ?? "").toLowerCase().includes(keyword)
+  )).forEach((p) => {
     const tr = document.createElement("tr");
 const liveCost = calculateLiveCost(p);
 const diff = liveCost - p.costPerKg;
@@ -151,12 +155,12 @@ if (p.volume) {
 }
     tr.innerHTML = `
       <td><input type="checkbox" class="rowCheck" value="${p.id}"></td>
-      <td>${p.type || "-"}</td>
+      <td>${escapeHtml(p.type || "-")}</td>
       <td 
   style="cursor:pointer; color:#2563eb; font-weight:500;"
   onclick="loadProduct(${p.id})"
 >
-  ${p.name}
+  ${escapeHtml(p.name)}
 </td>
     <td>
   ${formatNumber(liveCost)} 원
@@ -199,7 +203,7 @@ function loadPriceHistoryByCode(code) {
 
   const filtered = priceHistory
     .filter(m => String(m.code).trim() === String(code).trim())
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .sort((a, b) => new Date(b.date) - new Date(a.date) || Number(b.id) - Number(a.id));
 
   if (!filtered.length) {
     table.innerHTML = `<tr><td colspan="4">데이터 없음</td></tr>`;
@@ -209,10 +213,10 @@ function loadPriceHistoryByCode(code) {
   filtered.forEach((m) => {
     table.innerHTML += `
       <tr>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
+        <td>${escapeHtml(m.code)}</td>
+        <td>${escapeHtml(m.name)}</td>
         <td>${formatNumber(m.price)} 원</td>
-        <td>${m.date}</td>
+        <td>${escapeHtml(m.date)}</td>
       </tr>
     `;
   });
@@ -240,17 +244,17 @@ function getLatestRecordByCode(code) {
 
   if (filtered.length === 0) return null;
 
-  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date) || Number(b.id) - Number(a.id));
 
   return filtered[0];
 }
 function getAllLatestMaterials() {
-  const map = {};
+  const map = Object.create(null);
 
   materials.forEach((m) => {
     const key = String(m.code);
 
-    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
+    if (!map[key] || (new Date(m.date) - new Date(map[key].date) || Number(m.id) - Number(map[key].id)) > 0) {
       map[key] = m;
     }
   });
@@ -279,7 +283,7 @@ function saveMaterial() {
   const price = Number(document.getElementById("materialPrice").value);
   const date = normalizeDate(document.getElementById("materialDate").value);
 
-  if (!code || !name || date === "") {
+  if (!code || !name || !date || !document.getElementById("materialPrice").value || !Number.isFinite(price) || price < 0) {
     alert("모든 항목 입력");
     return;
   }
@@ -297,6 +301,7 @@ function saveMaterial() {
     target.name = name;
     target.price = price;
     target.date = date;
+    target.id = Date.now() + Math.random();
   } else {
     const existing = materials.find(m => m.code === code && m.name === name);
 
@@ -306,6 +311,7 @@ function saveMaterial() {
 
       existing.price = price;
       existing.date = date;
+      existing.id = Date.now() + Math.random();
     } else {
       materials.push({
         id: Date.now(),
@@ -343,6 +349,10 @@ function handleExcelUpload() {
     alert("엑셀 파일을 선택해주세요.");
     return;
   }
+  if (typeof XLSX === "undefined") {
+    alert("엑셀 업로드 라이브러리를 불러오지 못했습니다. 연결을 확인한 뒤 새로고침하세요.");
+    return;
+  }
 
   const reader = new FileReader();
 
@@ -369,17 +379,19 @@ function handleExcelUpload() {
     String(rawPrice).replace(/[^\d.]/g, "")
   ) || 0;
 
-  const date = new Date().toISOString().slice(0, 10);
+  const date = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 
   if (!code || !name) return;
 
-  materials.push({
+  const entry = {
     id: Date.now() + Math.random(),
     code,
     name,
     price,
     date
-  });
+  };
+  materials.push(entry);
+  priceHistory.push({ ...entry });
 });
 
     saveAll();
@@ -438,17 +450,7 @@ window.saveRecipe = function () {
     alert("제품명을 입력하세요");
     return;
   }
-// 🔥 기존 제품 덮어쓰기 처리 0319 수정
-const existingIndex = products.findIndex(p => p.name === name);
-
-if (existingIndex !== -1) {
-  if (!confirm("이미 동일한 제품이 있습니다. 덮어쓰시겠습니까?")) {
-    return;
-  }
-
-  // 기존 데이터 삭제
-  products.splice(existingIndex, 1);
-}
+  const existingIndex = products.findIndex(p => p.name === name);
   const costEl = document.getElementById("materialCostSum");
   const costText = costEl ? costEl.textContent.trim() : "0";
   const costPerKg = parseFloat(costText.replace(/[^\d.]/g, "")) || 0;
@@ -461,7 +463,6 @@ const density = parseFloat(document.getElementById("productDensity")?.value) || 
 
   const recipe = [];
  document.querySelectorAll("#recipeTable tbody tr").forEach(row => {
-  const input = row.querySelector("td:nth-child(1) input");
   const code = row.querySelector(".code")?.textContent || "";
   const price = parseFloat(row.querySelector(".price")?.dataset.price) || 0;
   const ratio = parseFloat(row.querySelector("td:nth-child(4) input")?.value) || 0;
@@ -482,8 +483,21 @@ const density = parseFloat(document.getElementById("productDensity")?.value) || 
   }
 });
 
+  const totalRatio = recipe.reduce((sum, item) => sum + item.ratio, 0);
+  if (recipe.some(item => !item.code || !Number.isFinite(item.ratio) || item.ratio <= 0) ||
+      Math.abs(totalRatio - 100) > 0.000001) {
+    alert("등록된 원재료를 선택하고 각 배합비를 0보다 크게, 합계는 100%로 입력하세요.");
+    return;
+  }
+  if (!Number.isFinite(volume) || volume <= 0 ||
+      (unit === "ml" && !(Number(document.getElementById("productDensity").value) > 0))) {
+    alert("내용량과 mL 환산에 사용하는 비중을 0보다 크게 입력하세요.");
+    return;
+  }
+  if (existingIndex !== -1 && !confirm("이미 동일한 제품이 있습니다. 덮어쓰시겠습니까?")) return;
+
 const newProduct = {
-  id: Date.now(),
+  id: products[existingIndex]?.id ?? Date.now(),
   type,
   name,
   costPerKg,   // 저장 당시 원가
@@ -496,7 +510,8 @@ const newProduct = {
   date: new Date().toISOString()
 };
   
-  products.push(newProduct);
+  if (existingIndex === -1) products.push(newProduct);
+  else products[existingIndex] = newProduct;
   saveAll();
   loadProducts();
   // 🔥 추가 (핵심) 0319 저장하면 초기
@@ -527,17 +542,17 @@ function loadMaterials() {
   list.innerHTML += `
     <tr>
       <td>${i + 1}</td>
-      <td>${m.code}</td>
+      <td>${escapeHtml(m.code)}</td>
       <td
   style="cursor:pointer; color:#2563eb; font-weight:500;"
-  onclick="showPriceHistoryByMaterial('${m.code}', '${m.name}')"
+  onclick="showPriceHistoryByMaterial('${escapeHtml(escapeJsString(m.code))}', '${escapeHtml(escapeJsString(m.name))}')"
 >
-  ${m.name}
+  ${escapeHtml(m.name)}
 </td>
       <td>${formatNumber(m.price)} 원</td>
-      <td>${m.date}</td>
-      <td><button onclick="editMaterial('${m.code}')">수정</button></td>
-      <td><button onclick="deleteMaterial('${m.code}')">삭제</button></td>
+      <td>${escapeHtml(m.date)}</td>
+      <td><button onclick="editMaterial('${escapeHtml(escapeJsString(m.code))}')">수정</button></td>
+      <td><button onclick="deleteMaterial('${escapeHtml(escapeJsString(m.code))}')">삭제</button></td>
     </tr>
   `;
 });
@@ -553,7 +568,7 @@ window.deleteMaterial = function(code) {
   loadMaterials();
 }
 window.editMaterial = function(code) {
-  const material = materials.find(m => String(m.code) === String(code));
+  const material = getLatestRecordByCode(code);
   if (!material) return;
 
   document.getElementById("materialCode").value = material.code;
@@ -585,24 +600,25 @@ document.getElementById("productDensity").value = product.density || 1;
     
   const materialsList = getAllLatestMaterials();
 const options = materialsList.map(m =>
-  `<option value="${m.name}"></option>`
+  `<option value="${escapeHtml(m.name)}"></option>`
 ).join("");
 
 const row = document.createElement("tr");
+const listId = "material-options-" + nextRecipeListId++;
 row.innerHTML = `
   <td>
-    <input list="materialListOptions" value="${item.materialName || ""}" oninput="updateRecipeRow(this)" placeholder="원재료명 입력" />
-    <datalist id="materialListOptions">
+    <input list="${listId}" value="${escapeHtml(item.materialName || "")}" oninput="updateRecipeRow(this)" placeholder="원재료명 입력" />
+    <datalist id="${listId}">
       ${options}
     </datalist>
   </td>
-  <td class="code">${item.code || ""}</td>
+  <td class="code">${escapeHtml(item.code || "")}</td>
 
 <td class="price" data-price="${livePrice}">
   ${formatNumber(item.price)}
-  ${livePrice !== item.price 
+  ${latest && livePrice !== item.price 
     ? `<span style="color:red; font-weight:600;">
-         → ${formatNumber(livePrice)} (${latest.date})
+         → ${formatNumber(livePrice)} (${escapeHtml(latest.date)})
        </span>` 
     : ""}
 </td>
@@ -643,7 +659,7 @@ window.resetRecipeTable = function () {
   document.getElementById("productName").value = "";
   document.getElementById("productType").value = "";
 
-  console.log("초기화 완료");
+  document.getElementById("volumeDisplayText").textContent = "";
 };
 
 // =============================
@@ -668,7 +684,7 @@ function loadPriceHistory(keyword = "") {
   }
 
   // 최신순 정렬
-  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date) || Number(b.id) - Number(a.id));
 if (!filtered.length) {
   table.innerHTML = `<tr><td colspan="4">데이터 없음</td></tr>`;
   return;
@@ -677,10 +693,10 @@ if (!filtered.length) {
 filtered.forEach((m) => {
   table.innerHTML += `
     <tr>
-      <td>${m.code}</td>
-      <td>${m.name}</td>
+      <td>${escapeHtml(m.code)}</td>
+      <td>${escapeHtml(m.name)}</td>
       <td>${formatNumber(m.price)} 원</td>
-      <td>${m.date}</td>
+      <td>${escapeHtml(m.date)}</td>
     </tr>
   `;
 });
@@ -699,13 +715,11 @@ function deletePriceHistory(id) {
 function calculateLiveCost(product) {
   let total = 0;
 
-  product.recipe.forEach(item => {
+  (product.recipe || []).forEach(item => {
     const latest = getLatestRecordByCode(item.code);
 
-    if (!latest) return;
-
-    const price = latest.price;
-    const ratio = item.ratio;
+    const price = Number(latest?.price ?? item.price) || 0;
+    const ratio = Number(item.ratio) || 0;
 
     total += price * (ratio / 100);
   });
@@ -717,25 +731,28 @@ function calculateLiveCost(product) {
 // =============================
 // 배합표 - 원재료 추가
 // =============================
+let nextRecipeListId = 0;
+
 function addRecipe() {
   const tbody = document.querySelector("#recipeTable tbody");
   const materials = getAllLatestMaterials();
 
   // 🔥 이름 기준으로 변경
   const options = materials.map(m => 
-    `<option value="${m.name}"></option>`
+    `<option value="${escapeHtml(m.name)}"></option>`
   ).join("");
 
   const row = document.createElement("tr");
 
+  const listId = "material-options-" + nextRecipeListId++;
   row.innerHTML = `
     <td>
       <input 
-        list="materialListOptions" 
+        list="${listId}" 
         oninput="updateRecipeRow(this)" 
         placeholder="원재료명 입력" 
       />
-      <datalist id="materialListOptions">
+      <datalist id="${listId}">
         ${options}
       </datalist>
     </td>
@@ -817,10 +834,48 @@ function deleteProduct(id) {
   saveAll();
   loadProducts();
 }
+async function exportSelectedProductExcel() {
+  const selected = document.querySelectorAll("#recipeProductList .rowCheck:checked");
+  if (!selected.length) {
+    alert("다운로드할 제품을 선택하세요.");
+    return;
+  }
+  if (typeof ExcelJS === "undefined") {
+    alert("엑셀 다운로드 라이브러리를 불러오지 못했습니다. 연결을 확인한 뒤 새로고침하세요.");
+    return;
+  }
+
+  try {
+    for (const checkbox of selected) {
+      const product = products.find(p => String(p.id) === checkbox.value);
+      if (!product) continue;
+      const rows = (product.recipe || []).map(item => {
+        const latest = getLatestRecordByCode(item.code);
+        const latestPrice = latest?.price ?? item.price;
+        return {
+          materialName: item.materialName || latest?.name || "",
+          code: item.code,
+          savedPrice: item.price,
+          latestPrice,
+          ratio: item.ratio,
+          savedCost: item.cost,
+          latestCost: Math.round(latestPrice * item.ratio / 100),
+          diff: latestPrice - item.price,
+          increaseDate: latestPrice !== item.price ? latest?.date || "" : ""
+        };
+      });
+      await downloadStyledRecipeExcel(product, rows);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("엑셀 다운로드 중 오류가 발생했습니다.");
+  }
+}
+
 function sanitizeSheetName(name) {
-  return String(name || "배합표")
+  return (String(name || "배합표")
     .replace(/[\\/*?:[\]]/g, "")
-    .slice(0, 31);
+    .slice(0, 31).replace(/^'+|'+$/g, "") || "배합표");
 }
 
 async function downloadStyledRecipeExcel(product, recipeRows) {
@@ -849,7 +904,7 @@ async function downloadStyledRecipeExcel(product, recipeRows) {
   // ]
 
   const workbook = new ExcelJS.Workbook();
-  const ws = workbook.addWorksheet(`${product.name} 배합표`, {
+  const ws = workbook.addWorksheet(sanitizeSheetName(`${product.name} 배합표`), {
     views: [{ state: "frozen", ySplit: 9 }]
   });
 
@@ -924,8 +979,8 @@ async function downloadStyledRecipeExcel(product, recipeRows) {
   const metaRows = [
     ["제품명", product.name],
     ["유형", product.type],
-    ["저장일", product.savedAt],
-    ["저장 원가", product.savedCost],
+    ["저장일", product.savedAt ?? new Date(product.date).toLocaleString("ko-KR")],
+    ["저장 원가 (원/kg)", product.savedCost ?? product.costPerKg],
     ["단위원가", product.unitCost]
   ];
 
@@ -1099,50 +1154,109 @@ function loadCalcProducts() {
   products.forEach(p => {
     select.innerHTML += `
       <option value="${p.id}">
-        ${p.name}
+        ${escapeHtml(p.name)}
       </option>
     `;
   });
 }
+let activeQuote = null;
+
+function showQuoteResult(quote) {
+  const fields = {
+    calcProductName: quote?.name || "-",
+    materialCostText: quote?.material ?? 0,
+    extraCostText: quote?.extra ?? 0,
+    totalCostText: quote?.cost ?? 0,
+    result: quote?.unitCost ?? 0
+  };
+
+  for (const [id, value] of Object.entries(fields)) {
+    document.getElementById(id).textContent =
+      typeof value === "number" ? value.toLocaleString("ko-KR", { maximumFractionDigits: 2 }) : value;
+  }
+  document.getElementById("calcUnitCost").value = quote ? quote.cost.toFixed(2) : "";
+}
+
 window.loadMaterialCostFromProduct = function () {
-  const select = document.getElementById("calcProductSelect");
-  const productId = select.value;
-
-  if (!productId) return;
-
-  const product = products.find(p => String(p.id) === String(productId));
-  if (!product) return;
-
-  document.getElementById("materialCostInput").value = product.costPerKg || 0;
+  activeQuote = null;
+  const id = document.getElementById("calcProductSelect").value;
+  const product = products.find(p => String(p.id) === id);
+  document.getElementById("materialCostInput").value = product ? calculateLiveCost(product) : "";
+  showQuoteResult(null);
+  if (product) document.getElementById("calcProductName").textContent = product.name;
 };
+
 window.calculateCost = function () {
-  const material = parseFloat(document.getElementById("materialCostInput").value) || 0;
-  const mfg = parseFloat(document.getElementById("mfg").value) || 0;
-  const pack = parseFloat(document.getElementById("pack").value) || 0;
-  const logi = parseFloat(document.getElementById("logi").value) || 0;
-  const margin = parseFloat(document.getElementById("margin").value) || 0;
+  const id = document.getElementById("calcProductSelect").value;
+  const product = products.find(p => String(p.id) === id);
+  const source = product && id ? { productId: product.id, name: product.name, type: product.type } : activeQuote;
+  if (!source) {
+    alert("제품을 선택하거나 저장한 견적을 불러오세요.");
+    return null;
+  }
 
-  const baseCost = material + mfg + pack + logi;
-  const finalCost = baseCost * (1 + margin / 100);
+  const values = {};
+  for (const field of ["mfg", "pack", "logi", "margin"]) {
+    const input = document.getElementById(field);
+    values[field] = Number(input.value);
+    if (!input.validity.valid || !Number.isFinite(values[field])) {
+      alert("제조비, 포장비, 물류비, 가산율은 0 이상으로 입력하세요.");
+      return null;
+    }
+  }
 
-  document.getElementById("unitCost").value = finalCost.toFixed(2);
+  const material = Number(document.getElementById("materialCostInput").value);
+  const extra = values.mfg + values.pack + values.logi;
+  const cost = material + extra;
+  const unitCost = Math.round(cost * (1 + values.margin / 100) * 100) / 100;
+  if (!Number.isFinite(unitCost)) {
+    alert("견적 금액이 계산 가능한 범위를 초과했습니다.");
+    return null;
+  }
 
-  console.log("총원가:", baseCost);
-  console.log("견적가:", finalCost);
+  const quote = { productId: source.productId, name: source.name, type: source.type,
+    material, ...values, extra, cost, unitCost };
+  showQuoteResult(quote);
+  return quote;
 };
+
+function saveQuote() {
+  const quote = calculateCost();
+  if (!quote) return;
+  quotes.unshift({ ...quote, id: Date.now(), date: new Date().toLocaleString("ko-KR") });
+  saveAll();
+  alert("견적이 저장되었습니다.");
+}
+
+function loadQuote(id) {
+  const quote = quotes.find(item => String(item.id) === String(id));
+  if (!quote) return;
+
+  showPage("calc");
+  activeQuote = quote;
+  document.getElementById("calcProductSelect").value = String(
+    quote.productId ?? products.find(p => p.name === quote.name)?.id ?? ""
+  );
+  for (const field of ["mfg", "pack", "logi", "margin"]) {
+    document.getElementById(field).value = quote[field] ?? 0;
+  }
+  document.getElementById("materialCostInput").value = quote.material ?? quote.cost ?? 0;
+  showQuoteResult({ ...quote, material: quote.material ?? quote.cost ?? 0,
+    cost: Number(quote.cost) || 0, extra: quote.extra ?? 0 });
+}
 
 // =============================
 // 선택 기능 (견적 조회)
 // =============================
 
 function toggleAll(el) {
- document.querySelectorAll(".productCheck").forEach(cb => {
+ document.querySelectorAll("#quoteList .rowCheck").forEach(cb => {
     cb.checked = el.checked;
   });
 }
 
 function deleteSelected() {
-  const checked = Array.from(document.querySelectorAll(".rowCheck:checked"))
+  const checked = Array.from(document.querySelectorAll("#quoteList .rowCheck:checked"))
     .map(cb => Number(cb.value));
 
   if (!checked.length) {
@@ -1158,7 +1272,7 @@ function deleteSelected() {
   loadQuotes();
 }
 window.deleteSelectedProducts = function () {
-  const checked = Array.from(document.querySelectorAll(".rowCheck:checked"))
+  const checked = Array.from(document.querySelectorAll("#recipeProductList .rowCheck:checked"))
     .map(cb => Number(cb.value));
 
   if (!checked.length) {
@@ -1175,7 +1289,7 @@ window.deleteSelectedProducts = function () {
 };
 
 function loadSelected() {
-  const checked = document.querySelector(".rowCheck:checked");
+  const checked = document.querySelector("#quoteList .rowCheck:checked");
 
   if (!checked) {
     alert("하나 선택하세요.");
@@ -1188,20 +1302,25 @@ function loadQuotes() {
   const list = document.getElementById("quoteList");
   list.innerHTML = "";
 
-  if (!quotes || quotes.length === 0) {
+  document.getElementById("selectAll").checked = false;
+  const keyword = document.getElementById("quoteSearch").value.trim().toLowerCase();
+  const filtered = quotes.filter(q => [q.name, q.type].some(value =>
+    String(value ?? "").toLowerCase().includes(keyword)
+  ));
+  if (!filtered.length) {
     list.innerHTML = `<tr><td colspan="7">데이터 없음</td></tr>`;
     return;
   }
 
-  quotes.forEach((q) => {
+  filtered.forEach((q) => {
     list.innerHTML += `
       <tr>
         <td><input type="checkbox" class="rowCheck" value="${q.id}"></td>
-        <td>${q.type || ""}</td>
-        <td>${q.name || ""}</td>
+        <td>${escapeHtml(q.type || "")}</td>
+        <td>${escapeHtml(q.name || "")}</td>
         <td>${formatNumber(q.cost)} 원</td>
         <td>${formatNumber(q.unitCost)} 원</td>
-        <td>${q.date || ""}</td>
+        <td>${escapeHtml(q.date || "")}</td>
         <td>
         <button type="button" onclick="loadQuote('${q.id}')">불러오기</button>
         </td>
@@ -1214,6 +1333,9 @@ console.log("끝까지 실행됨");
 // 부재료 데이터
 // =============================
 let subMaterials = JSON.parse(localStorage.getItem("subMaterials")) || [];
+let subPriceHistory = JSON.parse(localStorage.getItem("subPriceHistory")) ??
+  subMaterials.map(item => ({ ...item }));
+let editingSubMaterialId = null;
 
 // =============================
 // 저장 확장
@@ -1222,6 +1344,7 @@ const originalSaveAll = saveAll;
 saveAll = function () {
   originalSaveAll();
   localStorage.setItem("subMaterials", JSON.stringify(subMaterials));
+  localStorage.setItem("subPriceHistory", JSON.stringify(subPriceHistory));
   localStorage.setItem("priceHistory", JSON.stringify(priceHistory)); 
 };
 
@@ -1242,6 +1365,7 @@ window.showPage = function (id) {
 // 입력 초기화
 // =============================
 function clearSubMaterialInputs() {
+  editingSubMaterialId = null;
   document.getElementById("subMaterialCode").value = "";
   document.getElementById("subMaterialName").value = "";
   document.getElementById("subMaterialPrice").value = "";
@@ -1254,42 +1378,35 @@ function clearSubMaterialInputs() {
 function saveSubMaterial() {
   const code = document.getElementById("subMaterialCode").value.trim();
   const name = document.getElementById("subMaterialName").value.trim();
-  const price = Number(document.getElementById("subMaterialPrice").value);
+  const priceText = document.getElementById("subMaterialPrice").value;
+  const price = Number(priceText);
   const date = normalizeDate(document.getElementById("subMaterialDate").value);
 
-  if (!code || !name || date === "") {
-    alert("모든 항목 입력");
+  if (!code || !name || !date || !priceText || !Number.isFinite(price) || price < 0) {
+    alert("모든 항목을 입력하고 단가는 0 이상으로 입력하세요.");
     return;
   }
-  // 🔥 이름 중복 체크
-  const existsName = subMaterials.some(m =>
-    m.name.trim().toLowerCase() === name.toLowerCase()
-  );
-
-  if (existsName) {
-    alert("같은 부재료명이 이미 존재합니다!");
+  const target = subMaterials.find(item => item.id === editingSubMaterialId);
+  if (editingSubMaterialId !== null && !target) {
+    alert("수정할 부재료가 목록에 없습니다.");
     return;
   }
 
-  // 🔥 코드 중복 체크
-  const existsCode = subMaterials.some(m =>
-    String(m.code) === String(code)
-  );
-
-  if (existsCode) {
-    alert("같은 코드가 이미 존재합니다!");
+  const sameCode = subMaterials.some(item => String(item.code) === code &&
+    String(item.code) !== String(target?.code));
+  const sameName = subMaterials.some(item => item.name.trim().toLowerCase() === name.toLowerCase() &&
+    String(item.code) !== String(target?.code));
+  if (sameCode || sameName) {
+    alert("같은 코드 또는 부재료명이 이미 존재합니다.");
     return;
   }
 
-  subMaterials.push({
-    id: Date.now(),
-    code,
-    name,
-    price,
-    date
-  });
-
+  const entry = { id: target?.id ?? Date.now(), code, name, price, date };
+  if (target) subMaterials = subMaterials.filter(item => String(item.code) !== String(target.code));
+  subMaterials.push(entry);
+  subPriceHistory.push({ ...entry, id: Date.now() + Math.random() });
   saveAll();
+  clearSubMaterialInputs();
   loadSubMaterials();
   loadSubPriceHistory("");
 }
@@ -1298,12 +1415,12 @@ function saveSubMaterial() {
 // 목록
 // =============================
 function getAllLatestSubMaterials() {
-  const map = {};
+  const map = Object.create(null);
 
   subMaterials.forEach((m) => {
     const key = String(m.code);
 
-    if (!map[key] || new Date(m.date) > new Date(map[key].date)) {
+    if (!map[key] || (new Date(m.date) - new Date(map[key].date) || Number(m.id) - Number(map[key].id)) > 0) {
       map[key] = m;
     }
   });
@@ -1332,12 +1449,12 @@ function loadSubMaterials() {
     list.innerHTML += `
       <tr>
         <td>${i + 1}</td>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
+        <td>${escapeHtml(m.code)}</td>
+        <td>${escapeHtml(m.name)}</td>
         <td>${formatNumber(m.price)} 원</td>
-        <td>${m.date}</td>
-        <td><button onclick="editSubMaterial('${m.code}')">수정</button></td>
-        <td><button onclick="deleteSubMaterial('${m.code}')">삭제</button></td>
+        <td>${escapeHtml(m.date)}</td>
+        <td><button onclick="editSubMaterial('${escapeHtml(escapeJsString(m.code))}')">수정</button></td>
+        <td><button onclick="deleteSubMaterial('${escapeHtml(escapeJsString(m.code))}')">삭제</button></td>
       </tr>
     `;
   });
@@ -1354,7 +1471,7 @@ function deleteSubMaterial(code) {
 }
 
 function editSubMaterial(code) {
-  const material = subMaterials.find(m => String(m.code) === String(code));
+  const material = getAllLatestSubMaterials().find(m => String(m.code) === String(code));
   if (!material) return;
 
   document.getElementById("subMaterialCode").value = material.code;
@@ -1362,10 +1479,7 @@ function editSubMaterial(code) {
   document.getElementById("subMaterialPrice").value = material.price;
   document.getElementById("subMaterialDate").value = material.date;
 
-  subMaterials = subMaterials.filter(m => m.code !== code);
-
-  saveAll();
-  loadSubMaterials();
+  editingSubMaterialId = material.id;
 }
 
 // =============================
@@ -1375,9 +1489,7 @@ function loadSubPriceHistory(keyword = "") {
   const table = document.getElementById("subPriceHistoryTable");
   table.innerHTML = "";
 
-  if (!keyword) return;
-
-  const filtered = subMaterials.filter(m =>
+  const filtered = subPriceHistory.filter(m =>
     m.name.toLowerCase().includes(keyword.toLowerCase()) ||
     String(m.code).includes(keyword)
   );
@@ -1385,10 +1497,10 @@ function loadSubPriceHistory(keyword = "") {
   filtered.forEach((m) => {
     table.innerHTML += `
       <tr>
-        <td>${m.code}</td>
-        <td>${m.name}</td>
+        <td>${escapeHtml(m.code)}</td>
+        <td>${escapeHtml(m.name)}</td>
        <td>${formatNumber(m.price)} 원</td>
-        <td>${m.date}</td>
+        <td>${escapeHtml(m.date)}</td>
         <td><button onclick="deleteSubPriceHistory(${m.id})">삭제</button></td>
       </tr>
     `;
@@ -1401,7 +1513,7 @@ function searchSubPriceHistory() {
 }
 
 function deleteSubPriceHistory(id) {
-  subMaterials = subMaterials.filter((m) => m.id !== id);
+  subPriceHistory = subPriceHistory.filter((m) => m.id !== id);
   saveAll();
   loadSubPriceHistory("");
 }
@@ -1411,6 +1523,10 @@ function handleSubExcelUpload() {
 
   if (!file) {
     alert("엑셀 파일을 선택해주세요.");
+    return;
+  }
+  if (typeof XLSX === "undefined") {
+    alert("엑셀 업로드 라이브러리를 불러오지 못했습니다. 연결을 확인한 뒤 새로고침하세요.");
     return;
   }
 
@@ -1438,17 +1554,19 @@ function handleSubExcelUpload() {
         String(rawPrice).replace(/[^\d.]/g, "")
       ) || 0;
 
-      const date = new Date().toISOString().slice(0, 10);
+      const date = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 
       if (!code || !name) return;
 
-      subMaterials.push({
+      const entry = {
         id: Date.now() + Math.random(),
         code,
         name,
         price,
         date
-      });
+      };
+      subMaterials.push(entry);
+      subPriceHistory.push({ ...entry });
     });
 
     saveAll();
